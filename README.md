@@ -18,3 +18,6 @@ I expected that all that features will be supported via CAN bus, but during the 
 ## Outside part of project
 
 - AAsdk and Openauto forks from [imchos](https://github.com/imchos/openauto-dhu)
+- [Raspberry Pi OS with desktop 2020.05.27](https://downloads.raspberrypi.com/raspios_armhf/images/raspios_armhf-2020-05-28/)
+  - 32 bit - because of missing 64 bit version of one of the lib
+  - older one, because of better pulseaudio configuration
