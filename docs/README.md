@@ -5,3 +5,5 @@ In this folder you can find docs which I found useful during develop off this pr
 ### Links
 
 - [Arduino LIN bus sniffer without extra hardware](https://forum.arduino.cc/t/lin-bus-reader/480352/20)
+- [OBD-II PIDs](https://en.wikipedia.org/wiki/OBD-II_PIDs)
+- [Longan Labs I2C CAN Bus Module Library](https://github.com/Longan-Labs/I2C_CAN_Arduino) with OBD-II [example](https://github.com/Longan-Labs/I2C_CAN_Arduino/tree/main/examples/OBDII_PIDs)
