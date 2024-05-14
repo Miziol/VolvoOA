@@ -1,7 +1,13 @@
 #include "src/canBus.h"
 #include "src/keyboardEmulator.h"
+#include "src/linBus.h"
+#include "src/linFrame.h"
+
+#define TX_PIN 9
+#define RX_PIN 8
 
 CanBus can(0x25);
+LinBus lin(RX_PIN, TX_PIN);
 
 bool validCoolantTemp, validOilTemp;
 int coolantTemp, oilTemp;
@@ -9,14 +15,20 @@ int coolantTemp, oilTemp;
 void printTemps();
 
 void setup() {
-    // TODO INIT LINBUS
+    // INIT LINBUS
     
     // INIT CANBUS
     can.init(CAN_250KBPS);
 }
 
 void loop() {
-    // TODO LINBUS
+    // LINBUS
+    lin.readBus();
+    while (lin.frameAvailable()) {
+        LinFrame frame = lin.getFrame();
+
+        // TODO analize frames
+    }
 
     // TODO CANBUS
     validCoolantTemp = can.getCoolantTemp(&coolantTemp);
