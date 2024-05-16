@@ -1,17 +1,19 @@
 #include "linFrame.h"
 
-LinFrame::LinFrame(char frame[]) {
-
+LinFrame::LinFrame(char new_header, Vector<char> new_response, char new_checksum) {
+    header = new_header;
+    response = new_response;
+    checksum = new_checksum;
 }
 
 char LinFrame::getHeader() {
     return header;
 }
 
-char* LinFrame::getResponse() {
+Vector<char> LinFrame::getResponse() {
     return response;
 }
 
-bool LinFrame::isValid() {
-    return valid;
+char LinFrame::getChecksum() {
+    return checksum;
 }

@@ -6,6 +6,8 @@
 
 #include "linFrame.h"
 
+#define SYNC_BYTE 0x55
+
 class LinBus {
     SoftwareSerial *softSerial;
 
@@ -19,7 +21,7 @@ public:
 
     void readBus();
     bool frameAvailable();
-    LinFrame getFrame();
+    LinFrame popFrame();
 
 private:
     void analizeBytes();

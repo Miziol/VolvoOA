@@ -1,18 +1,19 @@
 #ifndef LIN_FRAME_H
 #define LIN_FRAME_H
 
+#include <Vector.h>
+
 class LinFrame {
-    bool valid;
     char header;
-    char response[];
+    Vector<char> response;
+    char checksum;
     
 public:
-    LinFrame(char frame[]);
+    LinFrame(char header, Vector<char> frame, char checksum);
 
     char getHeader();
-    char* getResponse();
-
-    bool isValid();
+    Vector<char> getResponse();
+    char getChecksum();
 };
 
 #endif  // LIN_FRAME_H

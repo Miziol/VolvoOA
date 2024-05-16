@@ -1,3 +1,6 @@
+#include <Arduino.h>
+#include <Streaming.h>
+
 #include "src/canBus.h"
 #include "src/keyboardEmulator.h"
 #include "src/linBus.h"
@@ -15,6 +18,7 @@ int coolantTemp, oilTemp;
 void printTemps();
 
 void setup() {
+    Serial.begin(9600);
     // INIT LINBUS
     
     // INIT CANBUS
@@ -25,9 +29,13 @@ void loop() {
     // LINBUS
     lin.readBus();
     while (lin.frameAvailable()) {
-        LinFrame frame = lin.getFrame();
+        LinFrame frame = lin.popFrame();
 
-        // TODO analize frames
+        Serial << "Header: " << frame.getHeader() << " response: " << frame.getResponse() << " with checksum: " << frame.getChecksum();
+
+        if (frame.getHeader() == 0x20) {
+            Serial.print("Some steering wheel frame");
+        }
     }
 
     // TODO CANBUS
