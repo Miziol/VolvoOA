@@ -1,3 +1,5 @@
+#include <Streaming.h>
+
 #include "linBus.h"
 
 LinBus::LinBus() {}
@@ -7,15 +9,11 @@ LinBus::LinBus(int rxPin, int txPin) {
 }
 
 void LinBus::readBus() {
-    if (softSerial != nullptr) {
-        while (Serial.available()) {
-            bytes.push_back(Serial.read());
-        }
-    } else {
-        while (softSerial->available()) {
-            bytes.push_back(softSerial->read());
-        }
+    while (softSerial->available()) {
+        bytes.push_back(softSerial->read());
     }
+
+    Serial.print(bytes.size());
     
     analizeBytes();
 }
