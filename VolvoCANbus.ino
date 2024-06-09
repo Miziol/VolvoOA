@@ -31,10 +31,16 @@ void loop() {
     while (lin.frameAvailable()) {
         LinFrame frame = lin.popFrame();
 
-        Serial << "Header: " << frame.getHeader() << " response: " << frame.getResponse() << " with checksum: " << frame.getChecksum();
+        Serial << "Header: "
+            << _HEX (frame.getHeader())
+            << " response: "
+            << frame.getResponse()
+            << " with checksum: "
+            << _HEX (frame.getChecksum())
+            << endl;
 
         if (frame.getHeader() == 0x20) {
-            Serial.print("Some steering wheel frame");
+            Serial << "Some steering wheel frame" << endl;
         }
     }
 

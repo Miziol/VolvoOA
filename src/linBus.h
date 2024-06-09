@@ -25,6 +25,11 @@ public:
     bool frameAvailable();
     LinFrame popFrame();
 
+    void clearEmptyBytes();
+    int incommingFrameSize();
+
+    static int sizeOfFrame(char id);
+
 private:
     void analizeBytes();
 };

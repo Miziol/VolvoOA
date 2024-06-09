@@ -30,44 +30,63 @@ LinFrame LinBus::popFrame() {
     return frame;
 }
 
+void LinBus::clearEmptyBytes() {
+    while (bytes.size()) {
+        if (bytes[0] == 0) {
+            bytes.remove(0);
+        } else {
+            break;
+        }
+    }
+}
+
+int LinBus::incommingFrameSize() {
+    if (bytes.size() >= 2 && bytes[0] == SYNC_BYTE) {
+        return sizeOfFrame(bytes[1]);
+    }
+
+    return 0;
+}
+
+int LinBus::sizeOfFrame(char id) {
+    switch (id >> 4) {
+        case 3:
+            return 11; // sync + header + 8 + checksum
+        case 2:
+            return 7; // sync + header + 4 + checksum
+    }
+    return 5; // sync + header + 2 + checksum
+}
+
 void LinBus::analizeBytes() {
-    char frameBeginIndex;
-
-    for (int i = 0; i < bytes.size(); i++) {
-        if (bytes[i] == SYNC_BYTE && bytes.size() - 1 == i) { // only SYNC_BYTE in current bytes
-            bytes.clear();
-            bytes.push_back(SYNC_BYTE);
-        } else if (bytes[i] == SYNC_BYTE) { // SYNC_BYTE and something else
-            char header = bytes[i+1];
-            int responseLenght;
-            switch (header >> 4) {
-                case 3:
-                    responseLenght == 8;
-                    break;
-                case 2:
-                    responseLenght == 4;
-                    break;
-                default:
-                    responseLenght = 2;
-                    break;
+    while (bytes.size()) {
+        clearEmptyBytes();
+        int frameSize = incommingFrameSize();
+        if (frameSize == 0) { // invalid frame begging or too low bytes
+            if (bytes.size() < 2) { // too low bytes
+                return;
+            } else { // invalid frame
+                while (bytes[0] != 0 && bytes.size()) {
+                    bytes.remove(0);
+                }
             }
-
-            if (bytes.size() > i + 1 + responseLenght + 1) { // i + header + response + checksum
-                Vector<char> responseBytes;
-                for (int j = i + 2; j < i + 2 + responseLenght; j++) {
-                    responseBytes.push_back(bytes[j]);
-                }
-
-                frames.push_back(LinFrame(bytes[i + 1], responseBytes, bytes[i + 1 + responseLenght + 1]));
-                i = i + 1 + responseLenght + 1;
+        } else {
+            if (bytes.size() < frameSize) { // frame incompleate
+                return;
             } else {
-                Vector<char> frameBytes;
-                for (int j = i; j < bytes.size(); j++) {
-                    frameBytes.push_back(bytes[j]);
+                const int responseSize = frameSize - 3; // frameSize - sync - header - checksum
+                char responseStorage[responseSize];
+                Vector<char> response;
+                response.setStorage(responseStorage, responseSize, 0);
+
+                for (int i = 0; i < frameSize - 3; i++) {
+                    response.push_back(bytes[2+i]);
                 }
-                bytes.clear();
-                bytes = frameBytes;
-                break;
+                frames.push_back(LinFrame(bytes[1], response, bytes[frameSize-1]));
+
+                for (int i = 0; i < frameSize; i++) {
+                    bytes.remove(0);
+                }
             }
         }
     }
