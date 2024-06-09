@@ -1,5 +1,7 @@
 #include "linFrame.h"
 
+LinFrame::LinFrame() {}
+
 LinFrame::LinFrame(char new_header, Vector<char> new_response, char new_checksum) {
     header = new_header;
     response = new_response;

@@ -9,6 +9,7 @@ class LinFrame {
     char checksum;
     
 public:
+    LinFrame();
     LinFrame(char header, Vector<char> frame, char checksum);
 
     char getHeader();

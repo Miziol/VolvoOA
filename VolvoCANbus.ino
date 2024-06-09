@@ -20,7 +20,7 @@ void printTemps();
 void setup() {
     Serial.begin(9600);
     // INIT LINBUS
-    
+
     // INIT CANBUS
     can.init(CAN_250KBPS);
 }

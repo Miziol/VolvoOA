@@ -6,6 +6,10 @@ LinBus::LinBus() {}
 
 LinBus::LinBus(int rxPin, int txPin) {
     softSerial = new SoftwareSerial(rxPin, txPin);
+    softSerial->begin(9600);
+    
+    bytes.setStorage(bytesStorage);
+    frames.setStorage(framesStorage);
 }
 
 void LinBus::readBus() {
@@ -13,8 +17,6 @@ void LinBus::readBus() {
         bytes.push_back(softSerial->read());
     }
 
-    Serial.print(bytes.size());
-    
     analizeBytes();
 }
 
@@ -63,9 +65,12 @@ void LinBus::analizeBytes() {
                 for (int j = i; j < bytes.size(); j++) {
                     frameBytes.push_back(bytes[j]);
                 }
+                bytes.clear();
                 bytes = frameBytes;
                 break;
             }
         }
     }
+
+    Serial << "Frames to analize:" << frames.size() << endl;
 }

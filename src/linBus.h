@@ -12,8 +12,10 @@ class LinBus {
     SoftwareSerial *softSerial;
 
     Vector<char> bytes;
+    char bytesStorage[100];
 
     Vector<LinFrame> frames;
+    LinFrame framesStorage[10];
 
 public:
     LinBus();
