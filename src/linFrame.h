@@ -15,6 +15,10 @@ public:
     char getHeader();
     Vector<char> getResponse();
     char getChecksum();
+
+    void printResponse();
+
+    LinFrame& operator=(const LinFrame& other);
 };
 
 #endif  // LIN_FRAME_H

@@ -31,13 +31,13 @@ void loop() {
     while (lin.frameAvailable()) {
         LinFrame frame = lin.popFrame();
 
+        frame.getResponse();
+
         Serial << "Header: "
             << _HEX (frame.getHeader())
-            << " response: "
-            << frame.getResponse()
-            << " with checksum: "
-            << _HEX (frame.getChecksum())
-            << endl;
+            << " response: ";
+            frame.printResponse();
+            Serial << endl;
 
         if (frame.getHeader() == 0x20) {
             Serial << "Some steering wheel frame" << endl;

@@ -1,3 +1,5 @@
+#include <Streaming.h>
+
 #include "linFrame.h"
 
 LinFrame::LinFrame() {}
@@ -18,4 +20,21 @@ Vector<char> LinFrame::getResponse() {
 
 char LinFrame::getChecksum() {
     return checksum;
+}
+
+void LinFrame::printResponse() {
+    Serial << "[";
+    for (int i = 0; i < response.size(); i++) {
+        Serial << _HEX (response[i]);
+        if ( i < response.size() - 1) {
+            Serial << ",";
+        }
+    }
+    Serial << "]";
+}
+
+LinFrame& LinFrame::operator=(const LinFrame& other) {
+    this->header = other.header;
+    this->response = other.response;
+    this->checksum = other.checksum;
 }
