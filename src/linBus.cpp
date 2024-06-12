@@ -18,10 +18,6 @@ void LinBus::readBus() {
     }
 
     analizeBytes();
-
-    Serial << "After analize: ";
-    frames[frames.size()-1].printResponse();
-    Serial << endl;
 }
 
 bool LinBus::frameAvailable() {
@@ -91,16 +87,9 @@ void LinBus::analizeBytes() {
                 for (int i = 0; i < frameSize; i++) {
                     bytes.remove(0);
                 }
-
-                Serial << "Push back 2: " << frames.size()-1;
-                frames[frames.size()-1].printResponse();
-                Serial << endl;
             }
         }
-                Serial << "BEfore while: " << frames.size()-1;
-                frames[frames.size()-1].printResponse();
-                Serial << endl;
     }
 
-    Serial << "Frames to analize:" << frames.size() << endl;
+    Serial << "Frames to analize: " << frames.size() << endl;
 }

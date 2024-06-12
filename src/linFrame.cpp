@@ -6,7 +6,10 @@ LinFrame::LinFrame() {}
 
 LinFrame::LinFrame(char new_header, Vector<char> new_response, char new_checksum) {
     header = new_header;
-    response = new_response;
+    responseSize = new_response.size();
+    for (int i = 0; i < new_response.size(); i++) {
+        response[i] = new_response[i];
+    }
     checksum = new_checksum;
 }
 
@@ -14,7 +17,7 @@ char LinFrame::getHeader() {
     return header;
 }
 
-Vector<char> LinFrame::getResponse() {
+char* LinFrame::getResponse() {
     return response;
 }
 
@@ -23,18 +26,21 @@ char LinFrame::getChecksum() {
 }
 
 void LinFrame::printResponse() {
-    Serial << "[";
-    for (int i = 0; i < response.size(); i++) {
-        Serial << _HEX (response[i]);
-        if ( i < response.size() - 1) {
-            Serial << ",";
+    Serial.print("[");
+    for (int i = 0; i < responseSize; i++) {
+        Serial.print(response[i], HEX);
+        if ( i < responseSize - 1) {
+            Serial.print(",");
         }
     }
-    Serial << "]";
+    Serial.print("]");
 }
 
 LinFrame& LinFrame::operator=(const LinFrame& other) {
     this->header = other.header;
-    this->response = other.response;
+    this->responseSize = other.responseSize;
+    for (int i = 0; i < responseSize; i++) {
+        this->response[i] = other.response[i];
+    }
     this->checksum = other.checksum;
 }

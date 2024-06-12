@@ -5,15 +5,17 @@
 
 class LinFrame {
     char header;
-    Vector<char> response;
+    int responseSize;
+    char response[8];
     char checksum;
     
 public:
     LinFrame();
+    LinFrame(const LinFrame &other) = default;
     LinFrame(char header, Vector<char> frame, char checksum);
 
     char getHeader();
-    Vector<char> getResponse();
+    char* getResponse();
     char getChecksum();
 
     void printResponse();

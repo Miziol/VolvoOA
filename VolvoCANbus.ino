@@ -30,9 +30,6 @@ void loop() {
     lin.readBus();
     while (lin.frameAvailable()) {
         LinFrame frame = lin.popFrame();
-
-        frame.getResponse();
-
         Serial << "Header: "
             << _HEX (frame.getHeader())
             << " response: ";
