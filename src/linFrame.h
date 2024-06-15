@@ -4,19 +4,21 @@
 #include <Vector.h>
 
 class LinFrame {
-    char header;
-    int responseSize;
+    byte header;
+    uint8_t responseSize;
     char response[8];
     char checksum;
     
 public:
     LinFrame();
     LinFrame(const LinFrame &other) = default;
-    LinFrame(char header, Vector<char> frame, char checksum);
+    LinFrame(byte header, Vector<byte> frame, byte checksum);
 
-    char getHeader();
-    char* getResponse();
-    char getChecksum();
+    byte getHeader();
+    uint8_t getID();
+    uint8_t getResponseSize();
+    byte* getResponse();
+    byte getChecksum();
 
     void printResponse();
 

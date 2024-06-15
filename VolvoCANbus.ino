@@ -2,7 +2,6 @@
 #include <Streaming.h>
 
 #include "src/canBus.h"
-#include "src/keyboardEmulator.h"
 #include "src/linBus.h"
 #include "src/linFrame.h"
 
@@ -31,13 +30,20 @@ void loop() {
     while (lin.frameAvailable()) {
         LinFrame frame = lin.popFrame();
         Serial << "Header: "
-            << _HEX (frame.getHeader())
+            << _HEX (frame.getID())
             << " response: ";
             frame.printResponse();
             Serial << endl;
 
-        if (frame.getHeader() == 0x20) {
-            Serial << "Some steering wheel frame" << endl;
+        switch (frame.getID()) {
+            case SWM_ID:
+                LinBus::analizeSteeringWheelFrame(frame.getResponse(), frame.getResponseSize());
+                break;
+            case LSM_ID:
+                LinBus::analizeLightFrame(frame.getResponse(), frame.getResponseSize());
+                break;
+            default:
+                Serial << "Unknown frame";
         }
     }
 

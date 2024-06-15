@@ -8,6 +8,9 @@
 
 #define SYNC_BYTE 0x55
 
+#define SWM_ID 0x20
+#define LSM_ID 0x30
+
 class LinBus {
     SoftwareSerial *softSerial;
 
@@ -29,6 +32,8 @@ public:
     int incommingFrameSize();
 
     static int sizeOfFrame(char id);
+    static void analizeSteeringWheelFrame(const byte* bytes, uint8_t size);
+    static void analizeLightFrame(const byte* bytes, uint8_t size);
 
 private:
     void analizeBytes();

@@ -42,13 +42,13 @@ void LinBus::clearEmptyBytes() {
 
 int LinBus::incommingFrameSize() {
     if (bytes.size() >= 2 && bytes[0] == SYNC_BYTE) {
-        return sizeOfFrame(bytes[1]);
+        return sizeOfFrame(bytes[1] & 0x00111111);
     }
 
     return 0;
 }
 
-int LinBus::sizeOfFrame(char id) {
+int LinBus::sizeOfFrame(uint8_t id) {
     switch (id >> 4) {
         case 3:
             return 11; // sync + header + 8 + checksum
@@ -56,6 +56,14 @@ int LinBus::sizeOfFrame(char id) {
             return 7; // sync + header + 4 + checksum
     }
     return 5; // sync + header + 2 + checksum
+}
+
+void LinBus::analizeSteeringWheelFrame(const byte* bytes, uint8_t size) {
+    Serial << "Steering Wheel";
+}
+
+void LinBus::analizeLightFrame(const byte* bytes, uint8_t size) {
+    Serial << "Light Switch";
 }
 
 void LinBus::analizeBytes() {
@@ -74,9 +82,9 @@ void LinBus::analizeBytes() {
             if (bytes.size() < frameSize) { // frame incompleate
                 return;
             } else {
-                const int responseSize = frameSize - 3; // frameSize - sync - header - checksum
-                char responseStorage[responseSize];
-                Vector<char> response;
+                const uint8_t responseSize = frameSize - 3; // frameSize - sync - header - checksum
+                byte responseStorage[responseSize];
+                Vector<byte> response;
                 response.setStorage(responseStorage, responseSize, 0);
 
                 for (int i = 0; i < frameSize - 3; i++) {

@@ -1,10 +1,11 @@
 #include <Streaming.h>
 
+#include "keyboardEmulator.h"
 #include "linFrame.h"
 
 LinFrame::LinFrame() {}
 
-LinFrame::LinFrame(char new_header, Vector<char> new_response, char new_checksum) {
+LinFrame::LinFrame(byte new_header, Vector<byte> new_response, byte new_checksum) {
     header = new_header;
     responseSize = new_response.size();
     for (int i = 0; i < new_response.size(); i++) {
@@ -13,22 +14,26 @@ LinFrame::LinFrame(char new_header, Vector<char> new_response, char new_checksum
     checksum = new_checksum;
 }
 
-char LinFrame::getHeader() {
+byte LinFrame::getHeader() {
     return header;
 }
 
-char* LinFrame::getResponse() {
+uint8_t LinFrame::getID() {
+    return header & 0x00111111;
+}
+
+byte* LinFrame::getResponse() {
     return response;
 }
 
-char LinFrame::getChecksum() {
+byte LinFrame::getChecksum() {
     return checksum;
 }
 
 void LinFrame::printResponse() {
     Serial.print("[");
     for (int i = 0; i < responseSize; i++) {
-        Serial.print(response[i], HEX);
+        Serial.print(response[i], BIN);
         if ( i < responseSize - 1) {
             Serial.print(",");
         }
