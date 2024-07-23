@@ -42,7 +42,7 @@ void LinBus::clearEmptyBytes() {
 
 int LinBus::incommingFrameSize() {
     if (bytes.size() >= 2 && bytes[0] == SYNC_BYTE) {
-        return sizeOfFrame(bytes[1] & 0x00111111);
+        return sizeOfFrame(bytes[1] & 0b00111111);
     }
 
     return 0;

@@ -19,7 +19,11 @@ byte LinFrame::getHeader() {
 }
 
 uint8_t LinFrame::getID() {
-    return header & 0x00111111;
+    return header & 0b00111111;
+}
+
+uint8_t LinFrame::getResponseSize() {
+    return responseSize;
 }
 
 byte* LinFrame::getResponse() {
@@ -33,7 +37,7 @@ byte LinFrame::getChecksum() {
 void LinFrame::printResponse() {
     Serial.print("[");
     for (int i = 0; i < responseSize; i++) {
-        Serial.print(response[i], BIN);
+        Serial.print((uint8_t) response[i], BIN);
         if ( i < responseSize - 1) {
             Serial.print(",");
         }

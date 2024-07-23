@@ -29,11 +29,11 @@ void loop() {
     lin.readBus();
     while (lin.frameAvailable()) {
         LinFrame frame = lin.popFrame();
-        Serial << "Header: "
-            << _HEX (frame.getID())
+        Serial << "Header: " << _HEX ((uint8_t) frame.getHeader())
+            << "ID: " << _HEX (frame.getID())
             << " response: ";
             frame.printResponse();
-            Serial << endl;
+            Serial << "\t";
 
         switch (frame.getID()) {
             case SWM_ID:
@@ -43,7 +43,7 @@ void loop() {
                 LinBus::analizeLightFrame(frame.getResponse(), frame.getResponseSize());
                 break;
             default:
-                Serial << "Unknown frame";
+                Serial << "Unknown frame" << endl;
         }
     }
 
