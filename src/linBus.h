@@ -9,7 +9,7 @@
 #define SYNC_BYTE 0x55
 
 #define SWM_ID 0x20
-#define LSM_ID 0x11
+#define LSM_ID 0x10
 
 class LinBus {
     SoftwareSerial *softSerial;
