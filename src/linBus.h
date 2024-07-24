@@ -10,6 +10,7 @@
 
 #define SWM_ID 0x20
 #define LSM_ID 0x10
+#define CEM_ID 0x32
 
 class LinBus {
     SoftwareSerial *softSerial;
@@ -34,6 +35,7 @@ public:
     static int sizeOfFrame(uint8_t id);
     static void analizeSteeringWheelFrame(const byte* bytes, uint8_t size);
     static void analizeLightFrame(const byte* bytes, uint8_t size);
+    static void analizeCEM(const byte* bytes, uint8_t size);
 
 private:
     void analizeBytes();
