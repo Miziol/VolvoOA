@@ -5,6 +5,9 @@ class KeyboardEmulator {
 public:
     KeyboardEmulator();
 
+    void next();
+    void previouse();
+
     void sendShutdownCombination();
 };
 

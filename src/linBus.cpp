@@ -59,19 +59,19 @@ int LinBus::sizeOfFrame(uint8_t id) {
 }
 
 void LinBus::analizeSteeringWheelFrame(const byte* bytes, uint8_t size) {
-    if (bytes[1] & 0b10000000) {
+    if (bytes[1] & 0b10000000) { // Sound down
         if (DEBUG_SWM)
             Serial << "Sound down" << "\t";
     }
-    if (bytes[2] & 0b00000001) {
+    if (bytes[2] & 0b00000001) { // Sound up
         if (DEBUG_SWM)
             Serial << "Sound up" << "\t";
     }
-    if (bytes[1] & 0b00010000) {
+    if (bytes[1] & 0b00010000) { // Next
         if (DEBUG_SWM)
             Serial << "Next" << "\t";
     }
-    if (bytes[1] & 0b00000010) {
+    if (bytes[1] & 0b00000010) { // Previous
         if (DEBUG_SWM)
             Serial << "Previous" << "\t";
     }

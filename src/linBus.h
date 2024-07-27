@@ -4,6 +4,7 @@
 #include <SoftwareSerial.h>
 #include <Vector.h>
 
+#include "keyboardEmulator.h"
 #include "linFrame.h"
 
 #define DEBUG_SWM 0
@@ -16,6 +17,7 @@
 
 class LinBus {
     SoftwareSerial *softSerial;
+    KeyboardEmulator keyboard;
 
     Vector<char> bytes;
     char bytesStorage[100];
