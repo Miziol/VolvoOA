@@ -6,11 +6,13 @@
 
 #include "linFrame.h"
 
+#define DEBUG_SWM 0
+#define DEBUG_LSM 0
+
 #define SYNC_BYTE 0x55
 
 #define SWM_ID 0x20
 #define LSM_ID 0x10
-#define CEM_ID 0x32
 
 class LinBus {
     SoftwareSerial *softSerial;

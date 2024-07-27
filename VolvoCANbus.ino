@@ -8,6 +8,8 @@
 #define TX_PIN 9
 #define RX_PIN 8
 
+#define DEBUG 1
+
 CanBus can(0x25);
 LinBus lin(RX_PIN, TX_PIN);
 
@@ -37,24 +39,21 @@ void loop() {
             case LSM_ID:
                 LinBus::analizeLightFrame(frame.getResponse(), frame.getResponseSize());
                 break;
-            case CEM_ID:
-                LinBus::analizeCEM(frame.getResponse(), frame.getResponseSize());
-                // break; // for debug
             default:
-                Serial << "Header: " << _HEX ((uint8_t) frame.getHeader())
-                    << " ID: " << _HEX (frame.getID())
-                    << " response: ";
+                if (DEBUG) {
+                    Serial << "Header: " << _HEX ((uint8_t) frame.getHeader())
+                        << " ID: " << _HEX (frame.getID())
+                        << " response: ";
                     frame.printResponse();
-                Serial << "\t";
-                Serial << "Unknown frame" << endl;
+                }
         }
     }
 
     // TODO CANBUS
-    validCoolantTemp = can.getCoolantTemp(&coolantTemp);
-    validOilTemp = can.getOilTemp(&oilTemp);
+    // validCoolantTemp = can.getCoolantTemp(&coolantTemp);
+    // validOilTemp = can.getOilTemp(&oilTemp);
 
-    printTemps();
+    //printTemps();
 }
 
 void printTemps() {
