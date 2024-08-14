@@ -21,3 +21,14 @@ I expected that all that features will be supported via CAN bus, but during the 
 - [Raspberry Pi OS with desktop 2020.05.27](https://downloads.raspberrypi.com/raspios_armhf/images/raspios_armhf-2020-05-28/)
   - 32 bit - because of missing 64 bit version of one of the lib
   - older one, because of better pulseaudio configuration
+
+## LIN bus
+
+|ID|byte|MSB|||||||LSB|
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|0x10|0|-|-|-|-|bri|bri|bri|bri|
+||1|-|-|-|-|-|-|-|-|
+|0x20|0|-|-|-|-|-|-|-|-|
+||1|sound down|-|-|next|enter|-|previous|back|
+||2|-|-|-|-|-|-|-|sound up|
+||3|-|-|-|-|-|-|-|-|

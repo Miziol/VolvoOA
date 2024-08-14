@@ -75,6 +75,14 @@ void LinBus::analizeSteeringWheelFrame(const byte* bytes, uint8_t size) {
         if (DEBUG_SWM)
             Serial << "Previous" << "\t";
     }
+    if (bytes[1] & 0b00000001) { // Back
+        if (DEBUG_SWM)
+            Serial << "Previous" << "\t";
+    }
+    if (bytes[1] & 0b00001000) { // Enter
+        if (DEBUG_SWM)
+            Serial << "Previous" << "\t";
+    }
     if (DEBUG_SWM)
         Serial << endl;
 }
