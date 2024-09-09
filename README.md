@@ -29,6 +29,6 @@ I expected that all that features will be supported via CAN bus, but during the 
 |0x10|0|-|-|-|-|bri|bri|bri|bri|
 ||1|-|-|-|-|-|-|-|-|
 |0x20|0|-|-|-|-|-|-|-|-|
-||1|sound down|-|-|next|enter|-|previous|back|
-||2|-|-|-|-|-|-|-|sound up|
+||1|sound down|back|enter|next|-|Mute/Mic|previous|-|
+||2|-|wheel|wheel|wheel|wheel|wheel|wheel|sound up|
 ||3|-|-|-|-|-|-|-|-|

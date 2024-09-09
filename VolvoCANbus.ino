@@ -4,6 +4,7 @@
 #include "src/canBus.h"
 #include "src/linBus.h"
 #include "src/linFrame.h"
+#include "src/volvoState.h"
 
 #define TX_PIN 9
 #define RX_PIN 8
@@ -12,6 +13,7 @@
 
 CanBus can(0x25);
 LinBus lin(RX_PIN, TX_PIN);
+VolvoState state;
 
 bool validCoolantTemp, validOilTemp;
 int coolantTemp, oilTemp;
@@ -34,10 +36,10 @@ void loop() {
 
         switch (frame.getID()) {
             case SWM_ID:
-                LinBus::analizeSteeringWheelFrame(frame.getResponse(), frame.getResponseSize());
+                state.updateStateSWM(frame.getResponse());
                 break;
             case LSM_ID:
-                LinBus::analizeLightFrame(frame.getResponse(), frame.getResponseSize());
+                state.updateStateLSM(frame.getResponse());
                 break;
             default:
                 if (DEBUG) {
@@ -45,6 +47,7 @@ void loop() {
                         << " ID: " << _HEX (frame.getID())
                         << " response: ";
                     frame.printResponse();
+                    Serial << endl;
                 }
         }
     }

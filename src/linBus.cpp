@@ -1,5 +1,3 @@
-#include <Streaming.h>
-
 #include "linBus.h"
 
 LinBus::LinBus() {}
@@ -56,41 +54,6 @@ int LinBus::sizeOfFrame(uint8_t id) {
             return 7; // sync + header + 4 + checksum
     }
     return 5; // sync + header + 2 + checksum
-}
-
-void LinBus::analizeSteeringWheelFrame(const byte* bytes, uint8_t size) {
-    if (bytes[1] & 0b10000000) { // Sound down
-        if (DEBUG_SWM)
-            Serial << "Sound down" << "\t";
-    }
-    if (bytes[2] & 0b00000001) { // Sound up
-        if (DEBUG_SWM)
-            Serial << "Sound up" << "\t";
-    }
-    if (bytes[1] & 0b00010000) { // Next
-        if (DEBUG_SWM)
-            Serial << "Next" << "\t";
-    }
-    if (bytes[1] & 0b00000010) { // Previous
-        if (DEBUG_SWM)
-            Serial << "Previous" << "\t";
-    }
-    if (bytes[1] & 0b00000001) { // Back
-        if (DEBUG_SWM)
-            Serial << "Previous" << "\t";
-    }
-    if (bytes[1] & 0b00001000) { // Enter
-        if (DEBUG_SWM)
-            Serial << "Previous" << "\t";
-    }
-    if (DEBUG_SWM)
-        Serial << endl;
-}
-
-void LinBus::analizeLightFrame(const byte* bytes, uint8_t size) {
-    uint8_t brightness = bytes[0] & 0b00001111;
-    if (DEBUG_LSM)
-        Serial << "Brightness: " << brightness << endl;
 }
 
 void LinBus::analizeBytes() {
