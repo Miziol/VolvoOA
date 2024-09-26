@@ -9,7 +9,7 @@
 #define TX_PIN 9
 #define RX_PIN 8
 
-#define DEBUG 1
+#define DEBUG 0
 
 CanBus can(0x25);
 LinBus lin(RX_PIN, TX_PIN);

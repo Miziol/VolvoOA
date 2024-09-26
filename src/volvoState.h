@@ -3,7 +3,7 @@
 
 #include "Keyboard.h"
 
-#define DEBUG_SWM 1
+#define DEBUG_SWM 0
 #define DEBUG_LSM 0
 
 #define SWM_ID 0x20

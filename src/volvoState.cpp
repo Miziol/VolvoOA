@@ -43,7 +43,7 @@ void VolvoState::updateStateSWM(const byte* bytes) {
 
     // Scroll
     if ((bytes[2] & 0b01111110) != (scrollWheelLastValue & 0b01111110)) {
-        if (n = 0) {
+        if (n == 0) {
             // START ROTATION
             if (bytes[3] & 0b00000001) {
                 isDown = true;
@@ -58,6 +58,7 @@ void VolvoState::updateStateSWM(const byte* bytes) {
         n++;
     } else if (n != 0) {
         // END ROTATION
+        n--;
         for (int i = 0; i < n; i++) {
             if (isDown) {
                 sendNextItem();
