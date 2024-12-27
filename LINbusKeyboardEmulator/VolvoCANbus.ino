@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <Streaming.h>
 
-#include "src/canBus.h"
 #include "src/linBus.h"
 #include "src/linFrame.h"
 #include "src/volvoState.h"
@@ -11,7 +10,6 @@
 
 #define DEBUG 0
 
-CanBus can(0x25);
 LinBus lin(RX_PIN, TX_PIN);
 VolvoState state;
 
@@ -22,14 +20,9 @@ void printTemps();
 
 void setup() {
     Serial.begin(9600);
-    // INIT LINBUS
-
-    // INIT CANBUS
-    can.init(CAN_250KBPS);
 }
 
 void loop() {
-    // LINBUS
     lin.readBus();
     while (lin.frameAvailable()) {
         LinFrame frame = lin.popFrame();
@@ -51,24 +44,4 @@ void loop() {
                 }
         }
     }
-
-    // TODO CANBUS
-    // validCoolantTemp = can.getCoolantTemp(&coolantTemp);
-    // validOilTemp = can.getOilTemp(&oilTemp);
-
-    //printTemps();
-}
-
-void printTemps() {
-    Serial.print("Coolant temp: ");
-    if(validCoolantTemp)
-        Serial.print(coolantTemp);
-    else
-        Serial.print("--");
-    Serial.print("°C\t\tOil temp: ");
-    if(validOilTemp)
-        Serial.print(oilTemp);
-    else
-        Serial.print("--");
-    Serial.println("°C");
 }
