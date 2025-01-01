@@ -1,6 +1,0 @@
-[submodule "aasdk"]
-	path = aasdk
-	url = https://github.com/imchos/aasdk.git
-[submodule "openauto"]
-	path = openauto
-	url = https://github.com/imchos/openauto.git
