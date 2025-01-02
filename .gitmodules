@@ -1,0 +1,4 @@
+[submodule "openauto-with-aasdk"]
+	path = openauto-with-aasdk
+	url = https://github.com/Miziol/openauto-with-aasdk
+	branch = main
