@@ -1,0 +1,14 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource>
+        <file>main.qml</file>
+    </qresource>
+    <qresource prefix="/androidAuto/">
+        <file alias="AndroidAutoView.qml">androidAuto/AndroidAutoView.qml</file>
+    </qresource>
+    <qresource prefix="/main/">
+        <file alias="MainView.qml">main/MainView.qml</file>
+    </qresource>
+    <qresource prefix="/settings/">
+        <file alias="SettingsView.qml">settings/SettingsView.qml</file>
+    </qresource>
+</RCC>
