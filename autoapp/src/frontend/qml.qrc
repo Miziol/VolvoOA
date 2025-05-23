@@ -2,6 +2,9 @@
     <qresource>
         <file>main.qml</file>
     </qresource>
+    <qresource prefix="/commons/">
+        <file alias="ScreenElement.qml">commons/ScreenElement.qml</file>
+    </qresource>
     <qresource prefix="/androidAuto/">
         <file alias="AndroidAutoView.qml">androidAuto/AndroidAutoView.qml</file>
     </qresource>
@@ -10,5 +13,10 @@
     </qresource>
     <qresource prefix="/settings/">
         <file alias="SettingsView.qml">settings/SettingsView.qml</file>
+    </qresource>
+    <qresource prefix="/icons/">
+        <file alias="dashboard.svg">resources/icons/dashboard.svg</file>
+        <file alias="settings.svg">resources/icons/settings.svg</file>
+        <file alias="phone.svg">resources/icons/phone.svg</file>
     </qresource>
 </RCC>
