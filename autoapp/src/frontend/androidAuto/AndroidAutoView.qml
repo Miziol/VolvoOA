@@ -1,5 +1,6 @@
 import QtQuick
+import "qrc:/commons"
 
-Rectangle {
+ScreenElement {
     color: "blue"
 }

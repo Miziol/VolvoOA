@@ -1,7 +1,8 @@
 import QtQuick
 import QtQuick.Controls
+import "qrc:/commons"
 
-Rectangle {
+ScreenElement {
     ListView {
         model: aaService.aaDevices
 
