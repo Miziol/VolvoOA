@@ -8,6 +8,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(PkgConfig REQUIRED)
+find_package(OpenSSL REQUIRED)
 find_package(Qt6 COMPONENTS Core Gui Multimedia Network Qml REQUIRED)
 pkg_check_modules(LibUSB REQUIRED IMPORTED_TARGET libusb-1.0)
 
@@ -25,4 +26,5 @@ target_link_libraries(autoapp PRIVATE
     Qt6::Network
     Qt6::Qml
     PkgConfig::LibUSB
+    ${OPENSSL_LIBRARIES}
 )

@@ -2,16 +2,13 @@
 
 #include <iostream>
 
-AndroidAutoDevice::AndroidAutoDevice(libusb_device *new_device, libusb_device_descriptor new_descriptor)
-    : category("ANDROID AUTO DEVICE"), device(new_device), descriptor(new_descriptor), socket(this) {
-    // open();
-    // extractEndpointAddresses();
+AndroidAutoDevice::AndroidAutoDevice(libusb_device *new_device, libusb_device_descriptor new_descriptor, SSL_CTX *ssl_ctx)
+    : category("ANDROID AUTO DEVICE"), device(new_device), descriptor(new_descriptor), context(ssl_ctx), maxBufferSize(1024 * 20) {
+    open();
 
-    // configSSL();
+    configSSL();
 
     // MESSENGER CREATE
-
-    // createServices(); // move to app instead doing it in a device
 }
 
 AndroidAutoDevice::~AndroidAutoDevice() {
@@ -19,41 +16,17 @@ AndroidAutoDevice::~AndroidAutoDevice() {
 }
 
 void AndroidAutoDevice::open() {
-    int result = libusb_open(device, &handle);
+    int result;
+
+    result = libusb_open(device, &handle);
 
     if (result != 0) {
         cerror << "Error opening AA device: " << libusb_error_name(result);
-    } else {
-        cinfo << "Opened AA device";
+        return;
     }
-}
 
-void AndroidAutoDevice::close() {
-    libusb_close(handle);
-}
-
-void AndroidAutoDevice::start() {
-    startListening(0, interfaceCallback);
-}
-
-void AndroidAutoDevice::stop() {}
-
-QString AndroidAutoDevice::getName() {
-    int maxSize = 128;
-    unsigned char manufacturer[maxSize];
-    unsigned char product[maxSize];
-    libusb_get_string_descriptor_ascii(handle, descriptor.iManufacturer, &manufacturer[0], maxSize);
-    libusb_get_string_descriptor_ascii(handle, descriptor.iProduct, &product[0], maxSize);
-
-    return QString(QByteArray(reinterpret_cast<char *>(manufacturer))) +
-           QString(QByteArray(reinterpret_cast<char *>(product)));
-}
-
-void AndroidAutoDevice::extractEndpointAddresses() {
-    libusb_config_descriptor *config_descriptor;
-
-    if (libusb_get_config_descriptor(device, 0, &config_descriptor) != 0) {
-        cerror << "Failed to get AA device descriptor";
+    if (libusb_get_active_config_descriptor(device, &config_descriptor) != 0) {
+        cerror << "Failed to get AA config descriptor";
         return;
     }
 
@@ -68,7 +41,59 @@ void AndroidAutoDevice::extractEndpointAddresses() {
     }
 
     interface = &(config_descriptor->interface[0].altsetting[0]);
+    result = libusb_claim_interface(handle, interface->bInterfaceNumber);
 
+    if (result != 0) {
+        cerror << "Error claiming AA interface: " << libusb_error_name(result);
+        return;
+    }
+
+    extractEndpointAddresses();
+
+    cinfo << "Opened AA device";
+}
+
+void AndroidAutoDevice::close() {
+    libusb_release_interface(handle, interface->bInterfaceNumber);
+    libusb_free_config_descriptor(config_descriptor);
+    libusb_close(handle);
+}
+
+void AndroidAutoDevice::start() {
+    cinfo << "Starting AA device";
+
+    std::vector<uint8_t> versionRequest;
+    versionRequest.push_back(MessageType::VersionRequest >> 8);
+    versionRequest.push_back(MessageType::VersionRequest);
+    versionRequest.push_back(VERSION_MAJOR >> 8);
+    versionRequest.push_back(VERSION_MAJOR);
+    versionRequest.push_back(VERSION_MINOR >> 8);
+    versionRequest.push_back(VERSION_MINOR);
+    sendMessageToChannel(
+        ChannelID::CONTROL,
+        EncryptionType::Plain | MessageTypeFlags::Control | FrameType::Bulk,
+        versionRequest
+    );
+
+
+    startListening(ChannelID::CONTROL, interfaceCallback);
+    // MESSENGER
+}
+
+void AndroidAutoDevice::stop() {
+    clearSSL();
+}
+
+QString AndroidAutoDevice::getName() {
+    return QString::number(descriptor.idVendor) + ":" + QString::number(descriptor.idProduct);
+}
+
+void AndroidAutoDevice::sendMessageToChannel(ChannelID channel, uint8_t flags, std::vector<uint8_t> data) {
+
+
+}
+
+void AndroidAutoDevice::extractEndpointAddresses() {
     if (interface->bNumEndpoints < 2) {
         cerror << "Too few endpoints";
         return;
@@ -84,46 +109,37 @@ void AndroidAutoDevice::extractEndpointAddresses() {
 }
 
 void AndroidAutoDevice::configSSL() {
-    socket.setLocalCertificate(QSslCertificate(certificate.toLocal8Bit()));
-    socket.setPrivateKey(QSslKey(key.toLocal8Bit(), QSsl::Rsa, QSsl::Pem));
+    // Instance
+    sslConnection = SSL_new(context);
 
-    // socket.connectToHostEncrypted(); // TODO
+    // BIO
+    inputBIO = BIO_new(BIO_s_mem());
+    outputBIO = BIO_new(BIO_s_mem());
+    SSL_set_bio(sslConnection, inputBIO, outputBIO);
+    BIO_set_write_buf_size(inputBIO, maxBufferSize);
+    BIO_set_write_buf_size(outputBIO, maxBufferSize);
+
+    SSL_set_connect_state(sslConnection);
+    SSL_set_verify(sslConnection, SSL_VERIFY_NONE, nullptr);
 }
 
-void AndroidAutoDevice::startListening(int channelID, void callback(libusb_transfer *)) {
-    if (handle == nullptr) {
-        qWarning() << "USB handler is missing";
-        return;
-    }
+void AndroidAutoDevice::clearSSL() {
+    BIO_free(inputBIO);
+    BIO_free(outputBIO);
+    SSL_free(sslConnection);
+}
 
-    libusb_claim_interface(handle, interface->bInterfaceNumber);
+void AndroidAutoDevice::startListening(ChannelID channelID, void callback(libusb_transfer *)) {
+    int result;
+    libusb_transfer *transfer = libusb_alloc_transfer(0);
+    unsigned char *buffer = new unsigned char[512 * 64];  // Bufor danych
 
-    buffer = new unsigned char[512];
-    transfer = libusb_alloc_transfer(0);
-
-    libusb_fill_bulk_transfer(transfer, handle, inputAddress, buffer, 512, callback, this, 0);
-
-    int result = libusb_submit_transfer(transfer);
+    libusb_fill_bulk_transfer(transfer, handle, inputAddress, buffer, 512 * 64, callback, this, 0);
+    result = libusb_submit_transfer(transfer);
     if (result != 0) {
-        qWarning() << "Failed to submit transfer: " << libusb_error_name(result);
+        cerror << "Error submitting transfer: " << libusb_error_name(result);
     }
 }
-
-void AndroidAutoDevice::createServices() {
-    // createAudioService(2, 16000); // TODO audio input service
-    // TODO create sensore service
-    createVideoService();
-    // TODO create bluetooth service
-    // TODO create input service
-}
-
-void AndroidAutoDevice::createAudioService(int channelCount, int sampleRate) {
-    audioFormat.setChannelCount(channelCount);
-    audioFormat.setSampleRate(sampleRate);
-    audioFormat.setSampleFormat(QAudioFormat::Int32);
-}
-
-void AndroidAutoDevice::createVideoService() {}
 
 void AndroidAutoDevice::interfaceCallback(libusb_transfer *transfer) {
     qInfo() << "Bulk transfer recived";

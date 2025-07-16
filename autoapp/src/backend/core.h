@@ -26,12 +26,12 @@ private:
     SettingsManager *settings;
     // GuiStyle qmlStyle;
 
+    AndroidAutoService androidAutoService;
+    UsbService usbService;
+
     QQmlApplicationEngine qmlEngine;
     QQmlContext *qmlRootContext;
     QObject *qmlRootObject;
-
-    AndroidAutoService androidAutoService;
-    UsbService usbService;
 };
 
 #endif  // AUTOAPP_GUICORE_H

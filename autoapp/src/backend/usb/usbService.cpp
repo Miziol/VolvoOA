@@ -28,6 +28,8 @@ UsbService::UsbService() : category("USB SERVICE") {
     libusbTimer.start();
 
     cinfo << "Service started";
+
+    // TODO check all already connected devices
 }
 
 UsbService::~UsbService() {

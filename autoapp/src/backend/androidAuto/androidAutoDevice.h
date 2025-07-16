@@ -2,15 +2,80 @@
 #define AUTOAPP_ANDROIDAUTODEVICE_H
 
 #include <libusb.h>
+#include <openssl/ssl.h>
 
 #include <QAudioFormat>
 #include <QObject>
 #include <QTimer>
-#include <QtNetwork/QSslCertificate>
-#include <QtNetwork/QSslKey>
-#include <QtNetwork/QSslSocket>
 
 #include "../logging/loggingCategory.h"
+
+const uint16_t VERSION_MAJOR = 1, VERSION_MINOR =1;
+
+enum ChannelID
+{
+    CONTROL,
+    INPUT,
+    SENSOR,
+    VIDEO,
+    MEDIA_AUDIO,
+    SPEECH_AUDIO,
+    SYSTEM_AUDIO,
+    AV_INPUT,
+    BLUETOOTH,
+    NONE = 255
+};
+
+enum EncryptionType {
+    Plain = 0,
+    Encrypted = 1 << 3,
+  };
+
+enum FrameType {
+    First = 1,
+    Last = 2,
+    Bulk = First | Last,
+  };
+
+enum MessageTypeFlags {
+    Control = 0,
+    Specific = 1 << 2,
+  };
+
+enum MessageType {
+    VersionRequest = 1,
+    VersionResponse = 2,
+    SslHandshake = 3,
+    AuthComplete = 4,
+    ServiceDiscoveryRequest = 5,
+    ServiceDiscoveryResponse = 6,
+    ChannelOpenRequest = 7,
+    ChannelOpenResponse = 8,
+    PingRequest = 0xb,
+    PingResponse = 0xc,
+    NavigationFocusRequest = 0x0d,
+    NavigationFocusResponse = 0x0e,
+    VoiceSessionRequest = 0x11,
+    AudioFocusRequest = 0x12,
+    AudioFocusResponse = 0x13,
+  };
+
+enum MediaMessageType {
+    MediaWithTimestampIndication = 0x0000,
+    MediaIndication = 0x0001,
+    SetupRequest = 0x8000,
+    StartIndication = 0x8001,
+    SetupResponse = 0x8003,
+    MediaAckIndication = 0x8004,
+    VideoFocusIndication = 0x8008,
+  };
+
+enum InputChannelMessageType {
+    None = 0,
+    Event = 0x8001,
+    HandshakeRequest = 0x8002,
+    HandshakeResponse = 0x8003,
+  };
 
 class AndroidAutoDevice : public QObject {
     Q_OBJECT
@@ -18,7 +83,7 @@ class AndroidAutoDevice : public QObject {
     Q_PROPERTY(QString name READ getName CONSTANT)
 
 public:
-    AndroidAutoDevice(libusb_device *new_device, libusb_device_descriptor new_descriptor);
+    AndroidAutoDevice(libusb_device *new_device, libusb_device_descriptor new_descriptor, SSL_CTX *ssl_ctx);
     ~AndroidAutoDevice();
 
 private:
@@ -27,14 +92,17 @@ private:
     libusb_device *device;
     libusb_device_handle *handle;
     libusb_device_descriptor descriptor;
+    libusb_config_descriptor *config_descriptor;
     const libusb_interface_descriptor *interface;
     uint8_t inputAddress, outputAddress;
 
-    QSslCertificate caCert;
-    QSslKey privateKey;
-    QSslSocket socket;
+    SSL_CTX *context;
+    SSL *sslConnection;
+    BIO *inputBIO, *outputBIO;
+    SSL_SESSION *sslSession;
 
     QTimer eventLoopTimer;
+    int maxBufferSize;
     unsigned char *buffer = nullptr;
     libusb_transfer *transfer = nullptr;
 
@@ -48,66 +116,17 @@ public slots:
 
     QString getName();
 
+    void sendMessageToChannel(ChannelID channel, uint8_t flags, std::vector<uint8_t> data);
+    // void sendEncryptedMessageToChannel(ChannelID channel);
+    void sendControlMessage(int flags, std::vector<uint8_t> data);
+
 private:
     void extractEndpointAddresses();
     void configSSL();
-    void startListening(int channelID, void callback(libusb_transfer *));
-
-    void createServices();
-    void createAudioService(int channelCount, int sampleRate);
-    void createVideoService();
+    void clearSSL();
+    void startListening(ChannelID channelID, void callback(libusb_transfer *));
 
     void static interfaceCallback(libusb_transfer *transfer);
 };
-
-const QString certificate =
-    "-----BEGIN CERTIFICATE-----\n\
-MIIDKjCCAhICARswDQYJKoZIhvcNAQELBQAwWzELMAkGA1UEBhMCVVMxEzARBgNV\n\
-BAgMCkNhbGlmb3JuaWExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxHzAdBgNVBAoM\n\
-Fkdvb2dsZSBBdXRvbW90aXZlIExpbmswJhcRMTQwNzA0MDAwMDAwLTA3MDAXETQ1\n\
-MDQyOTE0MjgzOC0wNzAwMFMxCzAJBgNVBAYTAkpQMQ4wDAYDVQQIDAVUb2t5bzER\n\
-MA8GA1UEBwwISGFjaGlvamkxFDASBgNVBAoMC0pWQyBLZW53b29kMQswCQYDVQQL\n\
-DAIwMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAM911mNnUfx+WJtx\n\
-uk06GO7kXRW/gXUVNQBkbAFZmVdVNvLoEQNthi2X8WCOwX6n6oMPxU2MGJnvicP3\n\
-6kBqfHhfQ2Fvqlf7YjjhgBHh0lqKShVPxIvdatBjVQ76aym5H3GpkigLGkmeyiVo\n\
-VO8oc3cJ1bO96wFRmk7kJbYcEjQyakODPDu4QgWUTwp1Z8Dn41ARMG5OFh6otITL\n\
-XBzj9REkUPkxfS03dBXGr5/LIqvSsnxib1hJ47xnYJXROUsBy3e6T+fYZEEzZa7y\n\
-7tFioHIQ8G/TziPmvFzmQpaWMGiYfoIgX8WoR3GD1diYW+wBaZTW+4SFUZJmRKgq\n\
-TbMNFkMCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAsGdH5VFn78WsBElMXaMziqFC\n\
-zmilkvr85/QpGCIztI0FdF6xyMBJk/gYs2thwvF+tCCpXoO8mjgJuvJZlwr6fHzK\n\
-Ox5hNUb06AeMtsUzUfFjSZXKrSR+XmclVd+Z6/ie33VhGePOPTKYmJ/PPfTT9wvT\n\
-93qswcxhA+oX5yqLbU3uDPF1ZnJaEeD/YN45K/4eEA4/0SDXaWW14OScdS2LV0Bc\n\
-YmsbkPVNYZn37FlY7e2Z4FUphh0A7yME2Eh/e57QxWrJ1wubdzGnX8mrABc67ADU\n\
-U5r9tlTRqMs7FGOk6QS2Cxp4pqeVQsrPts4OEwyPUyb3LfFNo3+sP111D9zEow==\n\
------END CERTIFICATE-----\n";
-
-const QString key =
-    "-----BEGIN RSA PRIVATE KEY-----\n\
-MIIEowIBAAKCAQEAz3XWY2dR/H5Ym3G6TToY7uRdFb+BdRU1AGRsAVmZV1U28ugR\n\
-A22GLZfxYI7Bfqfqgw/FTYwYme+Jw/fqQGp8eF9DYW+qV/tiOOGAEeHSWopKFU/E\n\
-i91q0GNVDvprKbkfcamSKAsaSZ7KJWhU7yhzdwnVs73rAVGaTuQlthwSNDJqQ4M8\n\
-O7hCBZRPCnVnwOfjUBEwbk4WHqi0hMtcHOP1ESRQ+TF9LTd0Fcavn8siq9KyfGJv\n\
-WEnjvGdgldE5SwHLd7pP59hkQTNlrvLu0WKgchDwb9POI+a8XOZClpYwaJh+giBf\n\
-xahHcYPV2Jhb7AFplNb7hIVRkmZEqCpNsw0WQwIDAQABAoIBAB2u7ZLheKCY71Km\n\
-bhKYqnKb6BmxgfNfqmq4858p07/kKG2O+Mg1xooFgHrhUhwuKGbCPee/kNGNrXeF\n\
-pFW9JrwOXVS2pnfaNw6ObUWhuvhLaxgrhqLAdoUEgWoYOHcKzs3zhj8Gf6di+edq\n\
-SyTA8+xnUtVZ6iMRKvP4vtCUqaIgBnXdmQbGINP+/4Qhb5R7XzMt/xPe6uMyAIyC\n\
-y5Fm9HnvekaepaeFEf3bh4NV1iN/R8px6cFc6ELYxIZc/4Xbm91WGqSdB0iSriaZ\n\
-TjgrmaFjSO40tkCaxI9N6DGzJpmpnMn07ifhl2VjnGOYwtyuh6MKEnyLqTrTg9x0\n\
-i3mMwskCgYEA9IyljPRerXxHUAJt+cKOayuXyNt80q9PIcGbyRNvn7qIY6tr5ut+\n\
-ZbaFgfgHdSJ/4nICRq02HpeDJ8oj9BmhTAhcX6c1irH5ICjRlt40qbPwemIcpybt\n\
-mb+DoNYbI8O4dUNGH9IPfGK8dRpOok2m+ftfk94GmykWbZF5CnOKIp8CgYEA2Syc\n\
-5xlKB5Qk2ZkwXIzxbzozSfunHhWWdg4lAbyInwa6Y5GB35UNdNWI8TAKZsN2fKvX\n\
-RFgCjbPreUbREJaM3oZ92o5X4nFxgjvAE1tyRqcPVbdKbYZgtcqqJX06sW/g3r/3\n\
-RH0XPj2SgJIHew9sMzjGWDViMHXLmntI8rVA7d0CgYBOr36JFwvrqERN0ypNpbMr\n\
-epBRGYZVSAEfLGuSzEUrUNqXr019tKIr2gmlIwhLQTmCxApFcXArcbbKs7jTzvde\n\
-PoZyZJvOr6soFNozP/YT8Ijc5/quMdFbmgqhUqLS5CPS3z2N+YnwDNj0mO1aPcAP\n\
-STmcm2DmxdaolJksqrZ0owKBgQCD0KJDWoQmaXKcaHCEHEAGhMrQot/iULQMX7Vy\n\
-gl5iN5E2EgFEFZIfUeRWkBQgH49xSFPWdZzHKWdJKwSGDvrdrcABwdfx520/4MhK\n\
-d3y7CXczTZbtN1zHuoTfUE0pmYBhcx7AATT0YCblxrynosrHpDQvIefBBh5YW3AB\n\
-cKZCOQKBgEM/ixzI/OVSZ0Py2g+XV8+uGQyC5XjQ6cxkVTX3Gs0ZXbemgUOnX8co\n\
-eCXS4VrhEf4/HYMWP7GB5MFUOEVtlLiLM05ruUL7CrphdfgayDXVcTPfk75lLhmu\n\
-KAwp3tIHPoJOQiKNQ3/qks5km/9dujUGU2ARiU3qmxLMdgegFz8e\n\
------END RSA PRIVATE KEY-----\n";
 
 #endif  // AUTOAPP_ANDROIDAUTODEVICE_H
