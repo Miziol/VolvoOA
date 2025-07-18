@@ -3,15 +3,7 @@
 #include <iostream>
 
 AndroidAutoDevice::AndroidAutoDevice(libusb_device *new_device, libusb_device_descriptor new_descriptor)
-    : category("ANDROID AUTO DEVICE"), device(new_device), descriptor(new_descriptor), socket(this) {
-    // open();
-    // extractEndpointAddresses();
-
-    // configSSL();
-
-    // MESSENGER CREATE
-
-    // createServices(); // move to app instead doing it in a device
+    : category("ANDROID AUTO DEVICE"), device(new_device), descriptor(new_descriptor) {
 }
 
 AndroidAutoDevice::~AndroidAutoDevice() {
@@ -33,7 +25,7 @@ void AndroidAutoDevice::close() {
 }
 
 void AndroidAutoDevice::start() {
-    startListening(0, interfaceCallback);
+    //androidAutoEntity = new f1x::openauto::autoapp::service::AndroidAutoEntity(); // TODO
 }
 
 void AndroidAutoDevice::stop() {}
@@ -81,53 +73,4 @@ void AndroidAutoDevice::extractEndpointAddresses() {
         inputAddress = interface->endpoint[1].bEndpointAddress;
         outputAddress = interface->endpoint[0].bEndpointAddress;
     }
-}
-
-void AndroidAutoDevice::configSSL() {
-    socket.setLocalCertificate(QSslCertificate(certificate.toLocal8Bit()));
-    socket.setPrivateKey(QSslKey(key.toLocal8Bit(), QSsl::Rsa, QSsl::Pem));
-
-    // socket.connectToHostEncrypted(); // TODO
-}
-
-void AndroidAutoDevice::startListening(int channelID, void callback(libusb_transfer *)) {
-    if (handle == nullptr) {
-        qWarning() << "USB handler is missing";
-        return;
-    }
-
-    libusb_claim_interface(handle, interface->bInterfaceNumber);
-
-    buffer = new unsigned char[512];
-    transfer = libusb_alloc_transfer(0);
-
-    libusb_fill_bulk_transfer(transfer, handle, inputAddress, buffer, 512, callback, this, 0);
-
-    int result = libusb_submit_transfer(transfer);
-    if (result != 0) {
-        qWarning() << "Failed to submit transfer: " << libusb_error_name(result);
-    }
-}
-
-void AndroidAutoDevice::createServices() {
-    // createAudioService(2, 16000); // TODO audio input service
-    // TODO create sensore service
-    createVideoService();
-    // TODO create bluetooth service
-    // TODO create input service
-}
-
-void AndroidAutoDevice::createAudioService(int channelCount, int sampleRate) {
-    audioFormat.setChannelCount(channelCount);
-    audioFormat.setSampleRate(sampleRate);
-    audioFormat.setSampleFormat(QAudioFormat::Int32);
-}
-
-void AndroidAutoDevice::createVideoService() {}
-
-void AndroidAutoDevice::interfaceCallback(libusb_transfer *transfer) {
-    qInfo() << "Bulk transfer recived";
-
-    delete transfer->buffer;
-    libusb_free_transfer(transfer);
 }

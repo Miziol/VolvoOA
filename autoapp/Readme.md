@@ -1,1 +1,1 @@
-`sudo apt install -y libusb-1.0-0-dev qt6-base-dev qt6-declarative-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript libqt6network qt6-multimedia-dev qml6-module-qtquick-controls qml6-module-qtquick-templates`
+`sudo apt install -y libusb-1.0-0-dev qt6-base-dev qt6-declarative-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript libqt6network qt6-multimedia-dev qml6-module-qtquick-controls qml6-module-qtquick-templates libboost-dev`
