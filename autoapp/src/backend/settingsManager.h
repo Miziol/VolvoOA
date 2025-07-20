@@ -1,6 +1,7 @@
 #ifndef AUTOAPP_SETTINGSMANAGER_H
 #define AUTOAPP_SETTINGSMANAGER_H
 
+#include <QBluetoothAddress>
 #include <QSettings>
 
 #include "f1x/openauto/autoapp/Configuration/IConfiguration.hpp"
@@ -42,39 +43,39 @@ public:
     inline static const f1x::aasdk::proto::enums::VideoResolution::Enum VIDEO_RESOLUTION_VALUE = f1x::aasdk::proto::enums::VideoResolution::_480p;
     inline static const QString VIDEO_SCREEN_DPI_KEY = "video/screen_dpi";
     inline static const int VIDEO_SCREEN_DPI_VALUE = 140;
-    inline static const QString VIDEO_OMX_LAYER_KEY = "video/omx_layer";
-    inline static const int VIDEO_OMX_LAYER_VALUE = 1;
     inline static const QString VIDEO_MARGIN_WIDTH_KEY = "video/margin_width";
-    inline static const QRect VIDEO_MARGIN_WIDTH_VALUE = QRect(0,0,0,0);
+    inline static const int VIDEO_MARGIN_WIDTH_VALUE = 0;
     inline static const QString VIDEO_MARGIN_HEIGHT_KEY = "video/margin_height";
-    inline static const QRect VIDEO_MARGIN_HEIGHT_VALUE = QRect(0,0,0,0);
+    inline static const int VIDEO_MARGIN_HEIGHT_VALUE = 0;
 
-    inline static const QString cBluetoothAdapterTypeKey;
-    inline static const QString cBluetoothRemoteAdapterAddressKey;
+    inline static const QString NAVIGATION_TOUCHSCREEN_ENABLED_KEY = "navigation/touchscreen_enabled";
+    inline static const bool NAVIGATION_TOUCHSCREEN_ENABLED_VALUE = true;
 
-    inline static const QString cInputEnableTouchscreenKey;
-    inline static const QString cInputPlayButtonKey;
-    inline static const QString cInputPauseButtonKey;
-    inline static const QString cInputTogglePlayButtonKey;
-    inline static const QString cInputNextTrackButtonKey;
-    inline static const QString cInputPreviousTrackButtonKey;
-    inline static const QString cInputHomeButtonKey;
-    inline static const QString cInputPhoneButtonKey;
-    inline static const QString cInputCallEndButtonKey;
-    inline static const QString cInputVoiceCommandButtonKey;
-    inline static const QString cInputLeftButtonKey;
-    inline static const QString cInputRightButtonKey;
-    inline static const QString cInputUpButtonKey;
-    inline static const QString cInputDownButtonKey;
-    inline static const QString cInputScrollWheelButtonKey;
-    inline static const QString cInputBackButtonKey;
-    inline static const QString cInputEnterButtonKey;
+    inline static const QString NAVIGATION_ENTER_KEY = "navigation/enter";
+    inline static const bool NAVIGATION_ENTER_VALUE = true;
+    inline static const QString NAVIGATION_ARROWS_KEY = "navigation/arrows";
+    inline static const bool NAVIGATION_ARROWS_VALUE = true;
+    inline static const QString NAVIGATION_SCROLL_WHEEL_KEY = "navigation/scroll_wheel";
+    inline static const bool NAVIGATION_SCROLL_WHEEL_VALUE = true;
+    inline static const QString NAVIGATION_BACK_KEY = "navigation/back";
+    inline static const bool NAVIGATION_BACK_VALUE = true;
+    inline static const QString NAVIGATION_HOME_KEY = "navigation/home";
+    inline static const bool NAVIGATION_HOME_VALUE = true;
+    inline static const QString NAVIGATION_MEDIA_KEY = "navigation/media";
+    inline static const bool NAVIGATION_MEDIA_VALUE = true;
+    inline static const QString NAVIGATION_VOICE_COMMAND_KEY = "navigation/voice_command";
+    inline static const bool NAVIGATION_VOICE_COMMAND_VALUE = false;
+    inline static const QString NAVIGATION_CHARS_KEY = "navigation/chars";
+    inline static const bool NAVIGATION_CHARS_VALUE = false;
+    inline static const QString NAVIGATION_LETTERS_KEY = "navigation/letters";
+    inline static const bool NAVIGATION_LETTERS_VALUE = false;
+    inline static const QString NAVIGATION_NUMBERS_KEY = "navigation/numbers";
+    inline static const bool NAVIGATION_NUMBERS_VALUE = false;
 
-    inline static const QString cInputArrowsButtonKey;
-    inline static const QString cInputMediaButtonKey;
-    inline static const QString cInputCharsButtonKey;
-    inline static const QString cInputLettersButtonKey;
-    inline static const QString cInputNumbersButtonKey;
+    inline static const QString BLUETOOTH_ADAPTER_TYPE_KEY = "bluetooth/adapter_type"; // TODO remove ?
+    inline static const f1x::openauto::autoapp::configuration::BluetoothAdapterType BLUETOOTH_ADAPTER_TYPE_VALUE = f1x::openauto::autoapp::configuration::BluetoothAdapterType::LOCAL;
+    inline static const QString BLUETOOTH_REMOTE_ADAPTER_ADDRESS_KEY = "bluetooth/remote_adapter_address";
+    inline static const QBluetoothAddress BLUETOOTH_REMOTE_ADAPTER_ADDRESS_VALUE = QBluetoothAddress();
 
 private:
 public slots:
@@ -100,10 +101,8 @@ public slots:
     void setVideoResolution(f1x::aasdk::proto::enums::VideoResolution::Enum value);
     size_t getScreenDPI() const;
     void setScreenDPI(size_t value);
-    void setOMXLayerIndex(int32_t value);
-    int32_t getOMXLayerIndex() const;
+    QRect getVideoMargins() const; // TODO remove ?
     void setVideoMargins(QRect value);
-    QRect getVideoMargins() const;
 
     bool getTouchscreenEnabled() const;
     void setTouchscreenEnabled(bool value);
@@ -112,8 +111,8 @@ public slots:
 
     f1x::openauto::autoapp::configuration::BluetoothAdapterType getBluetoothAdapterType() const;
     void setBluetoothAdapterType(f1x::openauto::autoapp::configuration::BluetoothAdapterType value);
-    std::string getBluetoothRemoteAdapterAddress() const;
-    void setBluetoothRemoteAdapterAddress(const std::string& value);
+    QBluetoothAddress getBluetoothRemoteAdapterAddress() const;
+    void setBluetoothRemoteAdapterAddress(const QBluetoothAddress value);
 
 private:
     void setDefault(bool force = false);

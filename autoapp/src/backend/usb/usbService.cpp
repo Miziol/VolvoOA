@@ -40,6 +40,8 @@ void UsbService::handleLibUsbEvents() {
 }
 
 void UsbService::newDevice(libusb_device *device) {
+    qInfo() << device;
+
     int result;
     libusb_device_descriptor deviceDescriptor;
 
@@ -62,7 +64,7 @@ void UsbService::newDevice(libusb_device *device) {
 }
 
 void UsbService::removeDevice(libusb_device *device) {
-    cinfo << "Remove device";
+    cinfo << "Remove device" << device;
     QMutableListIterator<UsbDevice *> i(devices);
     while (i.hasNext()) {
         UsbDevice *deviceToRemove = i.next();

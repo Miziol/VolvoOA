@@ -15,8 +15,9 @@ AndroidAutoDevice::AndroidAutoDevice(
       descriptor(new_descriptor),
       usbWrapper(f1x::aasdk::usb::USBWrapper(context)),
       ioService(new_ioService),
-      androidAutoEntityFactory(new_androidAutoEntityFactory) {
+      androidAutoEntityFactory(new_androidAutoEntityFactory), androidAutoEntity(nullptr) {
     open();
+    start();
 }
 
 AndroidAutoDevice::~AndroidAutoDevice() {
@@ -38,12 +39,16 @@ void AndroidAutoDevice::close() {
 }
 
 void AndroidAutoDevice::start() {
-    if (androidAutoEntity == nullptr)
+    if (androidAutoEntity != nullptr)
         return;
+
+    cinfo << "Starting AA entity";
 
     auto aoapDevice(f1x::aasdk::usb::AOAPDevice::create(usbWrapper, ioService, handle));
     androidAutoEntity = androidAutoEntityFactory.create(std::move(aoapDevice));
     androidAutoEntity->start(*this);
+
+    cinfo << "Started AA entity";
 }
 
 void AndroidAutoDevice::stop() {}

@@ -25,7 +25,8 @@ AppCore::AppCore(SettingsManager &new_settings)
 
     cinfo << "QML loaded";
 
-    connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addDevice);
+    connect(&usbService, SIGNAL(newAndroidAutoDevice(libusb_context *, libusb_device *, libusb_device_descriptor)),
+            &androidAutoService, SLOT(addDevice(libusb_context *, libusb_device *, libusb_device_descriptor)));
     // qmlStyle.changeTextSize(GuiStyle::textSizeType::LARGE);
     // qmlStyle.changeDarkLightMode();
 }
