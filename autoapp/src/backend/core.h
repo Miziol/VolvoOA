@@ -15,7 +15,7 @@ class AppCore : public QObject {
     Q_OBJECT
 
 public:
-    AppCore(SettingsManager *new_settings);
+    AppCore(SettingsManager &new_settings);
     ~AppCore();
 
 public slots:
@@ -23,7 +23,7 @@ public slots:
 private:
     QLoggingCategory category;
 
-    SettingsManager *settings;
+    SettingsManager &settings;
     // GuiStyle qmlStyle;
 
     QQmlApplicationEngine qmlEngine;

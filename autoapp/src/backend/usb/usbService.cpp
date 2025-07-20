@@ -52,7 +52,7 @@ void UsbService::newDevice(libusb_device *device) {
         PRODUCT_WITH_ANDROID_AUTO.contains(deviceDescriptor.idProduct)) {
         cinfo << "New device with AA inserted";
 
-        emit newAndroidAutoDevice(device, deviceDescriptor);
+        emit newAndroidAutoDevice(usbContext, device, deviceDescriptor);
     } else {
         UsbDevice *newDevice = new UsbDevice(this, device);
         devices.append(newDevice);

@@ -6,45 +6,50 @@
 #include <QAudioFormat>
 #include <QObject>
 #include <QTimer>
-
-#include "../../external/openauto-with-aasdk/openauto/include/f1x/openauto/autoapp/Service/AndroidAutoEntity.hpp"
-
 #include <QtNetwork/QSslCertificate>
 #include <QtNetwork/QSslKey>
 #include <QtNetwork/QSslSocket>
 
+#include "../../external/openauto-with-aasdk/openauto/include/f1x/openauto/autoapp/Service/AndroidAutoEntity.hpp"
 #include "../logging/loggingCategory.h"
+#include "f1x/aasdk/USB/USBWrapper.hpp"
+#include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
 
-class AndroidAutoDevice : public QObject {
+class AndroidAutoDevice : public QObject, public f1x::openauto::autoapp::service::IAndroidAutoEntityEventHandler {
     Q_OBJECT
 
     Q_PROPERTY(QString name READ getName CONSTANT)
 
 public:
-    AndroidAutoDevice(libusb_device *new_device, libusb_device_descriptor new_descriptor);
+    AndroidAutoDevice(libusb_context *context,
+                      libusb_device *new_device,
+                      libusb_device_descriptor new_descriptor,
+                      boost::asio::io_service &new_ioService,
+                      f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
     ~AndroidAutoDevice();
 
 private:
     QLoggingCategory category;
 
+    f1x::aasdk::usb::USBWrapper usbWrapper;
+    boost::asio::io_service &ioService;
+    f1x::openauto::autoapp::service::AndroidAutoEntityFactory &androidAutoEntityFactory;
+
     libusb_device *device;
     libusb_device_handle *handle;
-    libusb_device_descriptor descriptor;
-    const libusb_interface_descriptor *interface;
-    uint8_t inputAddress, outputAddress;
-
-    f1x::openauto::autoapp::service::AndroidAutoEntity *androidAutoEntity;
+    libusb_device_descriptor descriptor;  // TODO Raczej do usunięcia
+    f1x::openauto::autoapp::service::IAndroidAutoEntity::Pointer androidAutoEntity;
 
 public slots:
     void open();
     void close();
     void start();
     void stop();
+    void onAndroidAutoQuit() override;
 
     QString getName();
 
 private:
-    void extractEndpointAddresses();
 };
 
 #endif  // AUTOAPP_ANDROIDAUTODEVICE_H

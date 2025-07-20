@@ -2,8 +2,21 @@
 
 #include <iostream>
 
-AndroidAutoDevice::AndroidAutoDevice(libusb_device *new_device, libusb_device_descriptor new_descriptor)
-    : category("ANDROID AUTO DEVICE"), device(new_device), descriptor(new_descriptor) {
+#include "f1x/aasdk/USB/AOAPDevice.hpp"
+
+AndroidAutoDevice::AndroidAutoDevice(
+    libusb_context *context,
+    libusb_device *new_device,
+    libusb_device_descriptor new_descriptor,
+    boost::asio::io_service &new_ioService,
+    f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
+    : category("ANDROID AUTO DEVICE"),
+      device(new_device),
+      descriptor(new_descriptor),
+      usbWrapper(f1x::aasdk::usb::USBWrapper(context)),
+      ioService(new_ioService),
+      androidAutoEntityFactory(new_androidAutoEntityFactory) {
+    open();
 }
 
 AndroidAutoDevice::~AndroidAutoDevice() {
@@ -25,10 +38,19 @@ void AndroidAutoDevice::close() {
 }
 
 void AndroidAutoDevice::start() {
-    //androidAutoEntity = new f1x::openauto::autoapp::service::AndroidAutoEntity(); // TODO
+    if (androidAutoEntity == nullptr)
+        return;
+
+    auto aoapDevice(f1x::aasdk::usb::AOAPDevice::create(usbWrapper, ioService, handle));
+    androidAutoEntity = androidAutoEntityFactory.create(std::move(aoapDevice));
+    androidAutoEntity->start(*this);
 }
 
 void AndroidAutoDevice::stop() {}
+
+void AndroidAutoDevice::onAndroidAutoQuit() {
+    qInfo() << "AndroidAutoQuit";
+}
 
 QString AndroidAutoDevice::getName() {
     int maxSize = 128;
@@ -39,38 +61,4 @@ QString AndroidAutoDevice::getName() {
 
     return QString(QByteArray(reinterpret_cast<char *>(manufacturer))) +
            QString(QByteArray(reinterpret_cast<char *>(product)));
-}
-
-void AndroidAutoDevice::extractEndpointAddresses() {
-    libusb_config_descriptor *config_descriptor;
-
-    if (libusb_get_config_descriptor(device, 0, &config_descriptor) != 0) {
-        cerror << "Failed to get AA device descriptor";
-        return;
-    }
-
-    if (config_descriptor->bNumInterfaces == 0) {
-        cerror << "Empty interface list";
-        return;
-    }
-
-    if (config_descriptor->interface[0].num_altsetting == 0) {
-        cerror << "Empty interface descriptor";
-        return;
-    }
-
-    interface = &(config_descriptor->interface[0].altsetting[0]);
-
-    if (interface->bNumEndpoints < 2) {
-        cerror << "Too few endpoints";
-        return;
-    }
-
-    if ((interface->endpoint[0].bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK) == LIBUSB_ENDPOINT_IN) {
-        inputAddress = interface->endpoint[0].bEndpointAddress;
-        outputAddress = interface->endpoint[1].bEndpointAddress;
-    } else {
-        inputAddress = interface->endpoint[1].bEndpointAddress;
-        outputAddress = interface->endpoint[0].bEndpointAddress;
-    }
 }

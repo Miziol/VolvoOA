@@ -1,12 +1,15 @@
 #ifndef AUTOAPP_ANDROIDAUTOSERVICE_H
 #define AUTOAPP_ANDROIDAUTOSERVICE_H
 
-#include <libusb.h>
+#include <libusb-1.0/libusb.h>
 
 #include <QObject>
 #include <QStandardItemModel>
 
+#include "../settingsManager.h"
 #include "../logging/loggingCategory.h"
+#include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
+#include "f1x/openauto/autoapp/Service/ServiceFactory.hpp"
 
 class AndroidAutoService : public QObject {
     Q_OBJECT
@@ -15,16 +18,21 @@ signals:
     void aaDevicesChanged();
 
 public:
-    AndroidAutoService();
+    AndroidAutoService(SettingsManager &new_settings);
     ~AndroidAutoService();
 
     Q_PROPERTY(QList<QObject *> aaDevices MEMBER AAdevices NOTIFY aaDevicesChanged);
 
 public slots:
-    void addDevice(libusb_device *device, libusb_device_descriptor descriptor);
+    void addDevice(libusb_context *context, libusb_device *device, libusb_device_descriptor descriptor);
 
 private:
     QLoggingCategory category;
+    SettingsManager &settingsManager;
+
+    boost::asio::io_service ioService;
+    f1x::openauto::autoapp::service::ServiceFactory *serviceFactory;
+    f1x::openauto::autoapp::service::AndroidAutoEntityFactory *androidAutoEntityFactory;
 
     QList<QObject *> AAdevices;
 };

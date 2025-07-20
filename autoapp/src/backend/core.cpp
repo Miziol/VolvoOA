@@ -1,20 +1,21 @@
 #include "core.h"
 
-#include <libusb.h>
+#include <libusb-1.0/libusb.h>
 
 #include <QGuiApplication>
 
 #include "androidAuto/androidAutoDevice.h"
 
-AppCore::AppCore(SettingsManager *new_settings)
+AppCore::AppCore(SettingsManager &new_settings)
     : category("GUI CORE"),
-      settings(new_settings) /*,
+      settings(new_settings),
+      androidAutoService(new_settings) /*,
        qmlStyle(settings)*/
 {
     qmlRootContext = qmlEngine.rootContext();
     qmlRootContext->setContextProperty("core", this);
     // qmlRootContext->setContextProperty("guiStyle", &qmlStyle);
-    qmlRootContext->setContextProperty("settingsManager", settings);
+    qmlRootContext->setContextProperty("settingsManager", &settings);
     qmlRootContext->setContextProperty("aaService", &androidAutoService);
 
     cinfo << "Base QML contexts set";

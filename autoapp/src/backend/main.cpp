@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
     // Create modules
-    AppCore appCore(&settings);
+    AppCore appCore(settings);
 
     QLoggingCategory category = QLoggingCategory("MAIN");
     cinfo << "App started";

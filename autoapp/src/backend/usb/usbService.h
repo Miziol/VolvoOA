@@ -14,7 +14,7 @@ class UsbService : public QObject {
     Q_OBJECT
 
 signals:
-    void newAndroidAutoDevice(libusb_device *device, libusb_device_descriptor descriptor);
+    void newAndroidAutoDevice(libusb_context *context, libusb_device *device, libusb_device_descriptor descriptor);
 
 private:
     static inline uint16_t VENDOR_GOOGLE_INC = 0x18D1;

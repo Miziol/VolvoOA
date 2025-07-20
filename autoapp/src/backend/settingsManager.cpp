@@ -43,6 +43,9 @@ void SettingsManager::setDefault(bool force) {
     setDefaultValue(force, LOGGER_RETENTION_KEY, LOGGER_RETENTION_VALUE);
     setDefaultValue(force, LOGGER_PATH_KEY, LOGGER_PATH_VALUE);
     setDefaultValue(force, LOGGER_STD_OUTPUT_LEVEL_KEY, LOGGER_STD_OUTPUT_LEVEL_VALUE);
+
+    setDefaultValue(force, GENERAL_SHOW_CLOCK_KEY, GENERAL_SHOW_CLOCK_VALUE);
+    setDefaultValue(force, GENERAL_LEFT_HAND_DRIVE_KEY, GENERAL_LEFT_HAND_DRIVE_VALUE);
 }
 
 void SettingsManager::setDefaultValue(bool force, QString key, QVariant value) {
