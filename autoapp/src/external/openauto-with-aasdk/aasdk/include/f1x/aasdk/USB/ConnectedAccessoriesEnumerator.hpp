@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <libusb.h>
+
 #include <boost/asio.hpp>
 #include <f1x/aasdk/USB/IUSBWrapper.hpp>
 #include <f1x/aasdk/USB/IAccessoryModeQueryChainFactory.hpp>
@@ -41,7 +43,7 @@ public:
 private:
     using std::enable_shared_from_this<ConnectedAccessoriesEnumerator>::shared_from_this;
     void queryNextDevice();
-    DeviceHandle getNextDeviceHandle();
+    libusb_device_handle * getNextDeviceHandle();
     void reset();
 
     IUSBWrapper& usbWrapper_;

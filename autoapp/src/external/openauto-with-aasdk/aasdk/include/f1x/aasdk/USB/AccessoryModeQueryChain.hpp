@@ -38,7 +38,7 @@ public:
                             boost::asio::io_service& ioService,
                             IAccessoryModeQueryFactory& queryFactory);
 
-    void start(DeviceHandle handle, Promise::Pointer promise) override;
+    void start(libusb_device_handle * handle, Promise::Pointer promise) override;
     void cancel() override;
     
 private:
@@ -58,7 +58,7 @@ private:
     IUSBWrapper& usbWrapper_;
     boost::asio::io_service::strand strand_;
     IAccessoryModeQueryFactory& queryFactory_;
-    DeviceHandle handle_;    
+    libusb_device_handle * handle_;
     Promise::Pointer promise_;
     IAccessoryModeQuery::Pointer activeQuery_;
 };

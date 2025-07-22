@@ -82,7 +82,7 @@ void ConnectedAccessoriesEnumerator::queryNextDevice()
         queryChain_ = queryChainFactory_.create();
         auto queryChainPromise = IAccessoryModeQueryChain::Promise::defer(strand_);
 
-        queryChainPromise->then([this, self = this->shared_from_this()](DeviceHandle) mutable {
+        queryChainPromise->then([this, self = this->shared_from_this()](libusb_device_handle *) mutable {
                 promise_->resolve(true);
                 this->reset();
             },
@@ -107,9 +107,9 @@ void ConnectedAccessoriesEnumerator::queryNextDevice()
     }
 }
 
-DeviceHandle ConnectedAccessoriesEnumerator::getNextDeviceHandle()
+libusb_device_handle * ConnectedAccessoriesEnumerator::getNextDeviceHandle()
 {
-    DeviceHandle handle;
+    libusb_device_handle * handle;
 
     while(actualDeviceIter_ != deviceListHandle_->end())
     {

@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <libusb.h>
+
 #include <unordered_map>
 #include <memory>
 #include <boost/asio.hpp>
@@ -36,14 +38,14 @@ class USBEndpoint: public IUSBEndpoint,
         boost::noncopyable
 {
 public:
-    USBEndpoint(IUSBWrapper& usbWrapper, boost::asio::io_service& ioService, DeviceHandle handle, uint8_t endpointAddress = 0x00);
+    USBEndpoint(IUSBWrapper& usbWrapper, boost::asio::io_service& ioService, libusb_device_handle *handle, uint8_t endpointAddress = 0x00);
 
     void controlTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) override;
     void bulkTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) override;
     void interruptTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) override;
     uint8_t getAddress() override;
     void cancelTransfers() override;
-    DeviceHandle getDeviceHandle() const override;
+    libusb_device_handle * getDeviceHandle() const override;
 
 private:
     typedef std::unordered_map<libusb_transfer*, Promise::Pointer> Transfers;
@@ -54,7 +56,7 @@ private:
 
     IUSBWrapper& usbWrapper_;
     boost::asio::io_service::strand strand_;
-    DeviceHandle handle_;
+    libusb_device_handle * handle_;
     uint8_t endpointAddress_;
     Transfers transfers_;
     std::shared_ptr<USBEndpoint> self_;

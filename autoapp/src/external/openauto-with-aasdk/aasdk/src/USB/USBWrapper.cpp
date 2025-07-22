@@ -31,25 +31,24 @@ USBWrapper::USBWrapper(libusb_context* usbContext)
 
 }
 
-int USBWrapper::releaseInterface(const DeviceHandle& dev_handle, int interface_number)
+int USBWrapper::releaseInterface(libusb_device_handle *dev_handle, int interface_number)
 {
-    return libusb_release_interface(dev_handle.get(), interface_number);
+    return libusb_release_interface(dev_handle, interface_number);
 }
 
-libusb_device* USBWrapper::getDevice(const DeviceHandle& dev_handle)
+libusb_device* USBWrapper::getDevice(libusb_device_handle *dev_handle)
 {
-    return libusb_get_device(dev_handle.get());
+    return libusb_get_device(dev_handle);
 }
 
-int USBWrapper::claimInterface(const DeviceHandle& dev_handle, int interface_number)
+int USBWrapper::claimInterface(libusb_device_handle *dev_handle, int interface_number)
 {
-    return libusb_claim_interface(dev_handle.get(), interface_number);
+    return libusb_claim_interface(dev_handle, interface_number);
 }
 
-DeviceHandle USBWrapper::openDeviceWithVidPid(uint16_t vendor_id, uint16_t product_id)
+libusb_device_handle *USBWrapper::openDeviceWithVidPid(uint16_t vendor_id, uint16_t product_id)
 {
-    auto raw_handle = libusb_open_device_with_vid_pid(usbContext_, vendor_id, product_id);
-    return raw_handle != nullptr ? DeviceHandle(raw_handle, &libusb_close) : DeviceHandle();
+    return libusb_open_device_with_vid_pid(usbContext_, vendor_id, product_id);
 }
 
 int USBWrapper::getConfigDescriptor(libusb_device *dev, uint8_t config_index, ConfigDescriptorHandle& config_descriptor_handle)
@@ -62,27 +61,27 @@ int USBWrapper::getConfigDescriptor(libusb_device *dev, uint8_t config_index, Co
 }
 
 void USBWrapper::fillBulkTransfer(libusb_transfer *transfer,
-    const DeviceHandle& dev_handle, unsigned char endpoint,
+    libusb_device_handle *dev_handle, unsigned char endpoint,
     unsigned char *buffer, int length, libusb_transfer_cb_fn callback,
     void *user_data, unsigned int timeout)
 {
-    libusb_fill_bulk_transfer(transfer, dev_handle.get(), endpoint, buffer, length, callback, user_data, timeout);
+    libusb_fill_bulk_transfer(transfer, dev_handle, endpoint, buffer, length, callback, user_data, timeout);
 }
 
 void USBWrapper::fillInterruptTransfer(libusb_transfer *transfer,
-    const DeviceHandle& dev_handle, unsigned char endpoint,
+    libusb_device_handle *dev_handle, unsigned char endpoint,
     unsigned char *buffer, int length, libusb_transfer_cb_fn callback,
     void *user_data, unsigned int timeout)
 {
-    libusb_fill_interrupt_transfer(transfer, dev_handle.get(), endpoint, buffer, length, callback, user_data, timeout);
+    libusb_fill_interrupt_transfer(transfer, dev_handle, endpoint, buffer, length, callback, user_data, timeout);
 }
 
 void USBWrapper::fillControlTransfer(
-    libusb_transfer *transfer, const DeviceHandle& dev_handle,
+    libusb_transfer *transfer, libusb_device_handle *dev_handle,
     unsigned char *buffer, libusb_transfer_cb_fn callback, void *user_data,
     unsigned int timeout)
 {
-    libusb_fill_control_transfer(transfer, dev_handle.get(), buffer, callback, user_data, timeout);
+    libusb_fill_control_transfer(transfer, dev_handle, buffer, callback, user_data, timeout);
 }
 
 int USBWrapper::submitTransfer(libusb_transfer *transfer)
@@ -127,13 +126,9 @@ ssize_t USBWrapper::getDeviceList(DeviceListHandle& handle)
     return result;
 }
 
-int USBWrapper::open(libusb_device *dev, DeviceHandle& dev_handle)
+int USBWrapper::open(libusb_device *dev, libusb_device_handle *dev_handle)
 {
-    libusb_device_handle* raw_handle;
-    auto result = libusb_open(dev, &raw_handle);
-
-    dev_handle = (result == 0 && raw_handle != nullptr) ? DeviceHandle(raw_handle, &libusb_close) : DeviceHandle();
-    return result;
+    return libusb_open(dev, &dev_handle);
 }
 
 void USBWrapper::fillControlSetup(unsigned char *buffer,

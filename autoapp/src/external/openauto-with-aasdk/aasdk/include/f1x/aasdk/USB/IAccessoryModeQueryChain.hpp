@@ -34,11 +34,11 @@ class IAccessoryModeQueryChain
 {
 public:
     typedef std::shared_ptr<IAccessoryModeQueryChain> Pointer;
-    typedef io::Promise<DeviceHandle> Promise;
+    typedef io::Promise<libusb_device_handle *> Promise;
 
     IAccessoryModeQueryChain() = default;
     virtual ~IAccessoryModeQueryChain() = default;
-    virtual void start(DeviceHandle handle, Promise::Pointer promise) = 0;
+    virtual void start(libusb_device_handle * handle, Promise::Pointer promise) = 0;
     virtual void cancel() = 0;
 };
 
