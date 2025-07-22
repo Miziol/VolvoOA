@@ -7,15 +7,14 @@
 AndroidAutoDevice::AndroidAutoDevice(
     libusb_context *context,
     libusb_device *new_device,
-    libusb_device_descriptor new_descriptor,
     boost::asio::io_service &new_ioService,
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
     : category("ANDROID AUTO DEVICE"),
       device(new_device),
-      descriptor(new_descriptor),
       usbWrapper(f1x::aasdk::usb::USBWrapper(context)),
       ioService(new_ioService),
-      androidAutoEntityFactory(new_androidAutoEntityFactory), androidAutoEntity(nullptr) {
+      androidAutoEntityFactory(new_androidAutoEntityFactory),
+      androidAutoEntity(nullptr) {
     open();
     start();
 }
@@ -55,15 +54,4 @@ void AndroidAutoDevice::stop() {}
 
 void AndroidAutoDevice::onAndroidAutoQuit() {
     qInfo() << "AndroidAutoQuit";
-}
-
-QString AndroidAutoDevice::getName() {
-    int maxSize = 128;
-    unsigned char manufacturer[maxSize];
-    unsigned char product[maxSize];
-    libusb_get_string_descriptor_ascii(handle, descriptor.iManufacturer, &manufacturer[0], maxSize);
-    libusb_get_string_descriptor_ascii(handle, descriptor.iProduct, &product[0], maxSize);
-
-    return QString(QByteArray(reinterpret_cast<char *>(manufacturer))) +
-           QString(QByteArray(reinterpret_cast<char *>(product)));
 }

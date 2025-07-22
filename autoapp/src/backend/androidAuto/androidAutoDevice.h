@@ -18,12 +18,9 @@
 class AndroidAutoDevice : public QObject, public f1x::openauto::autoapp::service::IAndroidAutoEntityEventHandler {
     Q_OBJECT
 
-    Q_PROPERTY(QString name READ getName CONSTANT)
-
 public:
     AndroidAutoDevice(libusb_context *context,
                       libusb_device *new_device,
-                      libusb_device_descriptor new_descriptor,
                       boost::asio::io_service &new_ioService,
                       f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
     ~AndroidAutoDevice();
@@ -37,7 +34,6 @@ private:
 
     libusb_device *device;
     libusb_device_handle *handle;
-    libusb_device_descriptor descriptor;  // TODO Raczej do usunięcia
     f1x::openauto::autoapp::service::IAndroidAutoEntity::Pointer androidAutoEntity;
 
 public slots:
@@ -46,8 +42,6 @@ public slots:
     void start();
     void stop();
     void onAndroidAutoQuit() override;
-
-    QString getName();
 
 private:
 };

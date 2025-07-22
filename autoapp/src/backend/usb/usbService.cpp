@@ -7,7 +7,7 @@ UsbService::UsbService() : category("USB SERVICE") {
 
     result = libusb_init_context(&usbContext, NULL, 0);
     if (result == LIBUSB_SUCCESS) {
-        cdebug << "LIBUSB context set";
+        cinfo << "LIBUSB context set";
     } else {
         cerror << "LIBUSB context error";
         return;
@@ -39,9 +39,24 @@ void UsbService::handleLibUsbEvents() {
     libusb_handle_events_timeout(usbContext, &libusbEventTimeout);
 }
 
-void UsbService::newDevice(libusb_device *device) {
-    qInfo() << device;
+void UsbService::startUSBWorkers(boost::asio::io_service& ioService, std::vector<std::thread>& threadPool)
+{
+    auto usbWorker = [&ioService, this]() {
+        timeval libusbEventTimeout{180, 0};
 
+        while(!ioService.stopped())
+        {
+            libusb_handle_events_timeout_completed(usbContext, &libusbEventTimeout, nullptr);
+        }
+    };
+
+    threadPool.emplace_back(usbWorker);
+    threadPool.emplace_back(usbWorker);
+    threadPool.emplace_back(usbWorker);
+    threadPool.emplace_back(usbWorker);
+}
+
+void UsbService::newDevice(libusb_device *device) {
     int result;
     libusb_device_descriptor deviceDescriptor;
 
@@ -54,7 +69,7 @@ void UsbService::newDevice(libusb_device *device) {
         PRODUCT_WITH_ANDROID_AUTO.contains(deviceDescriptor.idProduct)) {
         cinfo << "New device with AA inserted";
 
-        emit newAndroidAutoDevice(usbContext, device, deviceDescriptor);
+        emit newAndroidAutoDevice(usbContext, device);
     } else {
         UsbDevice *newDevice = new UsbDevice(this, device);
         devices.append(newDevice);

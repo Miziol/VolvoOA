@@ -5,9 +5,10 @@
 
 #include <QObject>
 #include <QStandardItemModel>
+#include <QVideoWidget>
 
-#include "../settingsManager.h"
 #include "../logging/loggingCategory.h"
+#include "../settingsManager.h"
 #include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
 #include "f1x/openauto/autoapp/Service/ServiceFactory.hpp"
 
@@ -18,19 +19,22 @@ signals:
     void aaDevicesChanged();
 
 public:
-    AndroidAutoService(SettingsManager &new_settings);
+    AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService);
     ~AndroidAutoService();
 
     Q_PROPERTY(QList<QObject *> aaDevices MEMBER AAdevices NOTIFY aaDevicesChanged);
 
 public slots:
-    void addDevice(libusb_context *context, libusb_device *device, libusb_device_descriptor descriptor);
+    void addDevice(libusb_context *context, libusb_device *device);
+
+    void startIOServiceWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
+    void createFactories(QVideoWidget *widget);
 
 private:
     QLoggingCategory category;
     SettingsManager &settingsManager;
 
-    boost::asio::io_service ioService;
+    boost::asio::io_service &ioService;
     f1x::openauto::autoapp::service::ServiceFactory *serviceFactory;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory *androidAutoEntityFactory;
 

@@ -6,6 +6,8 @@
 
 #include <QObject>
 #include <QTimer>
+#include <boost/asio/io_service.hpp>
+#include <thread>
 
 #include "../logging/loggingCategory.h"
 #include "../usb/usbDevice.h"
@@ -14,7 +16,7 @@ class UsbService : public QObject {
     Q_OBJECT
 
 signals:
-    void newAndroidAutoDevice(libusb_context *context, libusb_device *device, libusb_device_descriptor descriptor);
+    void newAndroidAutoDevice(libusb_context *context, libusb_device *device);
 
 private:
     static inline uint16_t VENDOR_GOOGLE_INC = 0x18D1;
@@ -26,6 +28,7 @@ public:
 
 public slots:
     void handleLibUsbEvents();
+    void startUSBWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
 
     void newDevice(libusb_device *device);
     void removeDevice(libusb_device *device);

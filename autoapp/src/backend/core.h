@@ -1,7 +1,6 @@
 #ifndef AUTOAPP_GUICORE_H
 #define AUTOAPP_GUICORE_H
 
-#include <QObject>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
@@ -10,6 +9,8 @@
 #include "logging/loggingCategory.h"
 #include "settingsManager.h"
 #include "usb/usbService.h"
+
+Q_DECLARE_OPAQUE_POINTER(libusb_context*)
 
 class AppCore : public QObject {
     Q_OBJECT
@@ -30,6 +31,9 @@ private:
     QQmlContext *qmlRootContext;
     QObject *qmlRootObject;
 
+    boost::asio::io_service ioService;
+    boost::asio::io_service::work work;
+    std::vector<std::thread> threadPool;
     AndroidAutoService androidAutoService;
     UsbService usbService;
 };
