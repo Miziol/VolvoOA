@@ -20,25 +20,21 @@
 
 #include <boost/asio.hpp>
 #include <f1x/aasdk/Transport/ITransport.hpp>
-#include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
 #include <f1x/openauto/autoapp/Service/IAndroidAutoEntityFactory.hpp>
 #include <f1x/openauto/autoapp/Service/IServiceFactory.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+#include "../../../../backend/settingsManager.h"
 
-class AndroidAutoEntityFactory: public IAndroidAutoEntityFactory
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
+
+class AndroidAutoEntityFactory : public IAndroidAutoEntityFactory {
 public:
-    AndroidAutoEntityFactory(boost::asio::io_service& ioService,
-                             configuration::IConfiguration::Pointer configuration,
-                             IServiceFactory& serviceFactory);
+    AndroidAutoEntityFactory(boost::asio::io_service &ioService,
+                             SettingsManager &configuration,
+                             IServiceFactory &serviceFactory);
 
     IAndroidAutoEntity::Pointer create(aasdk::usb::IAOAPDevice::Pointer aoapDevice) override;
     IAndroidAutoEntity::Pointer create(aasdk::tcp::ITCPEndpoint::Pointer tcpEndpoint) override;
@@ -46,12 +42,12 @@ public:
 private:
     IAndroidAutoEntity::Pointer create(aasdk::transport::ITransport::Pointer transport);
 
-    boost::asio::io_service& ioService_;
-    configuration::IConfiguration::Pointer configuration_;
-    IServiceFactory& serviceFactory_;
+    boost::asio::io_service &ioService_;
+    SettingsManager &configuration_;
+    IServiceFactory &serviceFactory_;
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

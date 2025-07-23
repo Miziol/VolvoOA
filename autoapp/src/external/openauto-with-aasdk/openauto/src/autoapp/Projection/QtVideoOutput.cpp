@@ -16,9 +16,10 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QApplication>
-#include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
+#include <../../../../backend/settingsManager.h>
+#include <QGuiApplication>
 #include <f1x/openauto/Common/Log.hpp>
+#include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
 
 namespace f1x
 {
@@ -29,8 +30,8 @@ namespace autoapp
 namespace projection
 {
 
-QtVideoOutput::QtVideoOutput(configuration::IConfiguration::Pointer configuration)
-    : VideoOutput(std::move(configuration))
+QtVideoOutput::QtVideoOutput(SettingsManager &configuration)
+    : VideoOutput(configuration)
 {
     this->moveToThread(QApplication::instance()->thread());
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);

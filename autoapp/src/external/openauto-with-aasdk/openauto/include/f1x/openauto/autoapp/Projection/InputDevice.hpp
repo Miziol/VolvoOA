@@ -21,7 +21,6 @@
 #include <QObject>
 #include <QKeyEvent>
 #include <f1x/openauto/autoapp/Projection/IInputDevice.hpp>
-#include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
 
 namespace f1x
 {
