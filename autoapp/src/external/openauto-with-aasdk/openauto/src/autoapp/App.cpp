@@ -95,7 +95,7 @@ void App::stop()
     });
 }
 
-void App::aoapDeviceHandler(aasdk::usb::DeviceHandle deviceHandle)
+void App::aoapDeviceHandler(libusb_device_handle *deviceHandle)
 {
     OPENAUTO_LOG(info) << "[App] Device connected.";
 
