@@ -19,21 +19,16 @@
 #pragma once
 
 #include <QIODevice>
-#include <mutex>
 #include <boost/circular_buffer.hpp>
 #include <f1x/aasdk/Common/Data.hpp>
+#include <mutex>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-class SequentialBuffer: public QIODevice
-{
+class SequentialBuffer : public QIODevice {
 public:
     SequentialBuffer();
     bool isSequential() const override;
@@ -55,7 +50,7 @@ private:
     mutable std::mutex mutex_;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

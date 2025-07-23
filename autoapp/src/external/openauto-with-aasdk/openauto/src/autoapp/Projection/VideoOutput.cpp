@@ -28,19 +28,19 @@ namespace projection {
 VideoOutput::VideoOutput(SettingsManager &configuration) : configuration_(configuration) {}
 
 aasdk::proto::enums::VideoFPS::Enum VideoOutput::getVideoFPS() const {
-    return configuration_->getVideoFPS();
+    return configuration_.getVideoFPS();
 }
 
 aasdk::proto::enums::VideoResolution::Enum VideoOutput::getVideoResolution() const {
-    return configuration_->getVideoResolution();
+    return configuration_.getVideoResolution();
 }
 
 size_t VideoOutput::getScreenDPI() const {
-    return configuration_->getScreenDPI();
+    return configuration_.getScreenDPI();
 }
 
 QRect VideoOutput::getVideoMargins() const {
-    return configuration_->getVideoMargins();
+    return configuration_.getVideoMargins();
 }
 
 }  // namespace projection

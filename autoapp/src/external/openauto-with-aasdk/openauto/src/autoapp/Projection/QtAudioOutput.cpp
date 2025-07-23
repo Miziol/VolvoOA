@@ -17,28 +17,24 @@
 */
 
 #include <QGuiApplication>
+#include <QDebug>
 #include <f1x/openauto/autoapp/Projection/QtAudioOutput.hpp>
-#include <f1x/openauto/Common/Log.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
 QtAudioOutput::QtAudioOutput(uint32_t channelCount, uint32_t sampleSize, uint32_t sampleRate)
-    : playbackStarted_(false)
-{
+    : playbackStarted_(false) {
+    /*
     audioFormat_.setChannelCount(channelCount);
     audioFormat_.setSampleRate(sampleRate);
     audioFormat_.setSampleSize(sampleSize);
     audioFormat_.setCodec("audio/pcm");
     audioFormat_.setByteOrder(QAudioFormat::LittleEndian);
     audioFormat_.setSampleType(QAudioFormat::SignedInt);
-
+*/  // TODO migrate Qt6
     this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtAudioOutput::startPlayback, this, &QtAudioOutput::onStartPlayback);
     connect(this, &QtAudioOutput::suspendPlayback, this, &QtAudioOutput::onSuspendPlayback);
@@ -47,80 +43,66 @@ QtAudioOutput::QtAudioOutput(uint32_t channelCount, uint32_t sampleSize, uint32_
     QMetaObject::invokeMethod(this, "createAudioOutput", Qt::BlockingQueuedConnection);
 }
 
-void QtAudioOutput::createAudioOutput()
-{
-    OPENAUTO_LOG(debug) << "[QtAudioOutput] create.";
-    audioOutput_ = std::make_unique<QAudioOutput>(QAudioDeviceInfo::defaultOutputDevice(), audioFormat_);
+void QtAudioOutput::createAudioOutput() {
+    qDebug() << "[QtAudioOutput] create.";
+    // audioOutput_ = std::make_unique<QAudioOutput>(QAudioDeviceInfo::defaultOutputDevice(), audioFormat_); // TODO
+    // migrate Qt6
 }
 
-bool QtAudioOutput::open()
-{
+bool QtAudioOutput::open() {
     return audioBuffer_.open(QIODevice::ReadWrite);
 }
 
-void QtAudioOutput::write(aasdk::messenger::Timestamp::ValueType, const aasdk::common::DataConstBuffer& buffer)
-{
-    audioBuffer_.write(reinterpret_cast<const char*>(buffer.cdata), buffer.size);
+void QtAudioOutput::write(aasdk::messenger::Timestamp::ValueType, const aasdk::common::DataConstBuffer &buffer) {
+    audioBuffer_.write(reinterpret_cast<const char *>(buffer.cdata), buffer.size);
 }
 
-void QtAudioOutput::start()
-{
+void QtAudioOutput::start() {
     emit startPlayback();
 }
 
-void QtAudioOutput::stop()
-{
+void QtAudioOutput::stop() {
     emit stopPlayback();
 }
 
-void QtAudioOutput::suspend()
-{
+void QtAudioOutput::suspend() {
     emit suspendPlayback();
 }
 
-uint32_t QtAudioOutput::getSampleSize() const
-{
-    return audioFormat_.sampleSize();
+uint32_t QtAudioOutput::getSampleSize() const {
+    return 2056;
+    // return audioFormat_.sampleSize(); // TODO migrate Qt6
 }
 
-uint32_t QtAudioOutput::getChannelCount() const
-{
+uint32_t QtAudioOutput::getChannelCount() const {
     return audioFormat_.channelCount();
 }
 
-uint32_t QtAudioOutput::getSampleRate() const
-{
+uint32_t QtAudioOutput::getSampleRate() const {
     return audioFormat_.sampleRate();
 }
 
-void QtAudioOutput::onStartPlayback()
-{
-    if(!playbackStarted_)
-    {
-        audioOutput_->start(&audioBuffer_);
+void QtAudioOutput::onStartPlayback() {
+    if (!playbackStarted_) {
+        // audioOutput_->start(&audioBuffer_); // TODO migrate Qt6
         playbackStarted_ = true;
-    }
-    else
-    {
-        audioOutput_->resume();
+    } else {
+        // audioOutput_->resume(); // TODO migrate Qt6
     }
 }
 
-void QtAudioOutput::onSuspendPlayback()
-{
-    audioOutput_->suspend();
+void QtAudioOutput::onSuspendPlayback() {
+    // audioOutput_->suspend(); // TODO migrate Qt6
 }
 
-void QtAudioOutput::onStopPlayback()
-{
-    if(playbackStarted_)
-    {
-        audioOutput_->stop();
+void QtAudioOutput::onStopPlayback() {
+    if (playbackStarted_) {
+        // audioOutput_->stop(); // TODO migrate Qt6
         playbackStarted_ = false;
     }
 }
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

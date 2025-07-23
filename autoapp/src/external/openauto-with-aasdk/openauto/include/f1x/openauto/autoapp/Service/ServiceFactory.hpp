@@ -29,7 +29,7 @@ namespace service {
 
 class ServiceFactory : public IServiceFactory {
 public:
-    ServiceFactory(boost::asio::io_service &ioService, configuration::IConfiguration::Pointer configuration);
+    ServiceFactory(boost::asio::io_service &ioService, SettingsManager &configuration);
     ServiceList create(aasdk::messenger::IMessenger::Pointer messenger) override;
 
 private:

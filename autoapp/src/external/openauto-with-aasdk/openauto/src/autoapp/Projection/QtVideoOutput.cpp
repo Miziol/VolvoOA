@@ -17,22 +17,17 @@
 */
 
 #include <../../../../backend/settingsManager.h>
+
 #include <QGuiApplication>
-#include <f1x/openauto/Common/Log.hpp>
+#include <QDebug>
 #include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-QtVideoOutput::QtVideoOutput(SettingsManager &configuration)
-    : VideoOutput(configuration)
-{
+QtVideoOutput::QtVideoOutput(SettingsManager &configuration) : VideoOutput(configuration) {
     this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
@@ -40,37 +35,30 @@ QtVideoOutput::QtVideoOutput(SettingsManager &configuration)
     QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
 }
 
-void QtVideoOutput::createVideoOutput()
-{
-    OPENAUTO_LOG(debug) << "[QtVideoOutput] create.";
+void QtVideoOutput::createVideoOutput() {
+    qDebug() << "[QtVideoOutput] create.";
     videoWidget_ = std::make_unique<QVideoWidget>();
-    mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
+    // mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback); // TODO migrate Qt6
 }
 
-
-bool QtVideoOutput::open()
-{
+bool QtVideoOutput::open() {
     return videoBuffer_.open(QIODevice::ReadWrite);
 }
 
-bool QtVideoOutput::init()
-{
+bool QtVideoOutput::init() {
     emit startPlayback();
     return true;
 }
 
-void QtVideoOutput::stop()
-{
+void QtVideoOutput::stop() {
     emit stopPlayback();
 }
 
-void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer& buffer)
-{
-    videoBuffer_.write(reinterpret_cast<const char*>(buffer.cdata), buffer.size);
+void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer &buffer) {
+    videoBuffer_.write(reinterpret_cast<const char *>(buffer.cdata), buffer.size);
 }
 
-void QtVideoOutput::onStartPlayback()
-{
+void QtVideoOutput::onStartPlayback() {
     videoWidget_->setAspectRatioMode(Qt::IgnoreAspectRatio);
     videoWidget_->setFocus();
     videoWidget_->setWindowFlags(Qt::WindowStaysOnTopHint);
@@ -78,17 +66,16 @@ void QtVideoOutput::onStartPlayback()
     videoWidget_->show();
 
     mediaPlayer_->setVideoOutput(videoWidget_.get());
-    mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_);
+    // mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_); // TODO migrate Qt6
     mediaPlayer_->play();
 }
 
-void QtVideoOutput::onStopPlayback()
-{
+void QtVideoOutput::onStopPlayback() {
     videoWidget_->hide();
     mediaPlayer_->stop();
 }
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

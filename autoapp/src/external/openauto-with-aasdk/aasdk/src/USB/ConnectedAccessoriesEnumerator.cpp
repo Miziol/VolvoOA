@@ -18,44 +18,29 @@
 
 #include <f1x/aasdk/USB/ConnectedAccessoriesEnumerator.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-ConnectedAccessoriesEnumerator::ConnectedAccessoriesEnumerator(IUSBWrapper& usbWrapper, boost::asio::io_service& ioService, IAccessoryModeQueryChainFactory& queryChainFactory)
-    : usbWrapper_(usbWrapper)
-    , strand_(ioService)
-    , queryChainFactory_(queryChainFactory)
-{
+ConnectedAccessoriesEnumerator::ConnectedAccessoriesEnumerator(IUSBWrapper &usbWrapper,
+                                                               boost::asio::io_service &ioService,
+                                                               IAccessoryModeQueryChainFactory &queryChainFactory)
+    : usbWrapper_(usbWrapper), strand_(ioService), queryChainFactory_(queryChainFactory) {}
 
-}
-
-void ConnectedAccessoriesEnumerator::enumerate(Promise::Pointer promise)
-{
+void ConnectedAccessoriesEnumerator::enumerate(Promise::Pointer promise) {
     strand_.dispatch([this, self = this->shared_from_this(), promise = std::move(promise)]() mutable {
-        if(promise_ != nullptr)
-        {
+        if (promise_ != nullptr) {
             promise->reject(error::Error(error::ErrorCode::OPERATION_IN_PROGRESS));
-        }
-        else
-        {
+        } else {
             promise_ = std::move(promise);
 
             auto result = usbWrapper_.getDeviceList(deviceListHandle_);
 
-            if(result < 0)
-            {
+            if (result < 0) {
                 promise_->reject(error::Error(error::ErrorCode::USB_LIST_DEVICES));
-            }
-            else if(deviceListHandle_->empty())
-            {
+            } else if (deviceListHandle_->empty()) {
                 promise_->resolve(false);
-            }
-            else
-            {
+            } else {
                 actualDeviceIter_ = deviceListHandle_->begin();
                 this->queryNextDevice();
             }
@@ -63,61 +48,50 @@ void ConnectedAccessoriesEnumerator::enumerate(Promise::Pointer promise)
     });
 }
 
-void ConnectedAccessoriesEnumerator::cancel()
-{
+void ConnectedAccessoriesEnumerator::cancel() {
     strand_.dispatch([this, self = this->shared_from_this()]() mutable {
-        if(queryChain_ != nullptr)
-        {
+        if (queryChain_ != nullptr) {
             queryChain_->cancel();
         }
     });
 }
 
-void ConnectedAccessoriesEnumerator::queryNextDevice()
-{
+void ConnectedAccessoriesEnumerator::queryNextDevice() {
     auto deviceHandle = this->getNextDeviceHandle();
 
-    if(deviceHandle != nullptr)
-    {
+    if (deviceHandle != nullptr) {
         queryChain_ = queryChainFactory_.create();
         auto queryChainPromise = IAccessoryModeQueryChain::Promise::defer(strand_);
 
-        queryChainPromise->then([this, self = this->shared_from_this()](libusb_device_handle *) mutable {
+        queryChainPromise->then(
+            [this, self = this->shared_from_this()](libusb_device_handle *) mutable {
                 promise_->resolve(true);
                 this->reset();
             },
-            [this, self = this->shared_from_this()](const error::Error& e) mutable {
-                if(e != error::ErrorCode::OPERATION_ABORTED)
-                {
+            [this, self = this->shared_from_this()](const error::Error &e) mutable {
+                if (e != error::ErrorCode::OPERATION_ABORTED) {
                     this->queryNextDevice();
-                }
-                else
-                {
+                } else {
                     promise_->reject(e);
                     this->reset();
                 }
             });
 
         queryChain_->start(std::move(deviceHandle), std::move(queryChainPromise));
-    }
-    else if(actualDeviceIter_ == deviceListHandle_->end())
-    {
+    } else if (actualDeviceIter_ == deviceListHandle_->end()) {
         promise_->resolve(false);
         this->reset();
     }
 }
 
-libusb_device_handle * ConnectedAccessoriesEnumerator::getNextDeviceHandle()
-{
-    libusb_device_handle * handle;
+libusb_device_handle *ConnectedAccessoriesEnumerator::getNextDeviceHandle() {
+    libusb_device_handle *handle;
 
-    while(actualDeviceIter_ != deviceListHandle_->end())
-    {
+    while (actualDeviceIter_ != deviceListHandle_->end()) {
         auto openResult = usbWrapper_.open(*actualDeviceIter_, handle);
         ++actualDeviceIter_;
 
-        if(openResult == 0)
-        {
+        if (openResult == 0) {
             break;
         }
     }
@@ -125,14 +99,13 @@ libusb_device_handle * ConnectedAccessoriesEnumerator::getNextDeviceHandle()
     return handle;
 }
 
-void ConnectedAccessoriesEnumerator::reset()
-{
+void ConnectedAccessoriesEnumerator::reset() {
     queryChain_.reset();
     deviceListHandle_.reset();
     actualDeviceIter_ = DeviceList::iterator();
     promise_.reset();
 }
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x
