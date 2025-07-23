@@ -16,7 +16,7 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QApplication>
+#include <QGuiApplication>
 #include <f1x/openauto/autoapp/Projection/QtAudioOutput.hpp>
 #include <f1x/openauto/Common/Log.hpp>
 
@@ -39,7 +39,7 @@ QtAudioOutput::QtAudioOutput(uint32_t channelCount, uint32_t sampleSize, uint32_
     audioFormat_.setByteOrder(QAudioFormat::LittleEndian);
     audioFormat_.setSampleType(QAudioFormat::SignedInt);
 
-    this->moveToThread(QApplication::instance()->thread());
+    this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtAudioOutput::startPlayback, this, &QtAudioOutput::onStartPlayback);
     connect(this, &QtAudioOutput::suspendPlayback, this, &QtAudioOutput::onSuspendPlayback);
     connect(this, &QtAudioOutput::stopPlayback, this, &QtAudioOutput::onStopPlayback);

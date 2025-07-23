@@ -33,7 +33,7 @@ namespace projection
 QtVideoOutput::QtVideoOutput(SettingsManager &configuration)
     : VideoOutput(configuration)
 {
-    this->moveToThread(QApplication::instance()->thread());
+    this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 

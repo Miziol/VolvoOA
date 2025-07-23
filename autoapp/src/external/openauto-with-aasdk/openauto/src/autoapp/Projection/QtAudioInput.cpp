@@ -16,7 +16,7 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QApplication>
+#include <QGuiApplication>
 #include <f1x/openauto/autoapp/Projection/QtAudioInput.hpp>
 #include <f1x/openauto/Common/Log.hpp>
 
@@ -41,7 +41,7 @@ QtAudioInput::QtAudioInput(uint32_t channelCount, uint32_t sampleSize, uint32_t 
     audioFormat_.setByteOrder(QAudioFormat::LittleEndian);
     audioFormat_.setSampleType(QAudioFormat::SignedInt);
 
-    this->moveToThread(QApplication::instance()->thread());
+    this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtAudioInput::startRecording, this, &QtAudioInput::onStartRecording, Qt::QueuedConnection);
     connect(this, &QtAudioInput::stopRecording, this, &QtAudioInput::onStopRecording, Qt::QueuedConnection);
     QMetaObject::invokeMethod(this, "createAudioInput", Qt::BlockingQueuedConnection);

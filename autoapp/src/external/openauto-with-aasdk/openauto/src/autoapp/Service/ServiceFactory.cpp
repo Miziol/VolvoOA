@@ -16,7 +16,7 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QApplication>
+#include <QGuiApplication>
 #include <QScreen>
 #include <f1x/aasdk/Channel/AV/MediaAudioServiceChannel.hpp>
 #include <f1x/aasdk/Channel/AV/SpeechAudioServiceChannel.hpp>
@@ -112,7 +112,7 @@ IService::Pointer ServiceFactory::createInputService(aasdk::messenger::IMessenge
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect screenGeometry = screen == nullptr ? QRect(0, 0, 1, 1) : screen->geometry();
     projection::IInputDevice::Pointer inputDevice(std::make_shared<projection::InputDevice>(
-        *QApplication::instance(), configuration_, std::move(screenGeometry), std::move(videoGeometry)));
+        *QGuiApplication::instance(), configuration_, std::move(screenGeometry), std::move(videoGeometry)));
 
     return std::make_shared<InputService>(ioService_, messenger, std::move(inputDevice));
 }
