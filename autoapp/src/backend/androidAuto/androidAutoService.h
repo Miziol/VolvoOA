@@ -5,7 +5,6 @@
 
 #include <QObject>
 #include <QStandardItemModel>
-#include <QVideoWidget>
 
 #include "../logging/loggingCategory.h"
 #include "../settingsManager.h"
@@ -28,7 +27,7 @@ public slots:
     void addDevice(libusb_context *context, libusb_device *device);
 
     void startIOServiceWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
-    void createFactories(QVideoWidget *widget);
+    void createFactories(QObject *qmlRootObject);
 
 private:
     QLoggingCategory category;

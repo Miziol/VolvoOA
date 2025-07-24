@@ -3,7 +3,6 @@
 #include <libusb-1.0/libusb.h>
 
 #include <QGuiApplication>
-#include <QVideoWidget>
 
 #include "androidAuto/androidAutoDevice.h"
 
@@ -29,15 +28,14 @@ AppCore::AppCore(SettingsManager &new_settings)
 
     usbService.startUSBWorkers(ioService, threadPool);
     androidAutoService.startIOServiceWorkers(ioService, threadPool);
-    androidAutoService.createFactories(qmlRootObject->findChild<QVideoWidget *>("aaVideoOutput"));
+    androidAutoService.createFactories(qmlRootObject);
 
     cinfo << "Workers and factories created";
 
     qRegisterMetaType<libusb_context *>("libusb_context *");
     qRegisterMetaType<libusb_device *>("libusb_device *");
 
-    connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService,
-            &AndroidAutoService::addDevice);
+    connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addDevice);
     // qmlStyle.changeTextSize(GuiStyle::textSizeType::LARGE);
     // qmlStyle.changeDarkLightMode();
 }

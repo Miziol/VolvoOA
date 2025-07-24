@@ -25,9 +25,9 @@ void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioServic
     threadPool.emplace_back(ioServiceWorker);
 }
 
-void AndroidAutoService::createFactories(QVideoWidget *widget) {
+void AndroidAutoService::createFactories(QObject *qmlRootObject) {
     serviceFactory = new f1x::openauto::autoapp::service::ServiceFactory(
-        ioService, settingsManager);  // TODO  connect GUI to external backend
+        ioService, settingsManager, qmlRootObject);  // TODO  connect GUI to external backend
     androidAutoEntityFactory =
         new f1x::openauto::autoapp::service::AndroidAutoEntityFactory(ioService, settingsManager, *serviceFactory);
 }

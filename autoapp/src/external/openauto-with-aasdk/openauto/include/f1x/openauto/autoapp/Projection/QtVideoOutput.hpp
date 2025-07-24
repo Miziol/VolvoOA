@@ -19,7 +19,7 @@
 #pragma once
 
 #include <QMediaPlayer>
-#include <QVideoWidget>
+#include <QVideoSink>
 #include <boost/noncopyable.hpp>
 #include <f1x/openauto/autoapp/Projection/SequentialBuffer.hpp>
 #include <f1x/openauto/autoapp/Projection/VideoOutput.hpp>
@@ -33,7 +33,7 @@ class QtVideoOutput : public QObject, public VideoOutput, boost::noncopyable {
     Q_OBJECT
 
 public:
-    QtVideoOutput(SettingsManager &configuration);
+    QtVideoOutput(SettingsManager &configuration, QObject *qmlRootObject);
     bool open() override;
     bool init() override;
     void write(uint64_t timestamp, const aasdk::common::DataConstBuffer &buffer) override;
@@ -44,14 +44,13 @@ signals:
     void stopPlayback();
 
 protected slots:
-    void createVideoOutput();
     void onStartPlayback();
     void onStopPlayback();
 
 private:
     SequentialBuffer videoBuffer_;
-    std::unique_ptr<QVideoWidget> videoWidget_;
-    std::unique_ptr<QMediaPlayer> mediaPlayer_;
+    QObject *qmlRootObject;
+    QMediaPlayer mediaPlayer;
 };
 
 }  // namespace projection

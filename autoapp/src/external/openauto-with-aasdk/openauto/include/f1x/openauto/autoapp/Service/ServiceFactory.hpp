@@ -29,7 +29,7 @@ namespace service {
 
 class ServiceFactory : public IServiceFactory {
 public:
-    ServiceFactory(boost::asio::io_service &ioService, SettingsManager &configuration);
+    ServiceFactory(boost::asio::io_service &ioService, SettingsManager &configuration, QObject *new_qmlRootObject);
     ServiceList create(aasdk::messenger::IMessenger::Pointer messenger) override;
 
 private:
@@ -40,6 +40,7 @@ private:
 
     boost::asio::io_service &ioService_;
     SettingsManager &configuration_;
+    QObject *qmlRootObject;
 };
 
 }  // namespace service

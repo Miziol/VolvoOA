@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(android_auto VERSION 1.0 LANGUAGES CXX)
 
-# AASDK
+#AASDK
 
 set(AASDK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/external/openauto-with-aasdk/aasdk/include")
 set(AASDK_LIBRARIES "${CMAKE_SOURCE_DIR}/src/external/openauto-with-aasdk/aasdk/lib/libaasdk.so")
@@ -11,7 +11,7 @@ set(AASDK_PROTO_LIBRARIES "${CMAKE_SOURCE_DIR}/src/external/openauto-with-aasdk/
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/external/openauto-with-aasdk/aasdk)
 
-# AUTOAPP
+#AUTOAPP
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -50,7 +50,6 @@ target_link_libraries(autoapp PRIVATE
     Qt6::Multimedia
     Qt6::Network
     Qt6::Qml
-    Qt6::MultimediaWidgets # QApplication and QVideoWidget
     PkgConfig::LibUSB
     ${AASDK_PROTO_LIBRARIES}
     ${AASDK_LIBRARIES}

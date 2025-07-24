@@ -27,19 +27,15 @@ namespace openauto {
 namespace autoapp {
 namespace projection {
 
-QtVideoOutput::QtVideoOutput(SettingsManager &configuration) : VideoOutput(configuration) {
+QtVideoOutput::QtVideoOutput(SettingsManager &configuration, QObject *new_qmlRootObject)
+    : VideoOutput(configuration), qmlRootObject(new_qmlRootObject) {
     this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 
-    createVideoOutput();  // TODO remove ?
-    // QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
-}
-
-void QtVideoOutput::createVideoOutput() {
     qDebug() << "[QtVideoOutput] create.";
-    videoWidget_ = std::make_unique<QVideoWidget>();
-    // mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback); // TODO migrate Qt6
+    mediaPlayer.setSourceDevice(&videoBuffer_);
+    mediaPlayer.setVideoOutput(qmlRootObject->findChild<QObject *>("aaVideoOutput"));
 }
 
 bool QtVideoOutput::open() {
@@ -60,20 +56,11 @@ void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer &buffer
 }
 
 void QtVideoOutput::onStartPlayback() {
-    videoWidget_->setAspectRatioMode(Qt::IgnoreAspectRatio);
-    videoWidget_->setFocus();
-    videoWidget_->setWindowFlags(Qt::WindowStaysOnTopHint);
-    videoWidget_->setFullScreen(true);
-    videoWidget_->show();
-
-    mediaPlayer_->setVideoOutput(videoWidget_.get());
-    // mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_); // TODO migrate Qt6
-    mediaPlayer_->play();
+    mediaPlayer.play();
 }
 
 void QtVideoOutput::onStopPlayback() {
-    videoWidget_->hide();
-    mediaPlayer_->stop();
+    mediaPlayer.stop();
 }
 
 }  // namespace projection

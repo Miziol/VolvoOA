@@ -46,8 +46,10 @@ namespace openauto {
 namespace autoapp {
 namespace service {
 
-ServiceFactory::ServiceFactory(boost::asio::io_service &ioService, SettingsManager &configuration)
-    : ioService_(ioService), configuration_(configuration) {}
+ServiceFactory::ServiceFactory(boost::asio::io_service &ioService,
+                               SettingsManager &configuration,
+                               QObject *new_qmlRootObject)
+    : ioService_(ioService), configuration_(configuration), qmlRootObject(new_qmlRootObject) {}
 
 ServiceList ServiceFactory::create(aasdk::messenger::IMessenger::Pointer messenger) {
     ServiceList serviceList;
@@ -65,7 +67,7 @@ ServiceList ServiceFactory::create(aasdk::messenger::IMessenger::Pointer messeng
 }
 
 IService::Pointer ServiceFactory::createVideoService(aasdk::messenger::IMessenger::Pointer messenger) {
-    projection::IVideoOutput::Pointer videoOutput(new projection::QtVideoOutput(configuration_),
+    projection::IVideoOutput::Pointer videoOutput(new projection::QtVideoOutput(configuration_, qmlRootObject),
                                                   std::bind(&QObject::deleteLater, std::placeholders::_1));
 
     return std::make_shared<VideoService>(ioService_, messenger, std::move(videoOutput));

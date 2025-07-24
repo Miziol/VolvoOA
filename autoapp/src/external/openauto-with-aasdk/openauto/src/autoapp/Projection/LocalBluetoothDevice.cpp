@@ -16,8 +16,8 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QApplication>
 #include <QDebug>
+#include <QGuiApplication>
 #include <f1x/openauto/autoapp/Projection/LocalBluetoothDevice.hpp>
 
 namespace f1x {
@@ -28,7 +28,7 @@ namespace projection {
 LocalBluetoothDevice::LocalBluetoothDevice() {
     qRegisterMetaType<IBluetoothDevice::PairingPromise::Pointer>("PairingPromise::Pointer");
 
-    this->moveToThread(QApplication::instance()->thread());
+    this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &LocalBluetoothDevice::startPairing, this, &LocalBluetoothDevice::onStartPairing,
             Qt::QueuedConnection);
     createBluetoothLocalDevice();  // TODO remove ?
