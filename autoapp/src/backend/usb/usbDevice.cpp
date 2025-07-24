@@ -1,7 +1,6 @@
 #include "usbDevice.h"
 
-UsbDevice::UsbDevice(QObject *new_parent, libusb_device *new_device)
-    : QObject(new_parent), category("USB DEVICE"), device(new_device), m_isOpen(false) {}
+UsbDevice::UsbDevice(libusb_device *new_device) : category("USB DEVICE"), device(new_device), m_isOpen(false) {}
 
 UsbDevice::~UsbDevice() {
     close();

@@ -31,6 +31,10 @@ UsbService::UsbService() : category("USB SERVICE") {
 }
 
 UsbService::~UsbService() {
+    while (devices.size() > 0) {
+        delete devices[0];
+    }
+
     libusb_hotplug_deregister_callback(usbContext, callbackHandler);
     libusb_exit(usbContext);
 }
@@ -39,13 +43,11 @@ void UsbService::handleLibUsbEvents() {
     libusb_handle_events_timeout(usbContext, &libusbEventTimeout);
 }
 
-void UsbService::startUSBWorkers(boost::asio::io_service& ioService, std::vector<std::thread>& threadPool)
-{
+void UsbService::startUSBWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool) {
     auto usbWorker = [&ioService, this]() {
         timeval libusbEventTimeout{180, 0};
 
-        while(!ioService.stopped())
-        {
+        while (!ioService.stopped()) {
             libusb_handle_events_timeout_completed(usbContext, &libusbEventTimeout, nullptr);
         }
     };
@@ -71,7 +73,7 @@ void UsbService::newDevice(libusb_device *device) {
 
         emit newAndroidAutoDevice(usbContext, device);
     } else {
-        UsbDevice *newDevice = new UsbDevice(this, device);
+        UsbDevice *newDevice = new UsbDevice(device);
         devices.append(newDevice);
         newDevice->open();
         newDevice->tryToStartAndroidAutoServer();

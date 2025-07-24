@@ -16,8 +16,8 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QGuiApplication>
 #include <QDebug>
+#include <QGuiApplication>
 #include <f1x/openauto/autoapp/Projection/QtAudioOutput.hpp>
 
 namespace f1x {
@@ -40,7 +40,8 @@ QtAudioOutput::QtAudioOutput(uint32_t channelCount, uint32_t sampleSize, uint32_
     connect(this, &QtAudioOutput::suspendPlayback, this, &QtAudioOutput::onSuspendPlayback);
     connect(this, &QtAudioOutput::stopPlayback, this, &QtAudioOutput::onStopPlayback);
 
-    QMetaObject::invokeMethod(this, "createAudioOutput", Qt::BlockingQueuedConnection);
+    createAudioOutput();  // TODO remove ?
+    // QMetaObject::invokeMethod(this, "createAudioOutput", Qt::BlockingQueuedConnection);
 }
 
 void QtAudioOutput::createAudioOutput() {

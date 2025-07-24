@@ -18,8 +18,8 @@
 
 #include <../../../../backend/settingsManager.h>
 
-#include <QGuiApplication>
 #include <QDebug>
+#include <QGuiApplication>
 #include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
 
 namespace f1x {
@@ -32,7 +32,8 @@ QtVideoOutput::QtVideoOutput(SettingsManager &configuration) : VideoOutput(confi
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 
-    QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
+    createVideoOutput();  // TODO remove ?
+    // QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
 }
 
 void QtVideoOutput::createVideoOutput() {

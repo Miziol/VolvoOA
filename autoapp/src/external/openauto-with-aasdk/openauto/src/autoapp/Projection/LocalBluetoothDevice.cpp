@@ -31,7 +31,8 @@ LocalBluetoothDevice::LocalBluetoothDevice() {
     this->moveToThread(QApplication::instance()->thread());
     connect(this, &LocalBluetoothDevice::startPairing, this, &LocalBluetoothDevice::onStartPairing,
             Qt::QueuedConnection);
-    QMetaObject::invokeMethod(this, "createBluetoothLocalDevice", Qt::BlockingQueuedConnection);
+    createBluetoothLocalDevice();  // TODO remove ?
+    // QMetaObject::invokeMethod(this, "createBluetoothLocalDevice", Qt::BlockingQueuedConnection);
 }
 
 void LocalBluetoothDevice::createBluetoothLocalDevice() {

@@ -15,7 +15,7 @@ class UsbDevice : public QObject {
     Q_OBJECT
 
 public:
-    UsbDevice(QObject *new_parent, libusb_device *new_device);
+    UsbDevice(libusb_device *new_device);
     ~UsbDevice();
 
 public:
