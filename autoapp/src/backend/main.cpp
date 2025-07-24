@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
 
     // Create app
     QGuiApplication app(argc, argv);
+    // app.setOverrideCursor(Qt::BlankCursor); // TODO connect to Settings
 
     // Create modules
     AppCore appCore(settings);
@@ -28,15 +29,6 @@ int main(int argc, char *argv[]) {
 
     // Run app loop
     app.exec();
-
-    /* TODO
-    *
-    qApplication.setOverrideCursor(Qt::BlankCursor);
-    QObject::connect(&mainWindow, &autoapp::ui::MainWindow::toggleCursor, [&qApplication]() {
-        const auto cursor = qApplication.overrideCursor()->shape() == Qt::BlankCursor ? Qt::ArrowCursor :
-    Qt::BlankCursor; qApplication.setOverrideCursor(cursor);
-    });
-     */
 
     /* TODO
     *
