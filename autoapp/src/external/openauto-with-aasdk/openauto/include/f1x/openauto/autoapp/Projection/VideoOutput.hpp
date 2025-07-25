@@ -18,22 +18,18 @@
 
 #pragma once
 
-#include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
 #include <f1x/openauto/autoapp/Projection/IVideoOutput.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+#include "../../../../backend/settingsManager.h"
 
-class VideoOutput: public IVideoOutput
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
+
+class VideoOutput : public IVideoOutput {
 public:
-    VideoOutput(configuration::IConfiguration::Pointer configuration);
+    VideoOutput(SettingsManager &configuration);
 
     aasdk::proto::enums::VideoFPS::Enum getVideoFPS() const override;
     aasdk::proto::enums::VideoResolution::Enum getVideoResolution() const override;
@@ -41,10 +37,10 @@ public:
     QRect getVideoMargins() const override;
 
 protected:
-    configuration::IConfiguration::Pointer configuration_;
+    SettingsManager &configuration_;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

@@ -16,17 +16,13 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QDebug>
 #include <f1x/openauto/autoapp/Configuration/Configuration.hpp>
-#include <f1x/openauto/Common/Log.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace configuration
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace configuration {
 
 const std::string Configuration::cConfigFileName = "openauto.ini";
 
@@ -60,56 +56,51 @@ const std::string Configuration::cInputCharsButtonKey = "Input.CharsButtons";
 const std::string Configuration::cInputLettersButtonKey = "Input.LettersButtons";
 const std::string Configuration::cInputNumbersButtonKey = "Input.NumbersButtons";
 
-Configuration::Configuration()
-{
+Configuration::Configuration() {
     this->load();
 }
 
-void Configuration::load()
-{
+void Configuration::load() {
     boost::property_tree::ptree iniConfig;
 
-    try
-    {
+    try {
         boost::property_tree::ini_parser::read_ini(cConfigFileName, iniConfig);
 
-        handednessOfTrafficType_ = static_cast<HandednessOfTrafficType>(iniConfig.get<uint32_t>(cGeneralHandednessOfTrafficTypeKey,
-                                                                                                static_cast<uint32_t>(HandednessOfTrafficType::LEFT_HAND_DRIVE)));
+        handednessOfTrafficType_ = static_cast<HandednessOfTrafficType>(iniConfig.get<uint32_t>(
+            cGeneralHandednessOfTrafficTypeKey, static_cast<uint32_t>(HandednessOfTrafficType::LEFT_HAND_DRIVE)));
         showClock_ = iniConfig.get<bool>(cGeneralShowClockKey, true);
 
-        videoFPS_ = static_cast<aasdk::proto::enums::VideoFPS::Enum>(iniConfig.get<uint32_t>(cVideoFPSKey,
-                                                                                             aasdk::proto::enums::VideoFPS::_60));
+        videoFPS_ = static_cast<aasdk::proto::enums::VideoFPS::Enum>(
+            iniConfig.get<uint32_t>(cVideoFPSKey, aasdk::proto::enums::VideoFPS::_60));
 
-        videoResolution_ = static_cast<aasdk::proto::enums::VideoResolution::Enum>(iniConfig.get<uint32_t>(cVideoResolutionKey,
-                                                                                                           aasdk::proto::enums::VideoResolution::_480p));
+        videoResolution_ = static_cast<aasdk::proto::enums::VideoResolution::Enum>(
+            iniConfig.get<uint32_t>(cVideoResolutionKey, aasdk::proto::enums::VideoResolution::_480p));
         screenDPI_ = iniConfig.get<size_t>(cVideoScreenDPIKey, 140);
 
         omxLayerIndex_ = iniConfig.get<int32_t>(cVideoOMXLayerIndexKey, 1);
-        videoMargins_ = QRect(0, 0, iniConfig.get<int32_t>(cVideoMarginWidth, 0), iniConfig.get<int32_t>(cVideoMarginHeight, 0));
+        videoMargins_ =
+            QRect(0, 0, iniConfig.get<int32_t>(cVideoMarginWidth, 0), iniConfig.get<int32_t>(cVideoMarginHeight, 0));
 
         enableTouchscreen_ = iniConfig.get<bool>(cInputEnableTouchscreenKey, true);
         this->readButtonCodes(iniConfig);
 
-        bluetoothAdapterType_ = static_cast<BluetoothAdapterType>(iniConfig.get<uint32_t>(cBluetoothAdapterTypeKey,
-                                                                                          static_cast<uint32_t>(BluetoothAdapterType::NONE)));
+        bluetoothAdapterType_ = static_cast<BluetoothAdapterType>(
+            iniConfig.get<uint32_t>(cBluetoothAdapterTypeKey, static_cast<uint32_t>(BluetoothAdapterType::NONE)));
 
         bluetoothRemoteAdapterAddress_ = iniConfig.get<std::string>(cBluetoothRemoteAdapterAddressKey, "");
 
         musicAudioChannelEnabled_ = iniConfig.get<bool>(cAudioMusicAudioChannelEnabled, true);
         speechAudiochannelEnabled_ = iniConfig.get<bool>(cAudioSpeechAudioChannelEnabled, true);
-        audioOutputBackendType_ = static_cast<AudioOutputBackendType>(iniConfig.get<uint32_t>(cAudioOutputBackendType, static_cast<uint32_t>(AudioOutputBackendType::RTAUDIO)));
-    }
-    catch(const boost::property_tree::ini_parser_error& e)
-    {
-        OPENAUTO_LOG(warning) << "[Configuration] failed to read configuration file: " << cConfigFileName
-                            << ", error: " << e.what()
-                            << ". Using default configuration.";
+        audioOutputBackendType_ = static_cast<AudioOutputBackendType>(
+            iniConfig.get<uint32_t>(cAudioOutputBackendType, static_cast<uint32_t>(AudioOutputBackendType::RTAUDIO)));
+    } catch (const boost::property_tree::ini_parser_error &e) {
+        qWarning() << "[Configuration] failed to read configuration file: " << QString::fromStdString(cConfigFileName)
+                   << ", error: " << e.what() << ". Using default configuration.";
         this->reset();
     }
 }
 
-void Configuration::reset()
-{
+void Configuration::reset() {
     handednessOfTrafficType_ = HandednessOfTrafficType::LEFT_HAND_DRIVE;
     showClock_ = true;
     videoFPS_ = aasdk::proto::enums::VideoFPS::_60;
@@ -126,8 +117,7 @@ void Configuration::reset()
     audioOutputBackendType_ = AudioOutputBackendType::RTAUDIO;
 }
 
-void Configuration::save()
-{
+void Configuration::save() {
     boost::property_tree::ptree iniConfig;
     iniConfig.put<uint32_t>(cGeneralHandednessOfTrafficTypeKey, static_cast<uint32_t>(handednessOfTrafficType_));
     iniConfig.put<bool>(cGeneralShowClockKey, showClock_);
@@ -151,148 +141,119 @@ void Configuration::save()
     boost::property_tree::ini_parser::write_ini(cConfigFileName, iniConfig);
 }
 
-void Configuration::setHandednessOfTrafficType(HandednessOfTrafficType value)
-{
+void Configuration::setHandednessOfTrafficType(HandednessOfTrafficType value) {
     handednessOfTrafficType_ = value;
 }
 
-HandednessOfTrafficType Configuration::getHandednessOfTrafficType() const
-{
+HandednessOfTrafficType Configuration::getHandednessOfTrafficType() const {
     return handednessOfTrafficType_;
 }
 
-void Configuration::showClock(bool value)
-{
+void Configuration::showClock(bool value) {
     showClock_ = value;
 }
 
-bool Configuration::showClock() const
-{
+bool Configuration::showClock() const {
     return showClock_;
 }
 
-aasdk::proto::enums::VideoFPS::Enum Configuration::getVideoFPS() const
-{
+aasdk::proto::enums::VideoFPS::Enum Configuration::getVideoFPS() const {
     return videoFPS_;
 }
 
-void Configuration::setVideoFPS(aasdk::proto::enums::VideoFPS::Enum value)
-{
+void Configuration::setVideoFPS(aasdk::proto::enums::VideoFPS::Enum value) {
     videoFPS_ = value;
 }
 
-aasdk::proto::enums::VideoResolution::Enum Configuration::getVideoResolution() const
-{
+aasdk::proto::enums::VideoResolution::Enum Configuration::getVideoResolution() const {
     return videoResolution_;
 }
 
-void Configuration::setVideoResolution(aasdk::proto::enums::VideoResolution::Enum value)
-{
+void Configuration::setVideoResolution(aasdk::proto::enums::VideoResolution::Enum value) {
     videoResolution_ = value;
 }
 
-size_t Configuration::getScreenDPI() const
-{
+size_t Configuration::getScreenDPI() const {
     return screenDPI_;
 }
 
-void Configuration::setScreenDPI(size_t value)
-{
+void Configuration::setScreenDPI(size_t value) {
     screenDPI_ = value;
 }
 
-void Configuration::setOMXLayerIndex(int32_t value)
-{
+void Configuration::setOMXLayerIndex(int32_t value) {
     omxLayerIndex_ = value;
 }
 
-int32_t Configuration::getOMXLayerIndex() const
-{
+int32_t Configuration::getOMXLayerIndex() const {
     return omxLayerIndex_;
 }
 
-void Configuration::setVideoMargins(QRect value)
-{
+void Configuration::setVideoMargins(QRect value) {
     videoMargins_ = value;
 }
 
-QRect Configuration::getVideoMargins() const
-{
+QRect Configuration::getVideoMargins() const {
     return videoMargins_;
 }
 
-bool Configuration::getTouchscreenEnabled() const
-{
+bool Configuration::getTouchscreenEnabled() const {
     return enableTouchscreen_;
 }
 
-void Configuration::setTouchscreenEnabled(bool value)
-{
+void Configuration::setTouchscreenEnabled(bool value) {
     enableTouchscreen_ = value;
 }
 
-Configuration::ButtonCodes Configuration::getButtonCodes() const
-{
+Configuration::ButtonCodes Configuration::getButtonCodes() const {
     return buttonCodes_;
 }
 
-void Configuration::setButtonCodes(const ButtonCodes& value)
-{
+void Configuration::setButtonCodes(const ButtonCodes &value) {
     buttonCodes_ = value;
 }
 
-BluetoothAdapterType Configuration::getBluetoothAdapterType() const
-{
+BluetoothAdapterType Configuration::getBluetoothAdapterType() const {
     return bluetoothAdapterType_;
 }
 
-void Configuration::setBluetoothAdapterType(BluetoothAdapterType value)
-{
+void Configuration::setBluetoothAdapterType(BluetoothAdapterType value) {
     bluetoothAdapterType_ = value;
 }
 
-std::string Configuration::getBluetoothRemoteAdapterAddress() const
-{
+std::string Configuration::getBluetoothRemoteAdapterAddress() const {
     return bluetoothRemoteAdapterAddress_;
 }
 
-void Configuration::setBluetoothRemoteAdapterAddress(const std::string& value)
-{
+void Configuration::setBluetoothRemoteAdapterAddress(const std::string &value) {
     bluetoothRemoteAdapterAddress_ = value;
 }
 
-bool Configuration::musicAudioChannelEnabled() const
-{
+bool Configuration::musicAudioChannelEnabled() const {
     return musicAudioChannelEnabled_;
 }
 
-void Configuration::setMusicAudioChannelEnabled(bool value)
-{
+void Configuration::setMusicAudioChannelEnabled(bool value) {
     musicAudioChannelEnabled_ = value;
 }
 
-bool Configuration::speechAudioChannelEnabled() const
-{
+bool Configuration::speechAudioChannelEnabled() const {
     return speechAudiochannelEnabled_;
 }
 
-void Configuration::setSpeechAudioChannelEnabled(bool value)
-{
+void Configuration::setSpeechAudioChannelEnabled(bool value) {
     speechAudiochannelEnabled_ = value;
 }
 
-AudioOutputBackendType Configuration::getAudioOutputBackendType() const
-{
+AudioOutputBackendType Configuration::getAudioOutputBackendType() const {
     return audioOutputBackendType_;
 }
 
-void Configuration::setAudioOutputBackendType(AudioOutputBackendType value)
-{
+void Configuration::setAudioOutputBackendType(AudioOutputBackendType value) {
     audioOutputBackendType_ = value;
 }
 
-void Configuration::readButtonCodes(boost::property_tree::ptree& iniConfig)
-{
+void Configuration::readButtonCodes(boost::property_tree::ptree &iniConfig) {
     if (iniConfig.get<bool>(cInputEnterButtonKey, false)) {
         buttonCodes_.push_back(aasdk::proto::enums::ButtonCode::ENTER);
     }
@@ -339,32 +300,44 @@ void Configuration::readButtonCodes(boost::property_tree::ptree& iniConfig)
     if (iniConfig.get<bool>(cInputNumbersButtonKey, false)) {
         buttonCodes_.push_back(aasdk::proto::enums::ButtonCode::ENTER);
     }
-
 }
 
-void Configuration::insertButtonCode(boost::property_tree::ptree& iniConfig, const std::string& buttonCodeKey, aasdk::proto::enums::ButtonCode::Enum buttonCode)
-{
-    if(iniConfig.get<bool>(buttonCodeKey, false))
-    {
+void Configuration::insertButtonCode(boost::property_tree::ptree &iniConfig,
+                                     const std::string &buttonCodeKey,
+                                     aasdk::proto::enums::ButtonCode::Enum buttonCode) {
+    if (iniConfig.get<bool>(buttonCodeKey, false)) {
         buttonCodes_.push_back(buttonCode);
     }
 }
 
-void Configuration::writeButtonCodes(boost::property_tree::ptree& iniConfig)
-{
-    iniConfig.put<bool>(cInputEnterButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::ENTER) != buttonCodes_.end());
-    iniConfig.put<bool>(cInputArrowsButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::UP) != buttonCodes_.end());
-    iniConfig.put<bool>(cInputScrollWheelButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::SCROLL_WHEEL) != buttonCodes_.end());
-    iniConfig.put<bool>(cInputBackButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::BACK) != buttonCodes_.end());
-    iniConfig.put<bool>(cInputHomeButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::HOME) != buttonCodes_.end());
-    iniConfig.put<bool>(cInputMediaButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::PLAY) != buttonCodes_.end());
-    iniConfig.put<bool>(cInputVoiceCommandButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::MICROPHONE_1) != buttonCodes_.end());
-    iniConfig.put<bool>(cInputCharsButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::BACKSPACE) != buttonCodes_.end());
-    iniConfig.put<bool>(cInputLettersButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::A) != buttonCodes_.end());
-    iniConfig.put<bool>(cInputNumbersButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(), aasdk::proto::enums::ButtonCode::NUMBER_0) != buttonCodes_.end());
+void Configuration::writeButtonCodes(boost::property_tree::ptree &iniConfig) {
+    iniConfig.put<bool>(cInputEnterButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                                        aasdk::proto::enums::ButtonCode::ENTER) != buttonCodes_.end());
+    iniConfig.put<bool>(cInputArrowsButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                                         aasdk::proto::enums::ButtonCode::UP) != buttonCodes_.end());
+    iniConfig.put<bool>(cInputScrollWheelButtonKey,
+                        std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                  aasdk::proto::enums::ButtonCode::SCROLL_WHEEL) != buttonCodes_.end());
+    iniConfig.put<bool>(cInputBackButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                                       aasdk::proto::enums::ButtonCode::BACK) != buttonCodes_.end());
+    iniConfig.put<bool>(cInputHomeButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                                       aasdk::proto::enums::ButtonCode::HOME) != buttonCodes_.end());
+    iniConfig.put<bool>(cInputMediaButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                                        aasdk::proto::enums::ButtonCode::PLAY) != buttonCodes_.end());
+    iniConfig.put<bool>(cInputVoiceCommandButtonKey,
+                        std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                  aasdk::proto::enums::ButtonCode::MICROPHONE_1) != buttonCodes_.end());
+    iniConfig.put<bool>(cInputCharsButtonKey,
+                        std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                  aasdk::proto::enums::ButtonCode::BACKSPACE) != buttonCodes_.end());
+    iniConfig.put<bool>(cInputLettersButtonKey, std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                                          aasdk::proto::enums::ButtonCode::A) != buttonCodes_.end());
+    iniConfig.put<bool>(cInputNumbersButtonKey,
+                        std::find(buttonCodes_.begin(), buttonCodes_.end(),
+                                  aasdk::proto::enums::ButtonCode::NUMBER_0) != buttonCodes_.end());
 }
 
-}
-}
-}
-}
+}  // namespace configuration
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

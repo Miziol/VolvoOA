@@ -44,7 +44,7 @@ public:
     virtual void bulkTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) = 0;
     virtual void interruptTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) = 0;
     virtual void cancelTransfers() = 0;
-    virtual DeviceHandle getDeviceHandle() const = 0;
+    virtual libusb_device_handle *getDeviceHandle() const = 0;
 };
 
 }

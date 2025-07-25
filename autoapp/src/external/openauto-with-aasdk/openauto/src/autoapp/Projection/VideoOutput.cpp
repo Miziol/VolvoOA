@@ -18,42 +18,32 @@
 
 #include <f1x/openauto/autoapp/Projection/VideoOutput.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+#include "../../../../backend/settingsManager.h"
 
-VideoOutput::VideoOutput(configuration::IConfiguration::Pointer configuration)
-    : configuration_(std::move(configuration))
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
+VideoOutput::VideoOutput(SettingsManager &configuration) : configuration_(configuration) {}
+
+aasdk::proto::enums::VideoFPS::Enum VideoOutput::getVideoFPS() const {
+    return configuration_.getVideoFPS();
 }
 
-aasdk::proto::enums::VideoFPS::Enum VideoOutput::getVideoFPS() const
-{
-    return configuration_->getVideoFPS();
+aasdk::proto::enums::VideoResolution::Enum VideoOutput::getVideoResolution() const {
+    return configuration_.getVideoResolution();
 }
 
-aasdk::proto::enums::VideoResolution::Enum VideoOutput::getVideoResolution() const
-{
-    return configuration_->getVideoResolution();
+size_t VideoOutput::getScreenDPI() const {
+    return configuration_.getScreenDPI();
 }
 
-size_t VideoOutput::getScreenDPI() const
-{
-    return configuration_->getScreenDPI();
+QRect VideoOutput::getVideoMargins() const {
+    return configuration_.getVideoMargins();
 }
 
-QRect VideoOutput::getVideoMargins() const
-{
-    return configuration_->getVideoMargins();
-}
-
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

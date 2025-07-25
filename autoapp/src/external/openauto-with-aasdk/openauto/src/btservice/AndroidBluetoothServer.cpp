@@ -16,7 +16,7 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <f1x/openauto/Common/Log.hpp>
+#include <QDebug>
 #include <f1x/openauto/btservice/AndroidBluetoothServer.hpp>
 
 namespace f1x
@@ -43,11 +43,11 @@ void AndroidBluetoothServer::onClientConnected()
 
     if(socket != nullptr)
     {
-        OPENAUTO_LOG(info) << "[AndroidBluetoothServer] rfcomm client connected, peer name: " << socket->peerName().toStdString();
+        qInfo() << "[AndroidBluetoothServer] rfcomm client connected, peer name: " << socket->peerName().toStdString();
     }
     else
     {
-        OPENAUTO_LOG(error) << "[AndroidBluetoothServer] received null socket during client connection.";
+        qCritical() << "[AndroidBluetoothServer] received null socket during client connection.";
     }
 }
 

@@ -105,7 +105,7 @@ void USBHub::handleDevice(libusb_device* device)
         return;
     }
 
-    DeviceHandle handle;
+    libusb_device_handle * handle;
     auto openResult = usbWrapper_.open(device, handle);
 
     if(openResult != 0)
@@ -128,7 +128,7 @@ void USBHub::handleDevice(libusb_device* device)
 
         auto queueElementIter = std::prev(queryChainQueue_.end());
         auto queryChainPromise = IAccessoryModeQueryChain::Promise::defer(strand_);
-        queryChainPromise->then([this, self = this->shared_from_this(), queueElementIter](DeviceHandle handle) mutable {
+        queryChainPromise->then([this, self = this->shared_from_this(), queueElementIter](libusb_device_handle * handle) mutable {
                 queryChainQueue_.erase(queueElementIter);
             },
             [this, self = this->shared_from_this(), queueElementIter](const error::Error& e) mutable {

@@ -18,49 +18,48 @@
 
 #pragma once
 
-#include <QObject>
 #include <QKeyEvent>
+#include <QObject>
 #include <f1x/openauto/autoapp/Projection/IInputDevice.hpp>
-#include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+#include "../../../../backend/settingsManager.h"
 
-class InputDevice: public QObject, public IInputDevice, boost::noncopyable
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
+
+class InputDevice : public QObject, public IInputDevice, boost::noncopyable {
     Q_OBJECT
 
 public:
-    InputDevice(QObject& parent, configuration::IConfiguration::Pointer configuration, const QRect& touchscreenGeometry, const QRect& videoGeometry);
+    InputDevice(QObject &parent,
+                SettingsManager &configuration,
+                const QRect &touchscreenGeometry,
+                const QRect &videoGeometry);
 
-    void start(IInputDeviceEventHandler& eventHandler) override;
+    void start(IInputDeviceEventHandler &eventHandler) override;
     void stop() override;
-    ButtonCodes getSupportedButtonCodes() const override;
-    bool eventFilter(QObject* obj, QEvent* event) override;
+    QList<f1x::aasdk::proto::enums::ButtonCode::Enum> getSupportedButtonCodes() const override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
     bool hasTouchscreen() const override;
     QRect getTouchscreenGeometry() const override;
 
 private:
     void setVideoGeometry();
-    bool handleKeyEvent(QEvent* event, QKeyEvent* key);
+    bool handleKeyEvent(QEvent *event, QKeyEvent *key);
     void dispatchKeyEvent(ButtonEvent event);
-    bool handleTouchEvent(QEvent* event);
+    bool handleTouchEvent(QEvent *event);
 
-    QObject& parent_;
-    configuration::IConfiguration::Pointer configuration_;
+    QObject &parent_;
+    SettingsManager &configuration_;
     QRect touchscreenGeometry_;
     QRect displayGeometry_;
-    IInputDeviceEventHandler* eventHandler_;
+    IInputDeviceEventHandler *eventHandler_;
     std::mutex mutex_;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x
