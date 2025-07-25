@@ -16,13 +16,14 @@
 *  along with aasdk. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <boost/endian/conversion.hpp>
 #include <aasdk_proto/ControlMessageIdsEnum.pb.h>
-#include <f1x/aasdk/Version.hpp>
-#include <f1x/aasdk/IO/PromiseLink.hpp>
+
+#include <boost/endian/conversion.hpp>
 #include <f1x/aasdk/Channel/Control/ControlServiceChannel.hpp>
 #include <f1x/aasdk/Channel/Control/IControlServiceChannelEventHandler.hpp>
 #include <f1x/aasdk/Common/Log.hpp>
+#include <f1x/aasdk/IO/PromiseLink.hpp>
+#include <f1x/aasdk/Version.hpp>
 
 namespace f1x
 {
