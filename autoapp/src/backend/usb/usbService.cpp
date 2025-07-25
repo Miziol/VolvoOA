@@ -8,7 +8,7 @@ UsbService::UsbService() : category("USB SERVICE") {
 #if LIBUSB_API_VERSION >= 0x0100010B  // version 1.0.27
     result = libusb_init_context(&usbContext, NULL, 0);
 #else
-    libusb_init(&usbContext);
+    result = libusb_init(&usbContext);
 #endif
     if (result == LIBUSB_SUCCESS) {
         cinfo << "LIBUSB context set";
