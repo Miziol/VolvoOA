@@ -13,7 +13,7 @@ UsbService::UsbService() : category("USB SERVICE") {
     if (result == LIBUSB_SUCCESS) {
         cinfo << "LIBUSB context set";
     } else {
-        cerror << "LIBUSB context error";
+        cerror << "LIBUSB context error" << libusb_error_name(result);
         return;
     }
 
