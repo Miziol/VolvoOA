@@ -50,7 +50,7 @@ private:
     using std::enable_shared_from_this<App>::shared_from_this;
     void enumerateDevices();
     void waitForDevice();
-    void aoapDeviceHandler(aasdk::usb::DeviceHandle deviceHandle);
+    void aoapDeviceHandler(libusb_device_handle *deviceHandle);
     void onUSBHubError(const aasdk::error::Error& error);
 
     boost::asio::io_service& ioService_;

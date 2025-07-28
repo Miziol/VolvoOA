@@ -34,7 +34,6 @@ namespace aasdk
 namespace usb
 {
 
-typedef std::shared_ptr<libusb_device_handle> DeviceHandle;
 typedef std::list<libusb_device*> DeviceList;
 typedef std::shared_ptr<DeviceList> DeviceListHandle;
 typedef std::shared_ptr<libusb_config_descriptor> ConfigDescriptorHandle;
@@ -45,24 +44,24 @@ class IUSBWrapper
 public:
     virtual ~IUSBWrapper() = default;
 
-    virtual int releaseInterface(const DeviceHandle& dev_handle, int interface_number) = 0;
-    virtual libusb_device* getDevice(const DeviceHandle& dev_handle) = 0;
-    virtual int claimInterface(const DeviceHandle& dev_handle, int interface_number) = 0;
-    virtual DeviceHandle openDeviceWithVidPid(uint16_t vendor_id, uint16_t product_id) = 0;
+    virtual int releaseInterface(libusb_device_handle *dev_handle, int interface_number) = 0;
+    virtual libusb_device* getDevice(libusb_device_handle *dev_handle) = 0;
+    virtual int claimInterface(libusb_device_handle *dev_handle, int interface_number) = 0;
+    virtual libusb_device_handle *openDeviceWithVidPid(uint16_t vendor_id, uint16_t product_id) = 0;
     virtual int getConfigDescriptor(libusb_device *dev, uint8_t config_index, ConfigDescriptorHandle& config_descriptor_handle) = 0;
 
     virtual void fillBulkTransfer(libusb_transfer *transfer,
-        const DeviceHandle& dev_handle, unsigned char endpoint,
+        libusb_device_handle *dev_handle, unsigned char endpoint,
         unsigned char *buffer, int length, libusb_transfer_cb_fn callback,
         void *user_data, unsigned int timeout) = 0;
 
     virtual void fillInterruptTransfer(libusb_transfer *transfer,
-        const DeviceHandle& dev_handle, unsigned char endpoint,
+        libusb_device_handle *dev_handle, unsigned char endpoint,
         unsigned char *buffer, int length, libusb_transfer_cb_fn callback,
         void *user_data, unsigned int timeout) = 0;
 
     virtual void fillControlTransfer(
-        libusb_transfer *transfer, const DeviceHandle& dev_handle,
+        libusb_transfer *transfer, libusb_device_handle *dev_handle,
         unsigned char *buffer, libusb_transfer_cb_fn callback, void *user_data,
         unsigned int timeout) = 0;
 
@@ -71,7 +70,7 @@ public:
     virtual void freeTransfer(libusb_transfer *transfer) = 0;
 
     virtual ssize_t getDeviceList(DeviceListHandle& handle) = 0;
-    virtual int open(libusb_device *dev, DeviceHandle& dev_handle) = 0;
+    virtual int open(libusb_device *dev, libusb_device_handle *dev_handle) = 0;
     virtual void fillControlSetup(unsigned char *buffer,
         uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex,
         uint16_t wLength) = 0;

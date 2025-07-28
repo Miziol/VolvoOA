@@ -16,41 +16,30 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QApplication>
+#include <QDebug>
+#include <QGuiApplication>
+#include <QMediaDevices>
 #include <f1x/openauto/autoapp/Projection/QtAudioOutput.hpp>
-#include <f1x/openauto/Common/Log.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-QtAudioOutput::QtAudioOutput(uint32_t channelCount, uint32_t sampleSize, uint32_t sampleRate)
+QtAudioOutput::QtAudioOutput(uint32_t channelCount, uint32_t sampleSize, uint32_t sampleRate) // TODO remove sampleSize
     : playbackStarted_(false)
 {
     audioFormat_.setChannelCount(channelCount);
     audioFormat_.setSampleRate(sampleRate);
-    audioFormat_.setSampleSize(sampleSize);
-    audioFormat_.setCodec("audio/pcm");
-    audioFormat_.setByteOrder(QAudioFormat::LittleEndian);
-    audioFormat_.setSampleType(QAudioFormat::SignedInt);
+    audioFormat_.setSampleFormat(QAudioFormat::Int16);
 
-    this->moveToThread(QApplication::instance()->thread());
+    this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtAudioOutput::startPlayback, this, &QtAudioOutput::onStartPlayback);
     connect(this, &QtAudioOutput::suspendPlayback, this, &QtAudioOutput::onSuspendPlayback);
     connect(this, &QtAudioOutput::stopPlayback, this, &QtAudioOutput::onStopPlayback);
 
-    QMetaObject::invokeMethod(this, "createAudioOutput", Qt::BlockingQueuedConnection);
-}
-
-void QtAudioOutput::createAudioOutput()
-{
-    OPENAUTO_LOG(debug) << "[QtAudioOutput] create.";
-    audioOutput_ = std::make_unique<QAudioOutput>(QAudioDeviceInfo::defaultOutputDevice(), audioFormat_);
+    qDebug() << "[QtAudioOutput] create.";
+    audioOutput_ = std::make_unique<QAudioSink>(QMediaDevices::defaultAudioOutput(), audioFormat_);
 }
 
 bool QtAudioOutput::open()
@@ -80,7 +69,8 @@ void QtAudioOutput::suspend()
 
 uint32_t QtAudioOutput::getSampleSize() const
 {
-    return audioFormat_.sampleSize();
+    return 16; // hardcoded in line 39
+    //return audioFormat_.sampleSize(); // TODO return value based on QSampleFormat
 }
 
 uint32_t QtAudioOutput::getChannelCount() const

@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <libusb.h>
+
 #include <memory>
 #include <functional>
 #include <f1x/aasdk/USB/IUSBWrapper.hpp>
@@ -35,7 +37,7 @@ class IUSBHub
 {
 public:
     typedef std::shared_ptr<IUSBHub> Pointer;
-    typedef io::Promise<DeviceHandle> Promise;
+    typedef io::Promise<libusb_device_handle *> Promise;
 
     IUSBHub() = default;
     virtual ~IUSBHub() = default;

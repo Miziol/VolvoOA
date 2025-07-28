@@ -17,7 +17,7 @@
 */
 
 #include <aasdk_proto/DrivingStatusEnum.pb.h>
-#include <f1x/openauto/Common/Log.hpp>
+#include <QDebug>
 #include <f1x/openauto/autoapp/Service/SensorService.hpp>
 
 namespace f1x
@@ -39,7 +39,7 @@ SensorService::SensorService(boost::asio::io_service& ioService, aasdk::messenge
 void SensorService::start()
 {
     strand_.dispatch([this, self = this->shared_from_this()]() {
-        OPENAUTO_LOG(info) << "[SensorService] start.";
+        qInfo() << "[SensorService] start.";
         channel_->receive(this->shared_from_this());
     });
 }
@@ -47,13 +47,13 @@ void SensorService::start()
 void SensorService::stop()
 {
     strand_.dispatch([this, self = this->shared_from_this()]() {
-        OPENAUTO_LOG(info) << "[SensorService] stop.";
+        qInfo() << "[SensorService] stop.";
     });
 }
 
 void SensorService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse& response)
 {
-    OPENAUTO_LOG(info) << "[SensorService] fill features.";
+    qInfo() << "[SensorService] fill features.";
 
     auto* channelDescriptor = response.add_channels();
     channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
@@ -66,9 +66,9 @@ void SensorService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryRespons
 
 void SensorService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest& request)
 {
-    OPENAUTO_LOG(info) << "[SensorService] open request, priority: " << request.priority();
+    qInfo() << "[SensorService] open request, priority: " << request.priority();
     const aasdk::proto::enums::Status::Enum status = aasdk::proto::enums::Status::OK;
-    OPENAUTO_LOG(info) << "[SensorService] open status: " << status;
+    qInfo() << "[SensorService] open status: " << status;
 
     aasdk::proto::messages::ChannelOpenResponse response;
     response.set_status(status);
@@ -82,7 +82,7 @@ void SensorService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOp
 
 void SensorService::onSensorStartRequest(const aasdk::proto::messages::SensorStartRequestMessage& request)
 {
-    OPENAUTO_LOG(info) << "[SensorService] sensor start request, type: " << request.sensor_type();
+    qInfo() << "[SensorService] sensor start request, type: " << request.sensor_type();
 
     aasdk::proto::messages::SensorStartResponseMessage response;
     response.set_status(aasdk::proto::enums::Status::OK);
@@ -130,7 +130,7 @@ void SensorService::sendNightData()
 
 void SensorService::onChannelError(const aasdk::error::Error& e)
 {
-    OPENAUTO_LOG(error) << "[SensorService] channel error: " << e.what();
+    qCritical() << "[SensorService] channel error: " << e.what();
 }
 
 }

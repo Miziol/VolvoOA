@@ -21,34 +21,28 @@
 
 #pragma once
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-class LocalBluetoothDevice: public QObject, public IBluetoothDevice
-{
+class LocalBluetoothDevice : public QObject, public IBluetoothDevice {
     Q_OBJECT
 
 public:
     LocalBluetoothDevice();
 
     void stop() override;
-    bool isPaired(const std::string& address) const override;
-    void pair(const std::string& address, PairingPromise::Pointer promise) override;
+    bool isPaired(const std::string &address) const override;
+    void pair(const std::string &address, PairingPromise::Pointer promise) override;
     std::string getLocalAddress() const override;
     bool isAvailable() const override;
 
 signals:
-    void startPairing(const QString& address, PairingPromise::Pointer promise);
+    void startPairing(const QString &address, PairingPromise::Pointer promise);
 
 private slots:
-    void createBluetoothLocalDevice();
-    void onStartPairing(const QString& address, PairingPromise::Pointer promise);
+    void onStartPairing(const QString &address, PairingPromise::Pointer promise);
     void onPairingDisplayConfirmation(const QBluetoothAddress &address, QString pin);
     void onPairingDisplayPinCode(const QBluetoothAddress &address, QString pin);
     void onPairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing);
@@ -62,7 +56,7 @@ private:
     QBluetoothAddress pairingAddress_;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

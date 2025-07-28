@@ -37,7 +37,7 @@ AccessoryModeQueryChain::AccessoryModeQueryChain(IUSBWrapper& usbWrapper,
 
 }
 
-void AccessoryModeQueryChain::start(DeviceHandle handle, Promise::Pointer promise)
+void AccessoryModeQueryChain::start(libusb_device_handle * handle, Promise::Pointer promise)
 {   
     strand_.dispatch([this, self = this->shared_from_this(), handle = std::move(handle), promise = std::move(promise)]() mutable {
         if(promise_ != nullptr)

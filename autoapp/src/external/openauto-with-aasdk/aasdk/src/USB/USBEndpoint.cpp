@@ -27,7 +27,7 @@ namespace aasdk
 namespace usb
 {
 
-USBEndpoint::USBEndpoint(IUSBWrapper& usbWrapper, boost::asio::io_service& ioService, DeviceHandle handle, uint8_t endpointAddress)
+USBEndpoint::USBEndpoint(IUSBWrapper& usbWrapper, boost::asio::io_service& ioService, libusb_device_handle * handle, uint8_t endpointAddress)
     : usbWrapper_(usbWrapper)
     , strand_(ioService)
     , handle_(std::move(handle))
@@ -136,7 +136,7 @@ void USBEndpoint::cancelTransfers()
     });
 }
 
-DeviceHandle USBEndpoint::getDeviceHandle() const
+libusb_device_handle * USBEndpoint::getDeviceHandle() const
 {
     return handle_;
 }

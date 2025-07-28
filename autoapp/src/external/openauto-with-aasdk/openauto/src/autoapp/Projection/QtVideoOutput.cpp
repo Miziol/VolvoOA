@@ -16,78 +16,55 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QApplication>
+#include <../../../../backend/settingsManager.h>
+
+#include <QDebug>
+#include <QGuiApplication>
 #include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
-#include <f1x/openauto/Common/Log.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-QtVideoOutput::QtVideoOutput(configuration::IConfiguration::Pointer configuration)
-    : VideoOutput(std::move(configuration))
-{
-    this->moveToThread(QApplication::instance()->thread());
+QtVideoOutput::QtVideoOutput(SettingsManager &configuration, QObject *new_qmlRootObject)
+    : VideoOutput(configuration), qmlRootObject(new_qmlRootObject) {
+    this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 
-    QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
+    qDebug() << "[QtVideoOutput] create.";
+    mediaPlayer.setVideoOutput(qmlRootObject->findChild<QObject *>("aaVideoOutput"));
 }
 
-void QtVideoOutput::createVideoOutput()
-{
-    OPENAUTO_LOG(debug) << "[QtVideoOutput] create.";
-    videoWidget_ = std::make_unique<QVideoWidget>();
-    mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
-}
-
-
-bool QtVideoOutput::open()
-{
+bool QtVideoOutput::open() {
     return videoBuffer_.open(QIODevice::ReadWrite);
 }
 
-bool QtVideoOutput::init()
-{
+bool QtVideoOutput::init() {
     emit startPlayback();
     return true;
 }
 
-void QtVideoOutput::stop()
-{
+void QtVideoOutput::stop() {
     emit stopPlayback();
 }
 
-void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer& buffer)
-{
-    videoBuffer_.write(reinterpret_cast<const char*>(buffer.cdata), buffer.size);
+void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer &buffer) {
+    videoBuffer_.write(reinterpret_cast<const char *>(buffer.cdata), buffer.size);
 }
 
 void QtVideoOutput::onStartPlayback()
 {
-    videoWidget_->setAspectRatioMode(Qt::IgnoreAspectRatio);
-    videoWidget_->setFocus();
-    videoWidget_->setWindowFlags(Qt::WindowStaysOnTopHint);
-    videoWidget_->setFullScreen(true);
-    videoWidget_->show();
-
-    mediaPlayer_->setVideoOutput(videoWidget_.get());
-    mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_);
-    mediaPlayer_->play();
+    mediaPlayer.setSourceDevice(&videoBuffer_, QString("video/h264"));
+    mediaPlayer.play();
 }
 
-void QtVideoOutput::onStopPlayback()
-{
-    videoWidget_->hide();
-    mediaPlayer_->stop();
+void QtVideoOutput::onStopPlayback() {
+    mediaPlayer.stop();
 }
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x
