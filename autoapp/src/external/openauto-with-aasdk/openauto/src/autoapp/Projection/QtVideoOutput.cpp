@@ -33,8 +33,12 @@ QtVideoOutput::QtVideoOutput(SettingsManager &configuration, QObject *new_qmlRoo
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 
+    QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
+}
+
+void QtVideoOutput::createVideoOutput()
+{
     qDebug() << "[QtVideoOutput] create.";
-    mediaPlayer.setSourceDevice(&videoBuffer_);
     mediaPlayer.setVideoOutput(qmlRootObject->findChild<QObject *>("aaVideoOutput"));
 }
 
@@ -55,7 +59,9 @@ void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer &buffer
     videoBuffer_.write(reinterpret_cast<const char *>(buffer.cdata), buffer.size);
 }
 
-void QtVideoOutput::onStartPlayback() {
+void QtVideoOutput::onStartPlayback()
+{
+    mediaPlayer.setSourceDevice(&videoBuffer_, QString("video/h264"));
     mediaPlayer.play();
 }
 

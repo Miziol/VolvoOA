@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <QAudioOutput>
+#include <QAudioSink>
 #include <QAudioFormat>
 #include <f1x/openauto/autoapp/Projection/IAudioOutput.hpp>
 #include <f1x/openauto/autoapp/Projection/SequentialBuffer.hpp>
@@ -61,7 +61,7 @@ protected slots:
 private:
     QAudioFormat audioFormat_;
     SequentialBuffer audioBuffer_;
-    std::unique_ptr<QAudioOutput> audioOutput_;
+    std::unique_ptr<QAudioSink> audioOutput_;
     bool playbackStarted_;
 };
 

@@ -19,7 +19,7 @@
 #pragma once
 
 #include <mutex>
-#include <QAudioInput>
+#include <QAudioSource>
 #include <QAudioFormat>
 #include <f1x/openauto/autoapp/Projection/IAudioInput.hpp>
 
@@ -60,7 +60,7 @@ private slots:
 private:
     QAudioFormat audioFormat_;
     QIODevice* ioDevice_;
-    std::unique_ptr<QAudioInput> audioInput_;
+    std::unique_ptr<QAudioSource> audioInput_;
     ReadPromise::Pointer readPromise_;
     mutable std::mutex mutex_;
 

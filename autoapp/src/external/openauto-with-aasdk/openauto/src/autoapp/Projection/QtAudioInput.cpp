@@ -18,6 +18,7 @@
 
 #include <QDebug>
 #include <QGuiApplication>
+#include <QMediaDevices>
 #include <f1x/openauto/autoapp/Projection/QtAudioInput.hpp>
 
 namespace f1x {
@@ -27,26 +28,20 @@ namespace projection {
 
 QtAudioInput::QtAudioInput(uint32_t channelCount, uint32_t sampleSize, uint32_t sampleRate) : ioDevice_(nullptr) {
     qRegisterMetaType<IAudioInput::StartPromise::Pointer>("StartPromise::Pointer");
-    /*
-        audioFormat_.setChannelCount(channelCount);
-        audioFormat_.setSampleRate(sampleRate);
-        audioFormat_.setSampleSize(sampleSize);
-        audioFormat_.setCodec("audio/pcm");
-        audioFormat_.setByteOrder(QAudioFormat::LittleEndian);
-        audioFormat_.setSampleType(QAudioFormat::SignedInt);
-    */ // TODO migrate Qt6
+
+    audioFormat_.setChannelCount(channelCount);
+    audioFormat_.setSampleRate(sampleRate);
+    audioFormat_.setSampleFormat(QAudioFormat::Int16);
+
     this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtAudioInput::startRecording, this, &QtAudioInput::onStartRecording, Qt::QueuedConnection);
     connect(this, &QtAudioInput::stopRecording, this, &QtAudioInput::onStopRecording, Qt::QueuedConnection);
-
-    createAudioInput();  // TODO remove ?
-    // QMetaObject::invokeMethod(this, "createAudioInput", Qt::BlockingQueuedConnection);
+    QMetaObject::invokeMethod(this, "createAudioInput", Qt::BlockingQueuedConnection);
 }
 
 void QtAudioInput::createAudioInput() {
     qDebug() << "[AudioInput] create.";
-    // audioInput_ = (std::make_unique<QAudioInput>(QAudioDeviceInfo::defaultInputDevice(), audioFormat_)); // TODO
-    // migrate Qt6
+    audioInput_ = (std::make_unique<QAudioSource>(QMediaDevices::defaultAudioInput(), audioFormat_));
 }
 
 bool QtAudioInput::open() {
@@ -81,9 +76,10 @@ void QtAudioInput::stop() {
     emit stopRecording();
 }
 
-uint32_t QtAudioInput::getSampleSize() const {
-    return 2056;
-    // return audioFormat_.sampleSize(); // TODO migrate Qt6
+uint32_t QtAudioInput::getSampleSize() const
+{
+    return 16; // hardcoded in line 39
+    //return audioFormat_.sampleSize(); // TODO return value based on QSampleFormat
 }
 
 uint32_t QtAudioInput::getChannelCount() const {
@@ -97,11 +93,11 @@ uint32_t QtAudioInput::getSampleRate() const {
 void QtAudioInput::onStartRecording(StartPromise::Pointer promise) {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
-    // ioDevice_ = audioInput_->start(); // TODO migrate Qt6
+    ioDevice_ = audioInput_->start();
 
-    if (ioDevice_ != nullptr) {
-        // connect(ioDevice_, &QIODevice::readyRead, this, &QtAudioInput::onReadyRead, Qt::QueuedConnection); // TODO
-        // migrate Qt6
+    if(ioDevice_ != nullptr)
+    {
+        connect(ioDevice_, &QIODevice::readyRead, this, &QtAudioInput::onReadyRead, Qt::QueuedConnection);
         promise->resolve();
     } else {
         promise->reject();
@@ -116,15 +112,14 @@ void QtAudioInput::onStopRecording() {
         readPromise_.reset();
     }
 
-    if (ioDevice_ != nullptr) {
-        /*
+    if(ioDevice_ != nullptr)
+    {
         ioDevice_->reset();
         ioDevice_->disconnect();
-        */ // TODO migrate Qt6
         ioDevice_ = nullptr;
     }
 
-    // audioInput_->stop(); // TODO migrate Qt6
+    audioInput_->stop();
 }
 
 void QtAudioInput::onReadyRead() {
@@ -136,7 +131,7 @@ void QtAudioInput::onReadyRead() {
 
     aasdk::common::Data data(cSampleSize, 0);
     aasdk::common::DataBuffer buffer(data);
-    /* auto readSize = ioDevice_->read(reinterpret_cast<char*>(buffer.data), buffer.size);
+    auto readSize = ioDevice_->read(reinterpret_cast<char*>(buffer.data), buffer.size);
 
     if(readSize != -1)
     {
@@ -149,7 +144,6 @@ void QtAudioInput::onReadyRead() {
         readPromise_->reject();
         readPromise_.reset();
     }
-    */ // TODO migrate Qt6
 }
 
 }  // namespace projection
