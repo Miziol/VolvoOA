@@ -42,7 +42,6 @@ signals:
     void startPairing(const QString &address, PairingPromise::Pointer promise);
 
 private slots:
-    void createBluetoothLocalDevice();
     void onStartPairing(const QString &address, PairingPromise::Pointer promise);
     void onPairingDisplayConfirmation(const QBluetoothAddress &address, QString pin);
     void onPairingDisplayPinCode(const QBluetoothAddress &address, QString pin);

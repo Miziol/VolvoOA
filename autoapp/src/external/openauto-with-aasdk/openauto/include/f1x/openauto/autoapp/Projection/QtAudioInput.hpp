@@ -52,7 +52,6 @@ signals:
     void stopRecording();
 
 private slots:
-    void createAudioInput();
     void onStartRecording(StartPromise::Pointer promise);
     void onStopRecording();
     void onReadyRead();

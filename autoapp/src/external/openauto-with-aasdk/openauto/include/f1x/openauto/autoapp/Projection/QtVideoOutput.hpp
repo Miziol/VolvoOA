@@ -44,7 +44,6 @@ signals:
     void stopPlayback();
 
 protected slots:
-    void createVideoOutput();
     void onStartPlayback();
     void onStopPlayback();
 

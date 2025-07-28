@@ -36,10 +36,7 @@ QtAudioInput::QtAudioInput(uint32_t channelCount, uint32_t sampleSize, uint32_t 
     this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtAudioInput::startRecording, this, &QtAudioInput::onStartRecording, Qt::QueuedConnection);
     connect(this, &QtAudioInput::stopRecording, this, &QtAudioInput::onStopRecording, Qt::QueuedConnection);
-    QMetaObject::invokeMethod(this, "createAudioInput", Qt::BlockingQueuedConnection);
-}
 
-void QtAudioInput::createAudioInput() {
     qDebug() << "[AudioInput] create.";
     audioInput_ = (std::make_unique<QAudioSource>(QMediaDevices::defaultAudioInput(), audioFormat_));
 }

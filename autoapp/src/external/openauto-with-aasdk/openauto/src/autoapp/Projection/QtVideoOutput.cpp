@@ -33,11 +33,6 @@ QtVideoOutput::QtVideoOutput(SettingsManager &configuration, QObject *new_qmlRoo
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 
-    QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
-}
-
-void QtVideoOutput::createVideoOutput()
-{
     qDebug() << "[QtVideoOutput] create.";
     mediaPlayer.setVideoOutput(qmlRootObject->findChild<QObject *>("aaVideoOutput"));
 }

@@ -32,10 +32,6 @@ LocalBluetoothDevice::LocalBluetoothDevice() {
     connect(this, &LocalBluetoothDevice::startPairing, this, &LocalBluetoothDevice::onStartPairing,
             Qt::QueuedConnection);
 
-    QMetaObject::invokeMethod(this, "createBluetoothLocalDevice", Qt::BlockingQueuedConnection);
-}
-
-void LocalBluetoothDevice::createBluetoothLocalDevice() {
     qDebug() << "[LocalBluetoothDevice] create.";
 
     localDevice_ = std::make_unique<QBluetoothLocalDevice>(QBluetoothAddress());

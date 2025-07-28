@@ -38,11 +38,6 @@ QtAudioOutput::QtAudioOutput(uint32_t channelCount, uint32_t sampleSize, uint32_
     connect(this, &QtAudioOutput::suspendPlayback, this, &QtAudioOutput::onSuspendPlayback);
     connect(this, &QtAudioOutput::stopPlayback, this, &QtAudioOutput::onStopPlayback);
 
-    QMetaObject::invokeMethod(this, "createAudioOutput", Qt::BlockingQueuedConnection);
-}
-
-void QtAudioOutput::createAudioOutput()
-{
     qDebug() << "[QtAudioOutput] create.";
     audioOutput_ = std::make_unique<QAudioSink>(QMediaDevices::defaultAudioOutput(), audioFormat_);
 }

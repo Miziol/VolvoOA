@@ -53,7 +53,6 @@ signals:
     void stopPlayback();
 
 protected slots:
-    void createAudioOutput();
     void onStartPlayback();
     void onSuspendPlayback();
     void onStopPlayback();
