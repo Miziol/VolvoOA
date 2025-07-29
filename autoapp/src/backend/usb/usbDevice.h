@@ -18,6 +18,9 @@ class UsbDevice : public QObject {
     Q_OBJECT
 
 public:
+    Q_PROPERTY(QString deviceName READ getDeviceName CONSTANT)
+
+public:
     UsbDevice(libusb_device *new_device);
     ~UsbDevice();
 
@@ -25,6 +28,9 @@ public:
     void open();
     bool isOpen();
     void close();
+
+public slots:
+    QString getDeviceName();
     void tryToStartAndroidAutoServer();
 
 private:

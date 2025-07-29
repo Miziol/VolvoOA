@@ -1,5 +1,7 @@
 #include "usbDevice.h"
 
+#include <boost/asio/posix/descriptor.hpp>
+
 UsbDevice::UsbDevice(libusb_device *new_device) : category("USB DEVICE"), device(new_device), handle(nullptr) {}
 
 UsbDevice::~UsbDevice() {
@@ -23,6 +25,31 @@ bool UsbDevice::isOpen() {
 void UsbDevice::close() {
     libusb_close(handle);
     handle = nullptr;
+}
+
+QString UsbDevice::getDeviceName() {
+    int bufferLength = 128, manufacturerLength, priductLength;
+    unsigned char manufacturer[bufferLength], product[bufferLength];
+
+    libusb_device_descriptor descriptor;
+    int result = libusb_get_device_descriptor(device, &descriptor);
+    if (result != 0) {
+        cerror << "Error getting device descriptor: " << libusb_error_name(result);
+    }
+
+    manufacturerLength =
+        libusb_get_string_descriptor_ascii(handle, descriptor.iManufacturer, manufacturer, bufferLength);
+    if (result < 0) {
+        cerror << "Error getting device manufacturer: " << libusb_error_name(result);
+    }
+
+    priductLength = libusb_get_string_descriptor_ascii(handle, descriptor.iProduct, product, bufferLength);
+    if (result < 0) {
+        cerror << "Error getting device product: " << libusb_error_name(result);
+    }
+
+    return QString::fromLatin1(reinterpret_cast<const char *>(manufacturer), manufacturerLength) + " " +
+           QString::fromLatin1(reinterpret_cast<const char *>(product), priductLength);
 }
 
 void UsbDevice::tryToStartAndroidAutoServer() {

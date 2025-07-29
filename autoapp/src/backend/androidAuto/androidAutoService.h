@@ -15,13 +15,10 @@ class AndroidAutoService : public QObject {
     Q_OBJECT
 
 signals:
-    void aaDevicesChanged();
 
 public:
     AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService);
     ~AndroidAutoService();
-
-    Q_PROPERTY(QList<QObject *> aaDevices MEMBER AAdevices NOTIFY aaDevicesChanged);
 
 public slots:
     void addDevice(libusb_context *context, libusb_device *device);

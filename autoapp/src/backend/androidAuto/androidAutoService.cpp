@@ -12,7 +12,6 @@ void AndroidAutoService::addDevice(libusb_context *context, libusb_device *devic
     AAdevices.append(new AndroidAutoDevice(context, device, ioService, *androidAutoEntityFactory));
 
     cinfo << "Adding device";
-    emit aaDevicesChanged();
 }
 
 void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioService,

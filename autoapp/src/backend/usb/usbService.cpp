@@ -80,20 +80,35 @@ void UsbService::newDevice(libusb_device *device) {
         UsbDevice *newDevice = new UsbDevice(device);
         devices.append(newDevice);
         newDevice->open();
-        newDevice->tryToStartAndroidAutoServer();
+        emit usbDevicesChanged();
     }
 }
 
 void UsbService::removeDevice(libusb_device *device) {
-    cinfo << "Remove device" << device;
-    QMutableListIterator<UsbDevice *> i(devices);
-    while (i.hasNext()) {
-        UsbDevice *deviceToRemove = i.next();
-        i.remove();
-        delete deviceToRemove;
+    int result;
+    libusb_device_descriptor deviceDescriptor;
+
+    result = libusb_get_device_descriptor(device, &deviceDescriptor);
+    if (result != LIBUSB_SUCCESS) {
+        cerror << "Getting device descriptor error: " << libusb_error_name(result);
     }
 
-    // TODO request to remove AA device
+    if (deviceDescriptor.idVendor == VENDOR_GOOGLE_INC &&
+        PRODUCT_WITH_ANDROID_AUTO.contains(deviceDescriptor.idProduct)) {
+        cinfo << "Device with AA ejected";
+
+        emit removeAndroidAutoDevice(device);
+    } else {
+        cinfo << "Remove device" << device;
+
+        QMutableListIterator<QObject *> i(devices);
+        while (i.hasNext()) {
+            UsbDevice *deviceToRemove = static_cast<UsbDevice *>(i.next());
+            i.remove();
+            delete deviceToRemove;
+            emit usbDevicesChanged();
+        }
+    }
 }
 
 int UsbService::usbHotplug_cb(libusb_context *context,
