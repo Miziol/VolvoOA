@@ -18,19 +18,16 @@
 
 #pragma once
 
-#include <f1x/aasdk/Messenger/Message.hpp>
 #include <f1x/aasdk/IO/Promise.hpp>
+#include <f1x/aasdk/Messenger/Message.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
 typedef io::Promise<Message::Pointer> ReceivePromise;
 typedef io::Promise<void> SendPromise;
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

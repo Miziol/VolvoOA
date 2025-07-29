@@ -18,41 +18,38 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
-#include <memory>
 #include <google/protobuf/message.h>
+
+#include <boost/noncopyable.hpp>
 #include <f1x/aasdk/Common/Data.hpp>
 #include <f1x/aasdk/Messenger/ChannelId.hpp>
 #include <f1x/aasdk/Messenger/EncryptionType.hpp>
-#include <f1x/aasdk/Messenger/MessageType.hpp>
 #include <f1x/aasdk/Messenger/MessageId.hpp>
+#include <f1x/aasdk/Messenger/MessageType.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-class Message: boost::noncopyable
-{
+class Message : boost::noncopyable {
 public:
     typedef std::shared_ptr<Message> Pointer;
 
     Message(ChannelId channelId, EncryptionType encryptionType, MessageType type);
-    Message(Message&& other);
-    Message& operator=(Message&& other);
+    Message(Message &&other);
+    Message &operator=(Message &&other);
 
     ChannelId getChannelId() const;
     EncryptionType getEncryptionType() const;
     MessageType getType() const;
 
-    common::Data& getPayload();
-    const common::Data& getPayload() const;
-    void insertPayload(const common::Data& payload);
-    void insertPayload(const google::protobuf::Message& message);
-    void insertPayload(const common::DataConstBuffer& buffer);
-    void insertPayload(common::DataBuffer& buffer);
+    common::Data &getPayload();
+    const common::Data &getPayload() const;
+    void insertPayload(const common::Data &payload);
+    void insertPayload(const google::protobuf::Message &message);
+    void insertPayload(const common::DataConstBuffer &buffer);
+    void insertPayload(common::DataBuffer &buffer);
 
 private:
     ChannelId channelId_;
@@ -61,6 +58,6 @@ private:
     common::Data payload_;
 };
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

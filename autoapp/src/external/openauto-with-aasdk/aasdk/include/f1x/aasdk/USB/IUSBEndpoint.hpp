@@ -18,20 +18,16 @@
 
 #pragma once
 
-#include <memory>
-#include <f1x/aasdk/USB/USBWrapper.hpp>
 #include <f1x/aasdk/Common/Data.hpp>
 #include <f1x/aasdk/IO/Promise.hpp>
+#include <f1x/aasdk/USB/USBWrapper.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-class IUSBEndpoint
-{
+class IUSBEndpoint {
 public:
     typedef std::shared_ptr<IUSBEndpoint> Pointer;
     typedef io::Promise<size_t> Promise;
@@ -47,6 +43,6 @@ public:
     virtual libusb_device_handle *getDeviceHandle() const = 0;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

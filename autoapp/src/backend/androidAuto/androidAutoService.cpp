@@ -12,7 +12,6 @@ void AndroidAutoService::addDevice(libusb_context *context, libusb_device *devic
     AAdevices.append(new AndroidAutoDevice(context, device, ioService, *androidAutoEntityFactory));
 
     cinfo << "Adding device";
-    emit aaDevicesChanged();
 }
 
 void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioService,
@@ -26,8 +25,7 @@ void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioServic
 }
 
 void AndroidAutoService::createFactories(QObject *qmlRootObject) {
-    serviceFactory = new f1x::openauto::autoapp::service::ServiceFactory(
-        ioService, settingsManager, qmlRootObject);
+    serviceFactory = new f1x::openauto::autoapp::service::ServiceFactory(ioService, settingsManager, qmlRootObject);
     androidAutoEntityFactory =
         new f1x::openauto::autoapp::service::AndroidAutoEntityFactory(ioService, settingsManager, *serviceFactory);
 }

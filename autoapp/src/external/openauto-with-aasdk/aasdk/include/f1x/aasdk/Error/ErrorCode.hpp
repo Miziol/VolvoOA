@@ -20,15 +20,11 @@
 
 #include <stdint.h>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace error
-{
+namespace f1x {
+namespace aasdk {
+namespace error {
 
-enum class ErrorCode
-{
+enum class ErrorCode {
     NONE = 0,
     USB_CLAIM_INTERFACE = 1,
     USB_INVALID_CONFIG_DESCRIPTOR = 2,
@@ -66,5 +62,5 @@ enum class ErrorCode
 };
 
 }
-}
-}
+}  // namespace aasdk
+}  // namespace f1x

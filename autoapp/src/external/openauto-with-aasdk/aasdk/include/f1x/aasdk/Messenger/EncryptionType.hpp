@@ -18,19 +18,12 @@
 
 #pragma once
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-enum class EncryptionType
-{
-    PLAIN,
-    ENCRYPTED = 1 << 3
-};
+enum class EncryptionType { PLAIN, ENCRYPTED = 1 << 3 };
 
 }
-}
-}
+}  // namespace aasdk
+}  // namespace f1x

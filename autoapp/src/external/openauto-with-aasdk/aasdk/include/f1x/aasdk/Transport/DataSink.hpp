@@ -18,20 +18,15 @@
 
 #pragma once
 
-#include <limits>
 #include <boost/circular_buffer.hpp>
 #include <f1x/aasdk/Common/Data.hpp>
+#include <limits>
 
+namespace f1x {
+namespace aasdk {
+namespace transport {
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace transport
-{
-
-class DataSink
-{
+class DataSink {
 public:
     DataSink();
 
@@ -46,6 +41,6 @@ private:
     static constexpr common::Data::size_type cChunkSize = 16384;
 };
 
-}
-}
-}
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

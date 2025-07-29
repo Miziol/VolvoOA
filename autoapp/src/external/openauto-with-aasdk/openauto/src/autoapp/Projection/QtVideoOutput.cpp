@@ -54,8 +54,7 @@ void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer &buffer
     videoBuffer_.write(reinterpret_cast<const char *>(buffer.cdata), buffer.size);
 }
 
-void QtVideoOutput::onStartPlayback()
-{
+void QtVideoOutput::onStartPlayback() {
     mediaPlayer.setSourceDevice(&videoBuffer_, QString("video/h264"));
     mediaPlayer.play();
 }

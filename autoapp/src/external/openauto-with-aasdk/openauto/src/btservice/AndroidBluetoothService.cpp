@@ -18,15 +18,11 @@
 
 #include <f1x/openauto/btservice/AndroidBluetoothService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace btservice
-{
+namespace f1x {
+namespace openauto {
+namespace btservice {
 
-AndroidBluetoothService::AndroidBluetoothService(uint16_t portNumber)
-{
+AndroidBluetoothService::AndroidBluetoothService(uint16_t portNumber) {
     //"4de17a00-52cb-11e6-bdf4-0800200c9a66";
     //"669a0c20-0008-f4bd-e611-cb52007ae14d";
     const QBluetoothUuid serviceUuid(QLatin1String("4de17a00-52cb-11e6-bdf4-0800200c9a66"));
@@ -50,22 +46,19 @@ AndroidBluetoothService::AndroidBluetoothService(uint16_t portNumber)
     protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::L2cap));
     protocolDescriptorList.append(QVariant::fromValue(protocol));
     protocol.clear();
-    protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::Rfcomm))
-             << QVariant::fromValue(quint16(portNumber));
+    protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::Rfcomm)) << QVariant::fromValue(quint16(portNumber));
     protocolDescriptorList.append(QVariant::fromValue(protocol));
     serviceInfo_.setAttribute(QBluetoothServiceInfo::ProtocolDescriptorList, protocolDescriptorList);
 }
 
-bool AndroidBluetoothService::registerService(const QBluetoothAddress& bluetoothAddress)
-{
+bool AndroidBluetoothService::registerService(const QBluetoothAddress &bluetoothAddress) {
     return serviceInfo_.registerService(bluetoothAddress);
 }
 
-bool AndroidBluetoothService::unregisterService()
-{
+bool AndroidBluetoothService::unregisterService() {
     return serviceInfo_.unregisterService();
 }
 
-}
-}
-}
+}  // namespace btservice
+}  // namespace openauto
+}  // namespace f1x

@@ -20,48 +20,45 @@
 
 #include <libusb.h>
 
-#include <unordered_map>
-#include <memory>
 #include <boost/asio.hpp>
-#include <f1x/aasdk/USB/IUSBWrapper.hpp>
 #include <f1x/aasdk/USB/IUSBEndpoint.hpp>
+#include <f1x/aasdk/USB/IUSBWrapper.hpp>
+#include <memory>
+#include <unordered_map>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-class USBEndpoint: public IUSBEndpoint,
-        public std::enable_shared_from_this<USBEndpoint>,
-        boost::noncopyable
-{
+class USBEndpoint : public IUSBEndpoint, public std::enable_shared_from_this<USBEndpoint>, boost::noncopyable {
 public:
-    USBEndpoint(IUSBWrapper& usbWrapper, boost::asio::io_service& ioService, libusb_device_handle *handle, uint8_t endpointAddress = 0x00);
+    USBEndpoint(IUSBWrapper &usbWrapper,
+                boost::asio::io_service &ioService,
+                libusb_device_handle *handle,
+                uint8_t endpointAddress = 0x00);
 
     void controlTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) override;
     void bulkTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) override;
     void interruptTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) override;
     uint8_t getAddress() override;
     void cancelTransfers() override;
-    libusb_device_handle * getDeviceHandle() const override;
+    libusb_device_handle *getDeviceHandle() const override;
 
 private:
-    typedef std::unordered_map<libusb_transfer*, Promise::Pointer> Transfers;
+    typedef std::unordered_map<libusb_transfer *, Promise::Pointer> Transfers;
 
     using std::enable_shared_from_this<USBEndpoint>::shared_from_this;
     void transfer(libusb_transfer *transfer, Promise::Pointer promise);
     static void transferHandler(libusb_transfer *transfer);
 
-    IUSBWrapper& usbWrapper_;
+    IUSBWrapper &usbWrapper_;
     boost::asio::io_service::strand strand_;
-    libusb_device_handle * handle_;
+    libusb_device_handle *handle_;
     uint8_t endpointAddress_;
     Transfers transfers_;
     std::shared_ptr<USBEndpoint> self_;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

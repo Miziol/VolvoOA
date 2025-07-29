@@ -18,19 +18,15 @@
 
 #pragma once
 
-#include <memory>
 #include <f1x/aasdk/Common/Data.hpp>
 #include <f1x/aasdk/IO/Promise.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace transport
-{
+namespace f1x {
+namespace aasdk {
+namespace transport {
 
-class ITransport
-{
+class ITransport {
 public:
     typedef std::shared_ptr<ITransport> Pointer;
     typedef io::Promise<common::Data> ReceivePromise;
@@ -44,6 +40,6 @@ public:
     virtual void stop() = 0;
 };
 
-}
-}
-}
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

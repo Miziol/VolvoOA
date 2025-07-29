@@ -1,6 +1,7 @@
 #include "settingsManager.h"
 
 #include <QGuiApplication>
+#include <QRect>
 
 SettingsManager::SettingsManager() : category("SETTINGS MANAGER") {
     setDefault();
@@ -96,15 +97,16 @@ void SettingsManager::setTouchscreenEnabled(bool value) {
 }
 
 QList<f1x::aasdk::proto::enums::ButtonCode::Enum> SettingsManager::getButtonCodes() const {
-    return QList<f1x::aasdk::proto::enums::ButtonCode::Enum>(); // TODO
+    return QList<f1x::aasdk::proto::enums::ButtonCode::Enum>();  // TODO
 }
 
-void SettingsManager::setButtonCodes(const QList<f1x::aasdk::proto::enums::ButtonCode::Enum>& value) {
+void SettingsManager::setButtonCodes(const QList<f1x::aasdk::proto::enums::ButtonCode::Enum> &value) {
     // TODO
 }
 
 f1x::openauto::autoapp::configuration::BluetoothAdapterType SettingsManager::getBluetoothAdapterType() const {
-    return static_cast<f1x::openauto::autoapp::configuration::BluetoothAdapterType>(value(BLUETOOTH_ADAPTER_TYPE_KEY).toInt());
+    return static_cast<f1x::openauto::autoapp::configuration::BluetoothAdapterType>(
+        value(BLUETOOTH_ADAPTER_TYPE_KEY).toInt());
 }
 
 void SettingsManager::setBluetoothAdapterType(f1x::openauto::autoapp::configuration::BluetoothAdapterType value) {

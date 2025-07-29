@@ -18,21 +18,17 @@
 
 #pragma once
 
-#include <vector>
-#include <memory>
 #include <aasdk_proto/ServiceDiscoveryResponseMessage.pb.h>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+#include <memory>
+#include <vector>
 
-class IService
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
+
+class IService {
 public:
     typedef std::shared_ptr<IService> Pointer;
 
@@ -40,12 +36,12 @@ public:
 
     virtual void start() = 0;
     virtual void stop() = 0;
-    virtual void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse& response) = 0;
+    virtual void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse &response) = 0;
 };
 
 typedef std::vector<IService::Pointer> ServiceList;
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

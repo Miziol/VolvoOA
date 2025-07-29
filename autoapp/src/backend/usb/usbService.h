@@ -16,7 +16,12 @@ class UsbService : public QObject {
     Q_OBJECT
 
 signals:
+    void usbDevicesChanged();
     void newAndroidAutoDevice(libusb_context *context, libusb_device *device);
+    void removeAndroidAutoDevice(libusb_device *device);
+
+public:
+    Q_PROPERTY(QList<QObject *> usbDevices MEMBER devices NOTIFY usbDevicesChanged);
 
 private:
     static inline uint16_t VENDOR_GOOGLE_INC = 0x18D1;
@@ -41,7 +46,7 @@ private:
     libusb_context *usbContext;
     libusb_hotplug_callback_handle callbackHandler;
 
-    QList<UsbDevice *> devices;
+    QList<QObject *> devices;
 
     static int usbHotplug_cb(libusb_context *context,
                              libusb_device *device,

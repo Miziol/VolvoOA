@@ -18,33 +18,33 @@
 
 #pragma once
 
-#include <f1x/aasdk/USB/IUSBWrapper.hpp>
-#include <f1x/aasdk/USB/IAccessoryModeQueryFactory.hpp>
 #include <f1x/aasdk/USB/IAccessoryModeQueryChain.hpp>
+#include <f1x/aasdk/USB/IAccessoryModeQueryFactory.hpp>
+#include <f1x/aasdk/USB/IUSBWrapper.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
-    
+namespace f1x {
+namespace aasdk {
+namespace usb {
+
 class IAccessoryModeQueryFactory;
 
-class AccessoryModeQueryChain: public IAccessoryModeQueryChain, public std::enable_shared_from_this<AccessoryModeQueryChain>, boost::noncopyable
-{
+class AccessoryModeQueryChain : public IAccessoryModeQueryChain,
+                                public std::enable_shared_from_this<AccessoryModeQueryChain>,
+                                boost::noncopyable {
 public:
-    AccessoryModeQueryChain(IUSBWrapper& usbWrapper,
-                            boost::asio::io_service& ioService,
-                            IAccessoryModeQueryFactory& queryFactory);
+    AccessoryModeQueryChain(IUSBWrapper &usbWrapper,
+                            boost::asio::io_service &ioService,
+                            IAccessoryModeQueryFactory &queryFactory);
 
-    void start(libusb_device_handle * handle, Promise::Pointer promise) override;
+    void start(libusb_device_handle *handle, Promise::Pointer promise) override;
     void cancel() override;
-    
+
 private:
     using std::enable_shared_from_this<AccessoryModeQueryChain>::shared_from_this;
 
-    void startQuery(AccessoryModeQueryType queryType, IUSBEndpoint::Pointer usbEndpoint, IAccessoryModeQuery::Promise::Pointer queryPromise);
+    void startQuery(AccessoryModeQueryType queryType,
+                    IUSBEndpoint::Pointer usbEndpoint,
+                    IAccessoryModeQuery::Promise::Pointer queryPromise);
 
     void protocolVersionQueryHandler(IUSBEndpoint::Pointer usbEndpoint);
     void manufacturerQueryHandler(IUSBEndpoint::Pointer usbEndpoint);
@@ -54,15 +54,15 @@ private:
     void uriQueryHandler(IUSBEndpoint::Pointer usbEndpoint);
     void serialQueryHandler(IUSBEndpoint::Pointer usbEndpoint);
     void startQueryHandler(IUSBEndpoint::Pointer usbEndpoint);
-    
-    IUSBWrapper& usbWrapper_;
+
+    IUSBWrapper &usbWrapper_;
     boost::asio::io_service::strand strand_;
-    IAccessoryModeQueryFactory& queryFactory_;
-    libusb_device_handle * handle_;
+    IAccessoryModeQueryFactory &queryFactory_;
+    libusb_device_handle *handle_;
     Promise::Pointer promise_;
     IAccessoryModeQuery::Pointer activeQuery_;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

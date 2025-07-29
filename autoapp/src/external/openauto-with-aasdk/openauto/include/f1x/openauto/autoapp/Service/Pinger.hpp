@@ -20,19 +20,14 @@
 
 #include <f1x/openauto/autoapp/Service/IPinger.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-class Pinger: public IPinger, public std::enable_shared_from_this<Pinger>
-{
+class Pinger : public IPinger, public std::enable_shared_from_this<Pinger> {
 public:
-    Pinger(boost::asio::io_service& ioService, time_t duration);
+    Pinger(boost::asio::io_service &ioService, time_t duration);
 
     void ping(Promise::Pointer promise) override;
     void pong() override;
@@ -41,7 +36,7 @@ public:
 private:
     using std::enable_shared_from_this<Pinger>::shared_from_this;
 
-    void onTimerExceeded(const boost::system::error_code& error);
+    void onTimerExceeded(const boost::system::error_code &error);
 
     boost::asio::io_service::strand strand_;
     boost::asio::deadline_timer timer_;
@@ -52,7 +47,7 @@ private:
     int64_t pongsCount_;
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

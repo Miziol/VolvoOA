@@ -1,10 +1,14 @@
 #ifndef AUTOAPP_SETTINGSMANAGER_H
 #define AUTOAPP_SETTINGSMANAGER_H
 
+#include <aasdk_proto/ButtonCodeEnum.pb.h>
+#include <aasdk_proto/VideoFPSEnum.pb.h>
+#include <aasdk_proto/VideoResolutionEnum.pb.h>
+
 #include <QBluetoothAddress>
 #include <QSettings>
 
-#include "f1x/openauto/autoapp/Configuration/IConfiguration.hpp"
+#include "f1x/openauto/autoapp/Configuration/BluetootAdapterType.hpp"
 #include "logging/loggingCategory.h"
 
 const QString company = "Miziol";
@@ -31,16 +35,18 @@ public:
     inline static const QString LOGGER_PATH_VALUE = "/var/log/";
     inline static const QString LOGGER_STD_OUTPUT_LEVEL_KEY = "logger/output_level";
     inline static const int LOGGER_STD_OUTPUT_LEVEL_VALUE = 3;
-    
+
     inline static const QString GENERAL_SHOW_CLOCK_KEY = "general/show_clock";
     inline static const bool GENERAL_SHOW_CLOCK_VALUE = true;
     inline static const QString GENERAL_LEFT_HAND_DRIVE_KEY = "general/left_hand_drive";
     inline static const bool GENERAL_LEFT_HAND_DRIVE_VALUE = true;
 
     inline static const QString VIDEO_FPS_KEY = "video/fps";
-    inline static const f1x::aasdk::proto::enums::VideoFPS::Enum VIDEO_FPS_VALUE = f1x::aasdk::proto::enums::VideoFPS::_60;
+    inline static const f1x::aasdk::proto::enums::VideoFPS::Enum VIDEO_FPS_VALUE =
+        f1x::aasdk::proto::enums::VideoFPS::_60;
     inline static const QString VIDEO_RESOLUTION_KEY = "video/resolution";
-    inline static const f1x::aasdk::proto::enums::VideoResolution::Enum VIDEO_RESOLUTION_VALUE = f1x::aasdk::proto::enums::VideoResolution::_480p;
+    inline static const f1x::aasdk::proto::enums::VideoResolution::Enum VIDEO_RESOLUTION_VALUE =
+        f1x::aasdk::proto::enums::VideoResolution::_480p;
     inline static const QString VIDEO_SCREEN_DPI_KEY = "video/screen_dpi";
     inline static const int VIDEO_SCREEN_DPI_VALUE = 140;
     inline static const QString VIDEO_MARGIN_WIDTH_KEY = "video/margin_width";
@@ -72,8 +78,9 @@ public:
     inline static const QString NAVIGATION_NUMBERS_KEY = "navigation/numbers";
     inline static const bool NAVIGATION_NUMBERS_VALUE = false;
 
-    inline static const QString BLUETOOTH_ADAPTER_TYPE_KEY = "bluetooth/adapter_type"; // TODO remove ?
-    inline static const f1x::openauto::autoapp::configuration::BluetoothAdapterType BLUETOOTH_ADAPTER_TYPE_VALUE = f1x::openauto::autoapp::configuration::BluetoothAdapterType::LOCAL;
+    inline static const QString BLUETOOTH_ADAPTER_TYPE_KEY = "bluetooth/adapter_type";  // TODO remove ?
+    inline static const f1x::openauto::autoapp::configuration::BluetoothAdapterType BLUETOOTH_ADAPTER_TYPE_VALUE =
+        f1x::openauto::autoapp::configuration::BluetoothAdapterType::LOCAL;
     inline static const QString BLUETOOTH_REMOTE_ADAPTER_ADDRESS_KEY = "bluetooth/remote_adapter_address";
     inline static const QBluetoothAddress BLUETOOTH_REMOTE_ADAPTER_ADDRESS_VALUE = QBluetoothAddress();
 
@@ -101,13 +108,13 @@ public slots:
     void setVideoResolution(f1x::aasdk::proto::enums::VideoResolution::Enum value);
     size_t getScreenDPI() const;
     void setScreenDPI(size_t value);
-    QRect getVideoMargins() const; // TODO remove ?
+    QRect getVideoMargins() const;  // TODO remove ?
     void setVideoMargins(QRect value);
 
     bool getTouchscreenEnabled() const;
     void setTouchscreenEnabled(bool value);
     QList<f1x::aasdk::proto::enums::ButtonCode::Enum> getButtonCodes() const;
-    void setButtonCodes(const QList<f1x::aasdk::proto::enums::ButtonCode::Enum>& value);
+    void setButtonCodes(const QList<f1x::aasdk::proto::enums::ButtonCode::Enum> &value);
 
     f1x::openauto::autoapp::configuration::BluetoothAdapterType getBluetoothAdapterType() const;
     void setBluetoothAdapterType(f1x::openauto::autoapp::configuration::BluetoothAdapterType value);

@@ -17,55 +17,43 @@
 */
 
 #include <aasdk_proto/DrivingStatusEnum.pb.h>
+
 #include <QDebug>
 #include <f1x/openauto/autoapp/Service/SensorService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-SensorService::SensorService(boost::asio::io_service& ioService, aasdk::messenger::IMessenger::Pointer messenger)
-    : strand_(ioService)
-    , channel_(std::make_shared<aasdk::channel::sensor::SensorServiceChannel>(strand_, std::move(messenger)))
-{
+SensorService::SensorService(boost::asio::io_service &ioService, aasdk::messenger::IMessenger::Pointer messenger)
+    : strand_(ioService),
+      channel_(std::make_shared<aasdk::channel::sensor::SensorServiceChannel>(strand_, std::move(messenger))) {}
 
-}
-
-void SensorService::start()
-{
+void SensorService::start() {
     strand_.dispatch([this, self = this->shared_from_this()]() {
         qInfo() << "[SensorService] start.";
         channel_->receive(this->shared_from_this());
     });
 }
 
-void SensorService::stop()
-{
-    strand_.dispatch([this, self = this->shared_from_this()]() {
-        qInfo() << "[SensorService] stop.";
-    });
+void SensorService::stop() {
+    strand_.dispatch([this, self = this->shared_from_this()]() { qInfo() << "[SensorService] stop."; });
 }
 
-void SensorService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse& response)
-{
+void SensorService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse &response) {
     qInfo() << "[SensorService] fill features.";
 
-    auto* channelDescriptor = response.add_channels();
+    auto *channelDescriptor = response.add_channels();
     channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
 
-    auto* sensorChannel = channelDescriptor->mutable_sensor_channel();
+    auto *sensorChannel = channelDescriptor->mutable_sensor_channel();
     sensorChannel->add_sensors()->set_type(aasdk::proto::enums::SensorType::DRIVING_STATUS);
-    //sensorChannel->add_sensors()->set_type(aasdk::proto::enums::SensorType::LOCATION);
+    // sensorChannel->add_sensors()->set_type(aasdk::proto::enums::SensorType::LOCATION);
     sensorChannel->add_sensors()->set_type(aasdk::proto::enums::SensorType::NIGHT_DATA);
 }
 
-void SensorService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest& request)
-{
+void SensorService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) {
     qInfo() << "[SensorService] open request, priority: " << request.priority();
     const aasdk::proto::enums::Status::Enum status = aasdk::proto::enums::Status::OK;
     qInfo() << "[SensorService] open status: " << status;
@@ -80,8 +68,7 @@ void SensorService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOp
     channel_->receive(this->shared_from_this());
 }
 
-void SensorService::onSensorStartRequest(const aasdk::proto::messages::SensorStartRequestMessage& request)
-{
+void SensorService::onSensorStartRequest(const aasdk::proto::messages::SensorStartRequestMessage &request) {
     qInfo() << "[SensorService] sensor start request, type: " << request.sensor_type();
 
     aasdk::proto::messages::SensorStartResponseMessage response;
@@ -89,27 +76,22 @@ void SensorService::onSensorStartRequest(const aasdk::proto::messages::SensorSta
 
     auto promise = aasdk::channel::SendPromise::defer(strand_);
 
-    if(request.sensor_type() == aasdk::proto::enums::SensorType::DRIVING_STATUS)
-    {
+    if (request.sensor_type() == aasdk::proto::enums::SensorType::DRIVING_STATUS) {
         promise->then(std::bind(&SensorService::sendDrivingStatusUnrestricted, this->shared_from_this()),
                       std::bind(&SensorService::onChannelError, this->shared_from_this(), std::placeholders::_1));
-    }
-    else if(request.sensor_type() == aasdk::proto::enums::SensorType::NIGHT_DATA)
-    {
+    } else if (request.sensor_type() == aasdk::proto::enums::SensorType::NIGHT_DATA) {
         promise->then(std::bind(&SensorService::sendNightData, this->shared_from_this()),
                       std::bind(&SensorService::onChannelError, this->shared_from_this(), std::placeholders::_1));
-    }
-    else
-    {
-        promise->then([]() {}, std::bind(&SensorService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+    } else {
+        promise->then([]() {},
+                      std::bind(&SensorService::onChannelError, this->shared_from_this(), std::placeholders::_1));
     }
 
     channel_->sendSensorStartResponse(response, std::move(promise));
     channel_->receive(this->shared_from_this());
 }
 
-void SensorService::sendDrivingStatusUnrestricted()
-{
+void SensorService::sendDrivingStatusUnrestricted() {
     aasdk::proto::messages::SensorEventIndication indication;
     indication.add_driving_status()->set_status(aasdk::proto::enums::DrivingStatus::UNRESTRICTED);
 
@@ -118,8 +100,7 @@ void SensorService::sendDrivingStatusUnrestricted()
     channel_->sendSensorEventIndication(indication, std::move(promise));
 }
 
-void SensorService::sendNightData()
-{
+void SensorService::sendNightData() {
     aasdk::proto::messages::SensorEventIndication indication;
     indication.add_night_mode()->set_is_night(false);
 
@@ -128,12 +109,11 @@ void SensorService::sendNightData()
     channel_->sendSensorEventIndication(indication, std::move(promise));
 }
 
-void SensorService::onChannelError(const aasdk::error::Error& e)
-{
+void SensorService::onChannelError(const aasdk::error::Error &e) {
     qCritical() << "[SensorService] channel error: " << e.what();
 }
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

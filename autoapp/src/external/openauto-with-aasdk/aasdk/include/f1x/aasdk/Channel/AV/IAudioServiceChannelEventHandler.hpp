@@ -18,42 +18,39 @@
 
 #pragma once
 
-#include <stdint.h>
 #include <aasdk_proto/AVChannelSetupRequestMessage.pb.h>
 #include <aasdk_proto/AVChannelStartIndicationMessage.pb.h>
 #include <aasdk_proto/AVChannelStopIndicationMessage.pb.h>
 #include <aasdk_proto/ChannelOpenRequestMessage.pb.h>
-#include <f1x/aasdk/Messenger/Timestamp.hpp>
+#include <stdint.h>
+
 #include <f1x/aasdk/Common/Data.hpp>
 #include <f1x/aasdk/Error/Error.hpp>
+#include <f1x/aasdk/Messenger/Timestamp.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace channel
-{
-namespace av
-{
+namespace f1x {
+namespace aasdk {
+namespace channel {
+namespace av {
 
-class IAudioServiceChannelEventHandler
-{
+class IAudioServiceChannelEventHandler {
 public:
     typedef std::shared_ptr<IAudioServiceChannelEventHandler> Pointer;
 
     IAudioServiceChannelEventHandler() = default;
     virtual ~IAudioServiceChannelEventHandler() = default;
 
-    virtual void onChannelOpenRequest(const proto::messages::ChannelOpenRequest& request) = 0;
-    virtual void onAVChannelSetupRequest(const proto::messages::AVChannelSetupRequest& request) = 0;
-    virtual void onAVChannelStartIndication(const proto::messages::AVChannelStartIndication& indication) = 0;
-    virtual void onAVChannelStopIndication(const proto::messages::AVChannelStopIndication& indication) = 0;
-    virtual void onAVMediaWithTimestampIndication(messenger::Timestamp::ValueType, const common::DataConstBuffer& buffer) = 0;
-    virtual void onAVMediaIndication(const common::DataConstBuffer& buffer) = 0;
-    virtual void onChannelError(const error::Error& e) = 0;
+    virtual void onChannelOpenRequest(const proto::messages::ChannelOpenRequest &request) = 0;
+    virtual void onAVChannelSetupRequest(const proto::messages::AVChannelSetupRequest &request) = 0;
+    virtual void onAVChannelStartIndication(const proto::messages::AVChannelStartIndication &indication) = 0;
+    virtual void onAVChannelStopIndication(const proto::messages::AVChannelStopIndication &indication) = 0;
+    virtual void onAVMediaWithTimestampIndication(messenger::Timestamp::ValueType,
+                                                  const common::DataConstBuffer &buffer) = 0;
+    virtual void onAVMediaIndication(const common::DataConstBuffer &buffer) = 0;
+    virtual void onChannelError(const error::Error &e) = 0;
 };
 
-}
-}
-}
-}
+}  // namespace av
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

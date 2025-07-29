@@ -19,23 +19,23 @@
 #pragma once
 
 #include <f1x/aasdk/Common/Data.hpp>
-#include <f1x/aasdk/Transport/ITransport.hpp>
-#include <f1x/aasdk/Messenger/ICryptor.hpp>
-#include <f1x/aasdk/Messenger/IMessageOutStream.hpp>
 #include <f1x/aasdk/Messenger/FrameHeader.hpp>
 #include <f1x/aasdk/Messenger/FrameSize.hpp>
+#include <f1x/aasdk/Messenger/ICryptor.hpp>
+#include <f1x/aasdk/Messenger/IMessageOutStream.hpp>
+#include <f1x/aasdk/Transport/ITransport.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-class MessageOutStream: public IMessageOutStream, public std::enable_shared_from_this<MessageOutStream>, boost::noncopyable
-{
+class MessageOutStream : public IMessageOutStream,
+                         public std::enable_shared_from_this<MessageOutStream>,
+                         boost::noncopyable {
 public:
-    MessageOutStream(boost::asio::io_service& ioService, transport::ITransport::Pointer transport, ICryptor::Pointer cryptor);
+    MessageOutStream(boost::asio::io_service &ioService,
+                     transport::ITransport::Pointer transport,
+                     ICryptor::Pointer cryptor);
 
     void stream(Message::Pointer message, SendPromise::Pointer promise) override;
 
@@ -43,10 +43,10 @@ private:
     using std::enable_shared_from_this<MessageOutStream>::shared_from_this;
 
     void streamSplittedMessage();
-    common::Data compoundFrame(FrameType frameType, const common::DataConstBuffer& payloadBuffer);
-    void streamEncryptedFrame(FrameType frameType, const common::DataConstBuffer& payloadBuffer);
-    void streamPlainFrame(FrameType frameType, const common::DataConstBuffer& payloadBuffer);
-    void setFrameSize(common::Data& data, FrameType frameType, size_t payloadSize, size_t totalSize);
+    common::Data compoundFrame(FrameType frameType, const common::DataConstBuffer &payloadBuffer);
+    void streamEncryptedFrame(FrameType frameType, const common::DataConstBuffer &payloadBuffer);
+    void streamPlainFrame(FrameType frameType, const common::DataConstBuffer &payloadBuffer);
+    void setFrameSize(common::Data &data, FrameType frameType, size_t payloadSize, size_t totalSize);
     void reset();
 
     boost::asio::io_service::strand strand_;
@@ -57,9 +57,9 @@ private:
     size_t remainingSize_;
     SendPromise::Pointer promise_;
 
-        static constexpr size_t cMaxFramePayloadSize = 0x4000;
+    static constexpr size_t cMaxFramePayloadSize = 0x4000;
 };
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

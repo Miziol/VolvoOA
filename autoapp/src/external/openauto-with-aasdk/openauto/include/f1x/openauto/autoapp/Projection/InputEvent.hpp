@@ -20,47 +20,32 @@
 
 #include <aasdk_proto/ButtonCodeEnum.pb.h>
 #include <aasdk_proto/TouchActionEnum.pb.h>
+
 #include <f1x/aasdk/IO/Promise.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-enum class ButtonEventType
-{
-    NONE,
-    PRESS,
-    RELEASE
-};
+enum class ButtonEventType { NONE, PRESS, RELEASE };
 
-enum class WheelDirection
-{
-    NONE,
-    LEFT,
-    RIGHT
-};
+enum class WheelDirection { NONE, LEFT, RIGHT };
 
-struct ButtonEvent
-{
+struct ButtonEvent {
     ButtonEventType type;
     WheelDirection wheelDirection;
     aasdk::proto::enums::ButtonCode::Enum code;
 };
 
-struct TouchEvent
-{
+struct TouchEvent {
     aasdk::proto::enums::TouchAction::Enum type;
     uint32_t x;
     uint32_t y;
     uint32_t pointerId;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

@@ -17,87 +17,71 @@
 */
 
 #include <algorithm>
-#include <functional>
-#include <f1x/aasdk/Messenger/Cryptor.hpp>
 #include <f1x/aasdk/Error/Error.hpp>
+#include <f1x/aasdk/Messenger/Cryptor.hpp>
+#include <functional>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
 Cryptor::Cryptor(transport::ISSLWrapper::Pointer sslWrapper)
-    : sslWrapper_(std::move(sslWrapper))
-    , maxBufferSize_(1024 * 20)
-    , certificate_(nullptr)
-    , privateKey_(nullptr)
-    , context_(nullptr)
-    , ssl_(nullptr)
-    , isActive_(false)
-{
+    : sslWrapper_(std::move(sslWrapper)),
+      maxBufferSize_(1024 * 20),
+      certificate_(nullptr),
+      privateKey_(nullptr),
+      context_(nullptr),
+      ssl_(nullptr),
+      isActive_(false) {}
 
-}
-
-void Cryptor::init()
-{
+void Cryptor::init() {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
     certificate_ = sslWrapper_->readCertificate(cCertificate);
 
-    if(certificate_ == nullptr)
-    {
+    if (certificate_ == nullptr) {
         throw error::Error(error::ErrorCode::SSL_READ_CERTIFICATE);
     }
 
     privateKey_ = sslWrapper_->readPrivateKey(cPrivateKey);
 
-    if(privateKey_ == nullptr)
-    {
+    if (privateKey_ == nullptr) {
         throw error::Error(error::ErrorCode::SSL_READ_PRIVATE_KEY);
     }
 
     auto method = sslWrapper_->getMethod();
 
-    if(method == nullptr)
-    {
+    if (method == nullptr) {
         throw error::Error(error::ErrorCode::SSL_METHOD);
     }
 
     context_ = sslWrapper_->createContext(method);
 
-    if(context_ == nullptr)
-    {
+    if (context_ == nullptr) {
         throw error::Error(error::ErrorCode::SSL_CONTEXT_CREATION);
     }
 
-    if(!sslWrapper_->useCertificate(context_, certificate_))
-    {
+    if (!sslWrapper_->useCertificate(context_, certificate_)) {
         throw error::Error(error::ErrorCode::SSL_USE_CERTIFICATE);
     }
 
-    if(!sslWrapper_->usePrivateKey(context_, privateKey_))
-    {
+    if (!sslWrapper_->usePrivateKey(context_, privateKey_)) {
         throw error::Error(error::ErrorCode::SSL_USE_PRIVATE_KEY);
     }
 
     ssl_ = sslWrapper_->createInstance(context_);
 
-    if(ssl_ == nullptr)
-    {
+    if (ssl_ == nullptr) {
         throw error::Error(error::ErrorCode::SSL_HANDLER_CREATION);
     }
 
     bIOs_ = sslWrapper_->createBIOs();
 
-    if(bIOs_.first == nullptr)
-    {
+    if (bIOs_.first == nullptr) {
         throw error::Error(error::ErrorCode::SSL_READ_BIO_CREATION);
     }
 
-    if(bIOs_.second == nullptr)
-    {
+    if (bIOs_.second == nullptr) {
         throw error::Error(error::ErrorCode::SSL_WRITE_BIO_CREATION);
     }
 
@@ -106,70 +90,56 @@ void Cryptor::init()
     sslWrapper_->setConnectState(ssl_);
 }
 
-void Cryptor::deinit()
-{
+void Cryptor::deinit() {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
-    if(ssl_ != nullptr)
-    {
+    if (ssl_ != nullptr) {
         sslWrapper_->free(ssl_);
         ssl_ = nullptr;
     }
 
     bIOs_ = std::make_pair(nullptr, nullptr);
 
-    if(context_ != nullptr)
-    {
+    if (context_ != nullptr) {
         sslWrapper_->free(context_);
         context_ = nullptr;
     }
 
-    if(certificate_ != nullptr)
-    {
+    if (certificate_ != nullptr) {
         sslWrapper_->free(certificate_);
         certificate_ = nullptr;
     }
 
-    if(privateKey_ != nullptr)
-    {
+    if (privateKey_ != nullptr) {
         sslWrapper_->free(privateKey_);
         privateKey_ = nullptr;
     }
 }
 
-bool Cryptor::doHandshake()
-{
+bool Cryptor::doHandshake() {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
     auto result = sslWrapper_->doHandshake(ssl_);
-    if(result == SSL_ERROR_WANT_READ)
-    {
+    if (result == SSL_ERROR_WANT_READ) {
         return false;
-    }
-    else if(result == SSL_ERROR_NONE)
-    {
+    } else if (result == SSL_ERROR_NONE) {
         isActive_ = true;
         return true;
-    }
-    else
-    {
+    } else {
         throw error::Error(error::ErrorCode::SSL_HANDSHAKE, result);
     }
 }
 
-size_t Cryptor::encrypt(common::Data& output, const common::DataConstBuffer& buffer)
-{
+size_t Cryptor::encrypt(common::Data &output, const common::DataConstBuffer &buffer) {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
     size_t totalWrittenBytes = 0;
 
-    while(totalWrittenBytes < buffer.size)
-    {
+    while (totalWrittenBytes < buffer.size) {
         const common::DataConstBuffer currentBuffer(buffer.cdata, buffer.size, totalWrittenBytes);
         const auto writeSize = sslWrapper_->sslWrite(ssl_, currentBuffer.cdata, currentBuffer.size);
 
-        if(writeSize <= 0)
-        {
+        if (writeSize <= 0) {
             throw error::Error(error::ErrorCode::SSL_WRITE, sslWrapper_->getError(ssl_, writeSize));
         }
 
@@ -179,8 +149,7 @@ size_t Cryptor::encrypt(common::Data& output, const common::DataConstBuffer& buf
     return this->read(output);
 }
 
-size_t Cryptor::decrypt(common::Data& output, const common::DataConstBuffer& buffer)
-{
+size_t Cryptor::decrypt(common::Data &output, const common::DataConstBuffer &buffer) {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
     this->write(buffer);
@@ -190,13 +159,11 @@ size_t Cryptor::decrypt(common::Data& output, const common::DataConstBuffer& buf
     size_t availableBytes = 1;
     size_t totalReadSize = 0;
 
-    while(availableBytes > 0)
-    {
-        const auto& currentBuffer = common::DataBuffer(output, totalReadSize + beginOffset);
+    while (availableBytes > 0) {
+        const auto &currentBuffer = common::DataBuffer(output, totalReadSize + beginOffset);
         auto readSize = sslWrapper_->sslRead(ssl_, currentBuffer.data, currentBuffer.size);
 
-        if(readSize <= 0)
-        {
+        if (readSize <= 0) {
             throw error::Error(error::ErrorCode::SSL_READ, sslWrapper_->getError(ssl_, readSize));
         }
 
@@ -208,8 +175,7 @@ size_t Cryptor::decrypt(common::Data& output, const common::DataConstBuffer& buf
     return totalReadSize;
 }
 
-common::Data Cryptor::readHandshakeBuffer()
-{
+common::Data Cryptor::readHandshakeBuffer() {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
     common::Data output;
@@ -217,28 +183,24 @@ common::Data Cryptor::readHandshakeBuffer()
     return output;
 }
 
-void Cryptor::writeHandshakeBuffer(const common::DataConstBuffer& buffer)
-{
+void Cryptor::writeHandshakeBuffer(const common::DataConstBuffer &buffer) {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
     this->write(buffer);
 }
 
-size_t Cryptor::read(common::Data& output)
-{
+size_t Cryptor::read(common::Data &output) {
     const auto pendingSize = sslWrapper_->bioCtrlPending(bIOs_.second);
 
     size_t beginOffset = output.size();
     output.resize(beginOffset + pendingSize);
     size_t totalReadSize = 0;
 
-    while(totalReadSize < pendingSize)
-    {
-        const auto& currentBuffer = common::DataBuffer(output, totalReadSize + beginOffset);
+    while (totalReadSize < pendingSize) {
+        const auto &currentBuffer = common::DataBuffer(output, totalReadSize + beginOffset);
         const auto readSize = sslWrapper_->bioRead(bIOs_.second, currentBuffer.data, currentBuffer.size);
 
-        if(readSize <= 0)
-        {
+        if (readSize <= 0) {
             throw error::Error(error::ErrorCode::SSL_BIO_READ, sslWrapper_->getError(ssl_, readSize));
         }
 
@@ -248,17 +210,14 @@ size_t Cryptor::read(common::Data& output)
     return totalReadSize;
 }
 
-void Cryptor::write(const common::DataConstBuffer& buffer)
-{
+void Cryptor::write(const common::DataConstBuffer &buffer) {
     size_t totalWrittenBytes = 0;
 
-    while(totalWrittenBytes < buffer.size)
-    {
+    while (totalWrittenBytes < buffer.size) {
         const common::DataConstBuffer currentBuffer(buffer.cdata, buffer.size, totalWrittenBytes);
         const auto writeSize = sslWrapper_->bioWrite(bIOs_.first, currentBuffer.cdata, currentBuffer.size);
 
-        if(writeSize <= 0)
-        {
+        if (writeSize <= 0) {
             throw error::Error(error::ErrorCode::SSL_BIO_WRITE, sslWrapper_->getError(ssl_, writeSize));
         }
 
@@ -266,14 +225,14 @@ void Cryptor::write(const common::DataConstBuffer& buffer)
     }
 }
 
-bool Cryptor::isActive() const
-{
+bool Cryptor::isActive() const {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
     return isActive_;
 }
 
-const std::string Cryptor::cCertificate = "-----BEGIN CERTIFICATE-----\n\
+const std::string Cryptor::cCertificate =
+    "-----BEGIN CERTIFICATE-----\n\
 MIIDKjCCAhICARswDQYJKoZIhvcNAQELBQAwWzELMAkGA1UEBhMCVVMxEzARBgNV\n\
 BAgMCkNhbGlmb3JuaWExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxHzAdBgNVBAoM\n\
 Fkdvb2dsZSBBdXRvbW90aXZlIExpbmswJhcRMTQwNzA0MDAwMDAwLTA3MDAXETQ1\n\
@@ -293,7 +252,8 @@ YmsbkPVNYZn37FlY7e2Z4FUphh0A7yME2Eh/e57QxWrJ1wubdzGnX8mrABc67ADU\n\
 U5r9tlTRqMs7FGOk6QS2Cxp4pqeVQsrPts4OEwyPUyb3LfFNo3+sP111D9zEow==\n\
 -----END CERTIFICATE-----\n";
 
-const std::string Cryptor::cPrivateKey = "-----BEGIN RSA PRIVATE KEY-----\n\
+const std::string Cryptor::cPrivateKey =
+    "-----BEGIN RSA PRIVATE KEY-----\n\
 MIIEowIBAAKCAQEAz3XWY2dR/H5Ym3G6TToY7uRdFb+BdRU1AGRsAVmZV1U28ugR\n\
 A22GLZfxYI7Bfqfqgw/FTYwYme+Jw/fqQGp8eF9DYW+qV/tiOOGAEeHSWopKFU/E\n\
 i91q0GNVDvprKbkfcamSKAsaSZ7KJWhU7yhzdwnVs73rAVGaTuQlthwSNDJqQ4M8\n\
@@ -321,6 +281,6 @@ eCXS4VrhEf4/HYMWP7GB5MFUOEVtlLiLM05ruUL7CrphdfgayDXVcTPfk75lLhmu\n\
 KAwp3tIHPoJOQiKNQ3/qks5km/9dujUGU2ARiU3qmxLMdgegFz8e\n\
 -----END RSA PRIVATE KEY-----\n";
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

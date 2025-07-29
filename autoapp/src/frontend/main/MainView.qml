@@ -4,12 +4,12 @@ import "qrc:/commons"
 
 ScreenElement {
     ListView {
-        model: aaService.aaDevices
+        model: usbService.usbDevices
 
         delegate: Button {
-            text: modelData.name
+            text: modelData.deviceName
 
-            onClicked: modelData.start()
+            onClicked: modelData.tryToStartAndroidAutoServer()
         }
     }
 

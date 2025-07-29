@@ -20,20 +20,16 @@
 
 #include <f1x/aasdk/Common/Data.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-class Timestamp
-{
+class Timestamp {
 public:
     typedef uint64_t ValueType;
 
     Timestamp(ValueType stamp);
-    Timestamp(const common::DataConstBuffer& buffer);
+    Timestamp(const common::DataConstBuffer &buffer);
 
     common::Data getData() const;
     ValueType getValue() const;
@@ -42,6 +38,6 @@ private:
     ValueType stamp_;
 };
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

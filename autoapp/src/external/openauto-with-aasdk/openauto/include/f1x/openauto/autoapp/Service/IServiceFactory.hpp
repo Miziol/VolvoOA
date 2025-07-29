@@ -21,24 +21,19 @@
 #include <f1x/aasdk/Messenger/IMessenger.hpp>
 #include <f1x/openauto/autoapp/Service/IService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-class IServiceFactory
-{
+class IServiceFactory {
 public:
     virtual ~IServiceFactory() = default;
 
     virtual ServiceList create(aasdk::messenger::IMessenger::Pointer messenger) = 0;
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

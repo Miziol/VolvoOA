@@ -20,18 +20,14 @@
 
 #include <f1x/aasdk/Common/Data.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-class MessageId
-{
+class MessageId {
 public:
     MessageId(uint16_t id);
-    MessageId(const common::Data& data);
+    MessageId(const common::Data &data);
 
     common::Data getData() const;
     static constexpr size_t getSizeOf() { return 2; }
@@ -42,14 +38,14 @@ public:
     bool operator==(uint16_t id) const;
     bool operator>=(uint16_t id) const;
     bool operator<=(uint16_t id) const;
-    MessageId& operator=(uint16_t id);
+    MessageId &operator=(uint16_t id);
 
 private:
     uint16_t id_;
 };
 
-std::ostream& operator<<(std::ostream& stream, const f1x::aasdk::messenger::MessageId& messageId);
+std::ostream &operator<<(std::ostream &stream, const f1x::aasdk::messenger::MessageId &messageId);
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

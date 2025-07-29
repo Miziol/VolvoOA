@@ -18,23 +18,19 @@
 
 #pragma once
 
+#include <boost/asio.hpp>
+#include <f1x/aasdk/Transport/DataSink.hpp>
+#include <f1x/aasdk/Transport/ITransport.hpp>
 #include <list>
 #include <queue>
-#include <boost/asio.hpp>
-#include <f1x/aasdk/Transport/ITransport.hpp>
-#include <f1x/aasdk/Transport/DataSink.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace transport
-{
+namespace f1x {
+namespace aasdk {
+namespace transport {
 
-class Transport: public ITransport, public std::enable_shared_from_this<Transport>, boost::noncopyable
-{
+class Transport : public ITransport, public std::enable_shared_from_this<Transport>, boost::noncopyable {
 public:
-    Transport(boost::asio::io_service& ioService);
+    Transport(boost::asio::io_service &ioService);
 
     void receive(size_t size, ReceivePromise::Pointer promise) override;
     void send(common::Data data, SendPromise::Pointer promise) override;
@@ -46,7 +42,7 @@ protected:
     using std::enable_shared_from_this<Transport>::shared_from_this;
     void receiveHandler(size_t bytesTransferred);
     void distributeReceivedData();
-    void rejectReceivePromises(const error::Error& e);
+    void rejectReceivePromises(const error::Error &e);
 
     virtual void enqueueReceive(common::DataBuffer buffer) = 0;
     virtual void enqueueSend(SendQueue::iterator queueElement) = 0;
@@ -60,6 +56,6 @@ protected:
     SendQueue sendQueue_;
 };
 
-}
-}
-}
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

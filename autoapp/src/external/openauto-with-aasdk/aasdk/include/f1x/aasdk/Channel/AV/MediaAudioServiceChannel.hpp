@@ -20,22 +20,17 @@
 
 #include <f1x/aasdk/Channel/AV/AudioServiceChannel.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace channel
-{
-namespace av
-{
+namespace f1x {
+namespace aasdk {
+namespace channel {
+namespace av {
 
-class MediaAudioServiceChannel: public AudioServiceChannel
-{
+class MediaAudioServiceChannel : public AudioServiceChannel {
 public:
-    MediaAudioServiceChannel(boost::asio::io_service::strand& strand, messenger::IMessenger::Pointer messenger);
+    MediaAudioServiceChannel(boost::asio::io_service::strand &strand, messenger::IMessenger::Pointer messenger);
 };
 
-}
-}
-}
-}
+}  // namespace av
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

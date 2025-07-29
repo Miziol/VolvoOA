@@ -20,21 +20,17 @@
 
 #include <f1x/aasdk/Common/Data.hpp>
 #include <f1x/aasdk/Messenger/ChannelId.hpp>
-#include <f1x/aasdk/Messenger/FrameType.hpp>
 #include <f1x/aasdk/Messenger/EncryptionType.hpp>
+#include <f1x/aasdk/Messenger/FrameType.hpp>
 #include <f1x/aasdk/Messenger/MessageType.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-class FrameHeader
-{
+class FrameHeader {
 public:
-    FrameHeader(const common::DataConstBuffer& buffer);
+    FrameHeader(const common::DataConstBuffer &buffer);
     FrameHeader(ChannelId channelId, FrameType frameType, EncryptionType encryptionType, MessageType messageType);
 
     ChannelId getChannelId() const;
@@ -52,6 +48,6 @@ private:
     MessageType messageType_;
 };
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

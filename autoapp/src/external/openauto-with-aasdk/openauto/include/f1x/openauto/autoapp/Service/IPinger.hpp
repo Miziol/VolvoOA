@@ -20,17 +20,12 @@
 
 #include <f1x/aasdk/IO/Promise.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-class IPinger
-{
+class IPinger {
 public:
     typedef std::shared_ptr<IPinger> Pointer;
     typedef aasdk::io::Promise<void> Promise;
@@ -41,7 +36,7 @@ public:
     virtual void cancel() = 0;
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

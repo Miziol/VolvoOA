@@ -19,31 +19,27 @@
 #pragma once
 
 #include <boost/asio.hpp>
-#include <f1x/aasdk/Messenger/IMessenger.hpp>
 #include <f1x/aasdk/Channel/Promise.hpp>
+#include <f1x/aasdk/Messenger/IMessenger.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace channel
-{
+namespace f1x {
+namespace aasdk {
+namespace channel {
 
-class ServiceChannel
-{
+class ServiceChannel {
 protected:
-    ServiceChannel(boost::asio::io_service::strand& strand,
+    ServiceChannel(boost::asio::io_service::strand &strand,
                    messenger::IMessenger::Pointer messenger,
                    messenger::ChannelId channelId);
 
     virtual ~ServiceChannel() = default;
     void send(messenger::Message::Pointer message, SendPromise::Pointer promise);
 
-    boost::asio::io_service::strand& strand_;
+    boost::asio::io_service::strand &strand_;
     messenger::IMessenger::Pointer messenger_;
     messenger::ChannelId channelId_;
 };
 
-}
-}
-}
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

@@ -18,8 +18,8 @@
 
 #include <aasdk_proto/InputEventIndicationMessage.pb.h>
 
-#include <QList>
 #include <QDebug>
+#include <QList>
 #include <f1x/openauto/autoapp/Service/InputService.hpp>
 
 namespace f1x {
@@ -96,7 +96,7 @@ void InputService::onBindingRequest(const aasdk::proto::messages::BindingRequest
         if (std::find(supportedButtonCodes.begin(), supportedButtonCodes.end(), request.scan_codes(i)) ==
             supportedButtonCodes.end()) {
             qCritical() << "[InputService] binding request, scan code: " << request.scan_codes(i)
-                                << " is not supported.";
+                        << " is not supported.";
 
             status = aasdk::proto::enums::Status::FAIL;
             break;

@@ -18,18 +18,14 @@
 
 #pragma once
 
-#include <memory>
 #include <f1x/aasdk/IO/Promise.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-class IConnectedAccessoriesEnumerator
-{
+class IConnectedAccessoriesEnumerator {
 public:
     typedef std::shared_ptr<IConnectedAccessoriesEnumerator> Pointer;
     typedef io::Promise<bool> Promise;
@@ -39,6 +35,6 @@ public:
     virtual void cancel() = 0;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

@@ -17,23 +17,16 @@
 */
 
 #include <cstring>
-#include <f1x/aasdk/Transport/DataSink.hpp>
 #include <f1x/aasdk/Error/Error.hpp>
+#include <f1x/aasdk/Transport/DataSink.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace transport
-{
+namespace f1x {
+namespace aasdk {
+namespace transport {
 
-DataSink::DataSink()
-    : data_(common::cStaticDataSize)
-{
-}
+DataSink::DataSink() : data_(common::cStaticDataSize) {}
 
-common::DataBuffer DataSink::fill()
-{
+common::DataBuffer DataSink::fill() {
     const auto offset = data_.size();
     data_.resize(data_.size() + cChunkSize);
 
@@ -41,25 +34,20 @@ common::DataBuffer DataSink::fill()
     return common::DataBuffer(ptr, cChunkSize);
 }
 
-void DataSink::commit(common::Data::size_type size)
-{
-    if(size > cChunkSize)
-    {
+void DataSink::commit(common::Data::size_type size) {
+    if (size > cChunkSize) {
         throw error::Error(error::ErrorCode::DATA_SINK_COMMIT_OVERFLOW);
     }
 
     data_.erase_end((cChunkSize - size));
 }
 
-common::Data::size_type DataSink::getAvailableSize()
-{
+common::Data::size_type DataSink::getAvailableSize() {
     return data_.size();
 }
 
-common::Data DataSink::consume(common::Data::size_type size)
-{
-    if(size > data_.size())
-    {
+common::Data DataSink::consume(common::Data::size_type size) {
+    if (size > data_.size()) {
         throw error::Error(error::ErrorCode::DATA_SINK_CONSUME_UNDERFLOW);
     }
 
@@ -70,6 +58,6 @@ common::Data DataSink::consume(common::Data::size_type size)
     return data;
 }
 
-}
-}
-}
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

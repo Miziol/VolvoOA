@@ -26,12 +26,11 @@ namespace openauto {
 namespace autoapp {
 namespace projection {
 
-QtAudioOutput::QtAudioOutput(uint32_t channelCount, uint32_t sampleSize, uint32_t sampleRate) // TODO remove sampleSize
-    : playbackStarted_(false)
-{
+QtAudioOutput::QtAudioOutput(uint32_t channelCount, QAudioFormat::SampleFormat sampleFormat, uint32_t sampleRate)
+    : playbackStarted_(false) {
     audioFormat_.setChannelCount(channelCount);
     audioFormat_.setSampleRate(sampleRate);
-    audioFormat_.setSampleFormat(QAudioFormat::Int16);
+    audioFormat_.setSampleFormat(sampleFormat);
 
     this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtAudioOutput::startPlayback, this, &QtAudioOutput::onStartPlayback);
@@ -42,75 +41,71 @@ QtAudioOutput::QtAudioOutput(uint32_t channelCount, uint32_t sampleSize, uint32_
     audioOutput_ = std::make_unique<QAudioSink>(QMediaDevices::defaultAudioOutput(), audioFormat_);
 }
 
-bool QtAudioOutput::open()
-{
+bool QtAudioOutput::open() {
     return audioBuffer_.open(QIODevice::ReadWrite);
 }
 
-void QtAudioOutput::write(aasdk::messenger::Timestamp::ValueType, const aasdk::common::DataConstBuffer& buffer)
-{
-    audioBuffer_.write(reinterpret_cast<const char*>(buffer.cdata), buffer.size);
+void QtAudioOutput::write(aasdk::messenger::Timestamp::ValueType, const aasdk::common::DataConstBuffer &buffer) {
+    audioBuffer_.write(reinterpret_cast<const char *>(buffer.cdata), buffer.size);
 }
 
-void QtAudioOutput::start()
-{
+void QtAudioOutput::start() {
     emit startPlayback();
 }
 
-void QtAudioOutput::stop()
-{
+void QtAudioOutput::stop() {
     emit stopPlayback();
 }
 
-void QtAudioOutput::suspend()
-{
+void QtAudioOutput::suspend() {
     emit suspendPlayback();
 }
 
-uint32_t QtAudioOutput::getSampleSize() const
-{
-    return 16; // hardcoded in line 39
-    //return audioFormat_.sampleSize(); // TODO return value based on QSampleFormat
+uint32_t QtAudioOutput::getSampleSize() const {
+    switch (audioFormat_.sampleFormat()) {
+        case QAudioFormat::Float:
+        case QAudioFormat::Int32:
+            return 32;
+        case QAudioFormat::Int16:
+            return 16;
+        case QAudioFormat::UInt8:
+            return 8;
+        case QAudioFormat::Unknown:
+        defualt:
+            return 0;
+    }
+    return 0;
 }
 
-uint32_t QtAudioOutput::getChannelCount() const
-{
+uint32_t QtAudioOutput::getChannelCount() const {
     return audioFormat_.channelCount();
 }
 
-uint32_t QtAudioOutput::getSampleRate() const
-{
+uint32_t QtAudioOutput::getSampleRate() const {
     return audioFormat_.sampleRate();
 }
 
-void QtAudioOutput::onStartPlayback()
-{
-    if(!playbackStarted_)
-    {
+void QtAudioOutput::onStartPlayback() {
+    if (!playbackStarted_) {
         audioOutput_->start(&audioBuffer_);
         playbackStarted_ = true;
-    }
-    else
-    {
+    } else {
         audioOutput_->resume();
     }
 }
 
-void QtAudioOutput::onSuspendPlayback()
-{
+void QtAudioOutput::onSuspendPlayback() {
     audioOutput_->suspend();
 }
 
-void QtAudioOutput::onStopPlayback()
-{
-    if(playbackStarted_)
-    {
+void QtAudioOutput::onStopPlayback() {
+    if (playbackStarted_) {
         audioOutput_->stop();
         playbackStarted_ = false;
     }
 }
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

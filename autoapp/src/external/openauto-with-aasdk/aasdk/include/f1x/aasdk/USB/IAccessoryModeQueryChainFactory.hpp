@@ -20,21 +20,17 @@
 
 #include <f1x/aasdk/USB/IAccessoryModeQueryChain.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-class IAccessoryModeQueryChainFactory
-{
+class IAccessoryModeQueryChainFactory {
 public:
     virtual ~IAccessoryModeQueryChainFactory() = default;
 
     virtual IAccessoryModeQueryChain::Pointer create() = 0;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

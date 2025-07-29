@@ -18,18 +18,14 @@
 
 #pragma once
 
-#include <memory>
 #include <f1x/aasdk/Messenger/Promise.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-class IMessageInStream
-{
+class IMessageInStream {
 public:
     typedef std::shared_ptr<IMessageInStream> Pointer;
 
@@ -39,6 +35,6 @@ public:
     virtual void startReceive(ReceivePromise::Pointer promise) = 0;
 };
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

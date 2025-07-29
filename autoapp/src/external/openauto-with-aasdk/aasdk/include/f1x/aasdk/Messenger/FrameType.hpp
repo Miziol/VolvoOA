@@ -20,21 +20,12 @@
 
 #include <stdint.h>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-enum class FrameType
-{
-    MIDDLE = 0,
-    FIRST = 1 << 0,
-    LAST = 1 << 1,
-    BULK = FIRST | LAST
-};
+enum class FrameType { MIDDLE = 0, FIRST = 1 << 0, LAST = 1 << 1, BULK = FIRST | LAST };
 
 }
-}
-}
+}  // namespace aasdk
+}  // namespace f1x

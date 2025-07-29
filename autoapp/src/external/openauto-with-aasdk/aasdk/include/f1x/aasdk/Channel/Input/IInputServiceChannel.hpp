@@ -18,26 +18,22 @@
 
 #pragma once
 
-#include <memory>
-#include <aasdk_proto/StatusEnum.pb.h>
 #include <aasdk_proto/BindingResponseMessage.pb.h>
-#include <aasdk_proto/InputEventIndicationMessage.pb.h>
 #include <aasdk_proto/ChannelOpenResponseMessage.pb.h>
-#include <f1x/aasdk/Messenger/ChannelId.hpp>
-#include <f1x/aasdk/Channel/Promise.hpp>
+#include <aasdk_proto/InputEventIndicationMessage.pb.h>
+#include <aasdk_proto/StatusEnum.pb.h>
+
 #include <f1x/aasdk/Channel/Input/IInputServiceChannelEventHandler.hpp>
+#include <f1x/aasdk/Channel/Promise.hpp>
+#include <f1x/aasdk/Messenger/ChannelId.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace channel
-{
-namespace input
-{
+namespace f1x {
+namespace aasdk {
+namespace channel {
+namespace input {
 
-class IInputServiceChannel
-{
+class IInputServiceChannel {
 public:
     typedef std::shared_ptr<IInputServiceChannel> Pointer;
 
@@ -45,13 +41,16 @@ public:
     virtual ~IInputServiceChannel() = default;
 
     virtual void receive(IInputServiceChannelEventHandler::Pointer eventHandler) = 0;
-    virtual void sendChannelOpenResponse(const proto::messages::ChannelOpenResponse& response, SendPromise::Pointer promise) = 0;
-    virtual void sendInputEventIndication(const proto::messages::InputEventIndication& indication, SendPromise::Pointer promise) = 0;
-    virtual void sendBindingResponse(const proto::messages::BindingResponse& response, SendPromise::Pointer promise) = 0;
+    virtual void sendChannelOpenResponse(const proto::messages::ChannelOpenResponse &response,
+                                         SendPromise::Pointer promise) = 0;
+    virtual void sendInputEventIndication(const proto::messages::InputEventIndication &indication,
+                                          SendPromise::Pointer promise) = 0;
+    virtual void sendBindingResponse(const proto::messages::BindingResponse &response,
+                                     SendPromise::Pointer promise) = 0;
     virtual messenger::ChannelId getId() const = 0;
 };
 
-}
-}
-}
-}
+}  // namespace input
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x
