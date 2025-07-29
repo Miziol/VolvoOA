@@ -4,10 +4,10 @@
 #include <libusb-1.0/libusb.h>
 
 #include <QObject>
-#include <QStandardItemModel>
 
 #include "../logging/loggingCategory.h"
 #include "../settingsManager.h"
+#include "androidAutoDevice.h"
 #include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
 #include "f1x/openauto/autoapp/Service/ServiceFactory.hpp"
 
@@ -21,7 +21,10 @@ public:
     ~AndroidAutoService();
 
 public slots:
-    void addDevice(libusb_context *context, libusb_device *device);
+    void addUSBDevice(libusb_context *context, libusb_device *device);
+    void removeDevice(libusb_device *device);
+    void addNetworkDevice();  // TCP
+    void clearCurrentAADevice();
 
     void startIOServiceWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
     void createFactories(QObject *qmlRootObject);
@@ -34,7 +37,7 @@ private:
     f1x::openauto::autoapp::service::ServiceFactory *serviceFactory;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory *androidAutoEntityFactory;
 
-    QList<QObject *> AAdevices;
+    AndroidAutoDevice *aaDevice;
 };
 
 #endif  // AUTOAPP_ANDROIDAUTOSERVICE_H

@@ -18,6 +18,9 @@
 class AndroidAutoDevice : public QObject, public f1x::openauto::autoapp::service::IAndroidAutoEntityEventHandler {
     Q_OBJECT
 
+signals:
+    void deleteMe();
+
 public:
     AndroidAutoDevice(libusb_context *context,
                       libusb_device *new_device,
@@ -27,6 +30,7 @@ public:
 
 private:
     QLoggingCategory category;
+    int countOnExit;
 
     f1x::aasdk::usb::USBWrapper usbWrapper;
     boost::asio::io_service &ioService;
@@ -42,6 +46,8 @@ public slots:
     void start();
     void stop();
     void onAndroidAutoQuit() override;
+
+    libusb_device *getDevice();
 
 private:
 };

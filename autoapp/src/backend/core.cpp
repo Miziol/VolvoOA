@@ -36,7 +36,8 @@ AppCore::AppCore(SettingsManager &new_settings)
     qRegisterMetaType<libusb_context *>("libusb_context *");
     qRegisterMetaType<libusb_device *>("libusb_device *");
 
-    connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addDevice);
+    connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addUSBDevice);
+    connect(&usbService, &UsbService::removeAndroidAutoDevice, &androidAutoService, &AndroidAutoService::removeDevice);
     // qmlStyle.changeTextSize(GuiStyle::textSizeType::LARGE);
     // qmlStyle.changeDarkLightMode();
 }

@@ -14,12 +14,14 @@ AndroidAutoDevice::AndroidAutoDevice(
       usbWrapper(f1x::aasdk::usb::USBWrapper(context)),
       ioService(new_ioService),
       androidAutoEntityFactory(new_androidAutoEntityFactory),
-      androidAutoEntity(nullptr) {
+      androidAutoEntity(nullptr),
+      countOnExit(0) {
     open();
     start();
 }
 
 AndroidAutoDevice::~AndroidAutoDevice() {
+    stop();
     close();
 }
 
@@ -50,8 +52,20 @@ void AndroidAutoDevice::start() {
     cinfo << "Started AA entity";
 }
 
-void AndroidAutoDevice::stop() {}
+void AndroidAutoDevice::stop() {
+    if (androidAutoEntity != nullptr)
+        androidAutoEntity->stop();
+}
 
 void AndroidAutoDevice::onAndroidAutoQuit() {
-    qInfo() << "AndroidAutoQuit";
+    qWarning() << "AndroidAutoQuit";
+    if (countOnExit > 0) {
+        androidAutoEntity.reset();
+        emit deleteMe();
+    }
+    countOnExit++;
+}
+
+libusb_device *AndroidAutoDevice::getDevice() {
+    return device;
 }

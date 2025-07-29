@@ -3,15 +3,34 @@
 #include "androidAutoDevice.h"
 
 AndroidAutoService::AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService)
-    : category("ANDROID AUTO SERVICE"), settingsManager(new_settings), ioService(new_ioService) {}
+    : category("ANDROID AUTO SERVICE"), settingsManager(new_settings), ioService(new_ioService), aaDevice(nullptr) {}
 
 AndroidAutoService::~AndroidAutoService() {}
 
-void AndroidAutoService::addDevice(libusb_context *context, libusb_device *device) {
-    cinfo << "New AA device start processing";
-    AAdevices.append(new AndroidAutoDevice(context, device, ioService, *androidAutoEntityFactory));
+void AndroidAutoService::addUSBDevice(libusb_context *context, libusb_device *device) {
+    if (aaDevice == nullptr) {
+        cinfo << "New AA device start processing";
+        aaDevice = new AndroidAutoDevice(context, device, ioService, *androidAutoEntityFactory);
+        connect(aaDevice, &AndroidAutoDevice::deleteMe, this, &AndroidAutoService::clearCurrentAADevice);
+    } else {
+        cwarning << "Android Auto entity already exist. AA device ignored";
+    }
+}
 
-    cinfo << "Adding device";
+void AndroidAutoService::removeDevice(libusb_device *device) {
+    if (device == aaDevice->getDevice()) {
+        cinfo << "Stoping AA device";
+        aaDevice->stop();
+    }
+}
+
+void AndroidAutoService::addNetworkDevice() {
+    ;
+}
+
+void AndroidAutoService::clearCurrentAADevice() {
+    delete aaDevice;
+    aaDevice = nullptr;
 }
 
 void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioService,

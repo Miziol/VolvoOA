@@ -6,6 +6,7 @@
 #include <aasdk_proto/VideoResolutionEnum.pb.h>
 
 #include <QBluetoothAddress>
+#include <QRect>
 #include <QSettings>
 
 #include "f1x/openauto/autoapp/Configuration/BluetootAdapterType.hpp"

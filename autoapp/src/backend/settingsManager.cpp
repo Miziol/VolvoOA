@@ -1,7 +1,6 @@
 #include "settingsManager.h"
 
 #include <QGuiApplication>
-#include <QRect>
 
 SettingsManager::SettingsManager() : category("SETTINGS MANAGER") {
     setDefault();
