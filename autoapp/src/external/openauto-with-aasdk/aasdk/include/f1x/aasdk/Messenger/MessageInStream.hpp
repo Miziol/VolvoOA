@@ -18,32 +18,32 @@
 
 #pragma once
 
-#include <f1x/aasdk/Transport/ITransport.hpp>
-#include <f1x/aasdk/Messenger/IMessageInStream.hpp>
-#include <f1x/aasdk/Messenger/ICryptor.hpp>
 #include <f1x/aasdk/Messenger/FrameHeader.hpp>
 #include <f1x/aasdk/Messenger/FrameSize.hpp>
+#include <f1x/aasdk/Messenger/ICryptor.hpp>
+#include <f1x/aasdk/Messenger/IMessageInStream.hpp>
+#include <f1x/aasdk/Transport/ITransport.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-class MessageInStream: public IMessageInStream, public std::enable_shared_from_this<MessageInStream>, boost::noncopyable
-{
+class MessageInStream : public IMessageInStream,
+                        public std::enable_shared_from_this<MessageInStream>,
+                        boost::noncopyable {
 public:
-    MessageInStream(boost::asio::io_service& ioService, transport::ITransport::Pointer transport, ICryptor::Pointer cryptor);
+    MessageInStream(boost::asio::io_service &ioService,
+                    transport::ITransport::Pointer transport,
+                    ICryptor::Pointer cryptor);
 
     void startReceive(ReceivePromise::Pointer promise) override;
 
 private:
     using std::enable_shared_from_this<MessageInStream>::shared_from_this;
 
-    void receiveFrameHeaderHandler(const common::DataConstBuffer& buffer);
-    void receiveFrameSizeHandler(const common::DataConstBuffer& buffer);
-    void receiveFramePayloadHandler(const common::DataConstBuffer& buffer);
+    void receiveFrameHeaderHandler(const common::DataConstBuffer &buffer);
+    void receiveFrameSizeHandler(const common::DataConstBuffer &buffer);
+    void receiveFramePayloadHandler(const common::DataConstBuffer &buffer);
 
     boost::asio::io_service::strand strand_;
     transport::ITransport::Pointer transport_;
@@ -54,6 +54,6 @@ private:
     Message::Pointer messageBig_;
 };
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

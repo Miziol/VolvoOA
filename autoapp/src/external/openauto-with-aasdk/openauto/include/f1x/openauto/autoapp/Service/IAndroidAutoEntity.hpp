@@ -18,30 +18,25 @@
 
 #pragma once
 
-#include <memory>
 #include <f1x/openauto/autoapp/Service/IAndroidAutoEntityEventHandler.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-class IAndroidAutoEntity
-{
+class IAndroidAutoEntity {
 public:
     typedef std::shared_ptr<IAndroidAutoEntity> Pointer;
 
     virtual ~IAndroidAutoEntity() = default;
 
-    virtual void start(IAndroidAutoEntityEventHandler& eventHandler) = 0;
+    virtual void start(IAndroidAutoEntityEventHandler &eventHandler) = 0;
     virtual void stop() = 0;
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

@@ -20,17 +20,16 @@
 
 #include <f1x/aasdk/USB/AccessoryModeQuery.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-class AccessoryModeStartQuery: public AccessoryModeQuery, public std::enable_shared_from_this<AccessoryModeStartQuery>
-{
+class AccessoryModeStartQuery : public AccessoryModeQuery,
+                                public std::enable_shared_from_this<AccessoryModeStartQuery> {
 public:
-    AccessoryModeStartQuery(boost::asio::io_service& ioService, IUSBWrapper& usbWrapper, IUSBEndpoint::Pointer usbEndpoint);
+    AccessoryModeStartQuery(boost::asio::io_service &ioService,
+                            IUSBWrapper &usbWrapper,
+                            IUSBEndpoint::Pointer usbEndpoint);
     void start(Promise::Pointer promise) override;
 
 private:
@@ -39,6 +38,6 @@ private:
     static constexpr uint32_t ACC_REQ_START = 53;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

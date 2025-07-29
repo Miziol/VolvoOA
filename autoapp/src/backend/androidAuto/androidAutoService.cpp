@@ -26,8 +26,7 @@ void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioServic
 }
 
 void AndroidAutoService::createFactories(QObject *qmlRootObject) {
-    serviceFactory = new f1x::openauto::autoapp::service::ServiceFactory(
-        ioService, settingsManager, qmlRootObject);
+    serviceFactory = new f1x::openauto::autoapp::service::ServiceFactory(ioService, settingsManager, qmlRootObject);
     androidAutoEntityFactory =
         new f1x::openauto::autoapp::service::AndroidAutoEntityFactory(ioService, settingsManager, *serviceFactory);
 }

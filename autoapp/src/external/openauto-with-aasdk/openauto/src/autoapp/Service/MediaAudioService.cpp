@@ -19,22 +19,19 @@
 #include <f1x/aasdk/Channel/AV/MediaAudioServiceChannel.hpp>
 #include <f1x/openauto/autoapp/Service/MediaAudioService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-MediaAudioService::MediaAudioService(boost::asio::io_service& ioService, aasdk::messenger::IMessenger::Pointer messenger, projection::IAudioOutput::Pointer audioOutput)
-    : AudioService(ioService, std::make_shared<aasdk::channel::av::MediaAudioServiceChannel>(strand_, std::move(messenger)), std::move(audioOutput))
-{
+MediaAudioService::MediaAudioService(boost::asio::io_service &ioService,
+                                     aasdk::messenger::IMessenger::Pointer messenger,
+                                     projection::IAudioOutput::Pointer audioOutput)
+    : AudioService(ioService,
+                   std::make_shared<aasdk::channel::av::MediaAudioServiceChannel>(strand_, std::move(messenger)),
+                   std::move(audioOutput)) {}
 
-}
-
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

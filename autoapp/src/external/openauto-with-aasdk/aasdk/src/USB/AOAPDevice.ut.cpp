@@ -17,24 +17,19 @@
 */
 
 #include <boost/test/unit_test.hpp>
-#include <f1x/aasdk/USB/UT/USBWrapper.mock.hpp>
 #include <f1x/aasdk/USB/AOAPDevice.hpp>
+#include <f1x/aasdk/USB/UT/USBWrapper.mock.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
-namespace ut
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
+namespace ut {
 
-BOOST_AUTO_TEST_CASE(AOAPDevice_OutEndpointFirst)
-{
+BOOST_AUTO_TEST_CASE(AOAPDevice_OutEndpointFirst) {
     USBWrapperMock usbWrapperMock;
     boost::asio::io_service ioService;
     USBWrapperMock::DummyDeviceHandle dummyDeviceHandle;
-    DeviceHandle deviceHandle(reinterpret_cast<libusb_device_handle*>(&dummyDeviceHandle), [](auto*) {});
+    DeviceHandle deviceHandle(reinterpret_cast<libusb_device_handle *>(&dummyDeviceHandle), [](auto *) {});
 
     libusb_endpoint_descriptor endpointDescriptor[2];
     endpointDescriptor[0].bEndpointAddress = LIBUSB_ENDPOINT_OUT + 4;
@@ -51,12 +46,11 @@ BOOST_AUTO_TEST_CASE(AOAPDevice_OutEndpointFirst)
     BOOST_TEST(endpointDescriptor[1].bEndpointAddress == aoapDevice.getInEndpoint().getAddress());
 }
 
-BOOST_AUTO_TEST_CASE(AOAPDevice_InEndpointFirst)
-{
+BOOST_AUTO_TEST_CASE(AOAPDevice_InEndpointFirst) {
     USBWrapperMock usbWrapperMock;
     boost::asio::io_service ioService;
     USBWrapperMock::DummyDeviceHandle dummyDeviceHandle;
-    DeviceHandle deviceHandle(reinterpret_cast<libusb_device_handle*>(&dummyDeviceHandle), [](auto*) {});
+    DeviceHandle deviceHandle(reinterpret_cast<libusb_device_handle *>(&dummyDeviceHandle), [](auto *) {});
 
     libusb_endpoint_descriptor endpointDescriptor[2];
     endpointDescriptor[0].bEndpointAddress = LIBUSB_ENDPOINT_IN + 4;
@@ -73,7 +67,7 @@ BOOST_AUTO_TEST_CASE(AOAPDevice_InEndpointFirst)
     BOOST_TEST(endpointDescriptor[1].bEndpointAddress == aoapDevice.getOutEndpoint().getAddress());
 }
 
-}
-}
-}
-}
+}  // namespace ut
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

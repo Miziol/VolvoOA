@@ -20,15 +20,11 @@
 
 #include <string>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-enum class ChannelId
-{
+enum class ChannelId {
     CONTROL,
     INPUT,
     SENSOR,
@@ -43,6 +39,6 @@ enum class ChannelId
 
 std::string channelIdToString(ChannelId channelId);
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

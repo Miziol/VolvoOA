@@ -20,31 +20,27 @@
 
 #include <aasdk_proto/BluetoothPairingRequestMessage.pb.h>
 #include <aasdk_proto/ChannelOpenRequestMessage.pb.h>
+
 #include <f1x/aasdk/Error/Error.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace channel
-{
-namespace bluetooth
-{
+namespace f1x {
+namespace aasdk {
+namespace channel {
+namespace bluetooth {
 
-class IBluetoothServiceChannelEventHandler
-{
+class IBluetoothServiceChannelEventHandler {
 public:
     typedef std::shared_ptr<IBluetoothServiceChannelEventHandler> Pointer;
 
     IBluetoothServiceChannelEventHandler() = default;
     virtual ~IBluetoothServiceChannelEventHandler() = default;
 
-    virtual void onChannelOpenRequest(const proto::messages::ChannelOpenRequest& request) = 0;
-    virtual void onBluetoothPairingRequest(const proto::messages::BluetoothPairingRequest& request) = 0;
-    virtual void onChannelError(const error::Error& e) = 0;
+    virtual void onChannelOpenRequest(const proto::messages::ChannelOpenRequest &request) = 0;
+    virtual void onBluetoothPairingRequest(const proto::messages::BluetoothPairingRequest &request) = 0;
+    virtual void onChannelError(const error::Error &e) = 0;
 };
 
-}
-}
-}
-}
+}  // namespace bluetooth
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

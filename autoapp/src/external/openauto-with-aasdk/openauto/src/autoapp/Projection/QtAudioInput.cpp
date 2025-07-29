@@ -26,12 +26,13 @@ namespace openauto {
 namespace autoapp {
 namespace projection {
 
-QtAudioInput::QtAudioInput(uint32_t channelCount, uint32_t sampleSize, uint32_t sampleRate) : ioDevice_(nullptr) {
+QtAudioInput::QtAudioInput(uint32_t channelCount, QAudioFormat::SampleFormat sampleFormat, uint32_t sampleRate)
+    : ioDevice_(nullptr) {
     qRegisterMetaType<IAudioInput::StartPromise::Pointer>("StartPromise::Pointer");
 
     audioFormat_.setChannelCount(channelCount);
     audioFormat_.setSampleRate(sampleRate);
-    audioFormat_.setSampleFormat(QAudioFormat::Int16);
+    audioFormat_.setSampleFormat(sampleFormat);
 
     this->moveToThread(QGuiApplication::instance()->thread());
     connect(this, &QtAudioInput::startRecording, this, &QtAudioInput::onStartRecording, Qt::QueuedConnection);
@@ -73,10 +74,20 @@ void QtAudioInput::stop() {
     emit stopRecording();
 }
 
-uint32_t QtAudioInput::getSampleSize() const
-{
-    return 16; // hardcoded in line 39
-    //return audioFormat_.sampleSize(); // TODO return value based on QSampleFormat
+uint32_t QtAudioInput::getSampleSize() const {
+    switch (audioFormat_.sampleFormat()) {
+        case QAudioFormat::Float:
+        case QAudioFormat::Int32:
+            return 32;
+        case QAudioFormat::Int16:
+            return 16;
+        case QAudioFormat::UInt8:
+            return 8;
+        case QAudioFormat::Unknown:
+        defualt:
+            return 0;
+    }
+    return 0;
 }
 
 uint32_t QtAudioInput::getChannelCount() const {
@@ -92,8 +103,7 @@ void QtAudioInput::onStartRecording(StartPromise::Pointer promise) {
 
     ioDevice_ = audioInput_->start();
 
-    if(ioDevice_ != nullptr)
-    {
+    if (ioDevice_ != nullptr) {
         connect(ioDevice_, &QIODevice::readyRead, this, &QtAudioInput::onReadyRead, Qt::QueuedConnection);
         promise->resolve();
     } else {
@@ -109,8 +119,7 @@ void QtAudioInput::onStopRecording() {
         readPromise_.reset();
     }
 
-    if(ioDevice_ != nullptr)
-    {
+    if (ioDevice_ != nullptr) {
         ioDevice_->reset();
         ioDevice_->disconnect();
         ioDevice_ = nullptr;
@@ -128,16 +137,13 @@ void QtAudioInput::onReadyRead() {
 
     aasdk::common::Data data(cSampleSize, 0);
     aasdk::common::DataBuffer buffer(data);
-    auto readSize = ioDevice_->read(reinterpret_cast<char*>(buffer.data), buffer.size);
+    auto readSize = ioDevice_->read(reinterpret_cast<char *>(buffer.data), buffer.size);
 
-    if(readSize != -1)
-    {
+    if (readSize != -1) {
         data.resize(readSize);
         readPromise_->resolve(std::move(data));
         readPromise_.reset();
-    }
-    else
-    {
+    } else {
         readPromise_->reject();
         readPromise_.reset();
     }

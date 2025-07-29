@@ -19,38 +19,29 @@
 #include <QDebug>
 #include <f1x/openauto/btservice/AndroidBluetoothServer.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace btservice
-{
+namespace f1x {
+namespace openauto {
+namespace btservice {
 
 AndroidBluetoothServer::AndroidBluetoothServer()
-    : rfcommServer_(std::make_unique<QBluetoothServer>(QBluetoothServiceInfo::RfcommProtocol, this))
-{
+    : rfcommServer_(std::make_unique<QBluetoothServer>(QBluetoothServiceInfo::RfcommProtocol, this)) {
     connect(rfcommServer_.get(), &QBluetoothServer::newConnection, this, &AndroidBluetoothServer::onClientConnected);
 }
 
-bool AndroidBluetoothServer::start(const QBluetoothAddress& address, uint16_t portNumber)
-{
+bool AndroidBluetoothServer::start(const QBluetoothAddress &address, uint16_t portNumber) {
     return rfcommServer_->listen(address, portNumber);
 }
 
-void AndroidBluetoothServer::onClientConnected()
-{
+void AndroidBluetoothServer::onClientConnected() {
     auto socket = rfcommServer_->nextPendingConnection();
 
-    if(socket != nullptr)
-    {
+    if (socket != nullptr) {
         qInfo() << "[AndroidBluetoothServer] rfcomm client connected, peer name: " << socket->peerName().toStdString();
-    }
-    else
-    {
+    } else {
         qCritical() << "[AndroidBluetoothServer] received null socket during client connection.";
     }
 }
 
-}
-}
-}
+}  // namespace btservice
+}  // namespace openauto
+}  // namespace f1x

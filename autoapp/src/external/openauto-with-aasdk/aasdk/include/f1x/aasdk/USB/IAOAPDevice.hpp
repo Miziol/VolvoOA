@@ -20,25 +20,21 @@
 
 #include <f1x/aasdk/USB/IUSBEndpoint.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-class IAOAPDevice
-{
+class IAOAPDevice {
 public:
     typedef std::shared_ptr<IAOAPDevice> Pointer;
 
     IAOAPDevice() = default;
     virtual ~IAOAPDevice() = default;
 
-    virtual IUSBEndpoint& getInEndpoint() = 0;
-    virtual IUSBEndpoint& getOutEndpoint() = 0;
+    virtual IUSBEndpoint &getInEndpoint() = 0;
+    virtual IUSBEndpoint &getOutEndpoint() = 0;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

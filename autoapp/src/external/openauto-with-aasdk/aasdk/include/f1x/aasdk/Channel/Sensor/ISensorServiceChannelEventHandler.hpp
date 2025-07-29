@@ -18,33 +18,29 @@
 
 #pragma once
 
-#include <aasdk_proto/SensorStartRequestMessage.pb.h>
 #include <aasdk_proto/ChannelOpenRequestMessage.pb.h>
+#include <aasdk_proto/SensorStartRequestMessage.pb.h>
+
 #include <f1x/aasdk/Error/Error.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace channel
-{
-namespace sensor
-{
+namespace f1x {
+namespace aasdk {
+namespace channel {
+namespace sensor {
 
-class ISensorServiceChannelEventHandler
-{
+class ISensorServiceChannelEventHandler {
 public:
     typedef std::shared_ptr<ISensorServiceChannelEventHandler> Pointer;
 
     ISensorServiceChannelEventHandler() = default;
     virtual ~ISensorServiceChannelEventHandler() = default;
 
-    virtual void onChannelOpenRequest(const proto::messages::ChannelOpenRequest& request) = 0;
-    virtual void onSensorStartRequest(const proto::messages::SensorStartRequestMessage& request) = 0;
-    virtual void onChannelError(const error::Error& e) = 0;
+    virtual void onChannelOpenRequest(const proto::messages::ChannelOpenRequest &request) = 0;
+    virtual void onSensorStartRequest(const proto::messages::SensorStartRequestMessage &request) = 0;
+    virtual void onChannelError(const error::Error &e) = 0;
 };
 
-}
-}
-}
-}
+}  // namespace sensor
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

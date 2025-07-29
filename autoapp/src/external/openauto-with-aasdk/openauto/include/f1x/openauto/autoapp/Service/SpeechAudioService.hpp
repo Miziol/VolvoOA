@@ -21,22 +21,19 @@
 #include <f1x/aasdk/Messenger/IMessenger.hpp>
 #include <f1x/openauto/autoapp/Service/AudioService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-class SpeechAudioService: public AudioService
-{
+class SpeechAudioService : public AudioService {
 public:
-    SpeechAudioService(boost::asio::io_service& ioService, aasdk::messenger::IMessenger::Pointer messenger, projection::IAudioOutput::Pointer audioOutput);
+    SpeechAudioService(boost::asio::io_service &ioService,
+                       aasdk::messenger::IMessenger::Pointer messenger,
+                       projection::IAudioOutput::Pointer audioOutput);
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

@@ -20,21 +20,17 @@
 
 #include <libusb.h>
 
-#include <memory>
-#include <functional>
-#include <f1x/aasdk/USB/IUSBWrapper.hpp>
 #include <f1x/aasdk/Error/Error.hpp>
 #include <f1x/aasdk/IO/Promise.hpp>
+#include <f1x/aasdk/USB/IUSBWrapper.hpp>
+#include <functional>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-class IUSBHub
-{
+class IUSBHub {
 public:
     typedef std::shared_ptr<IUSBHub> Pointer;
     typedef io::Promise<libusb_device_handle *> Promise;
@@ -46,6 +42,6 @@ public:
     virtual void cancel() = 0;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

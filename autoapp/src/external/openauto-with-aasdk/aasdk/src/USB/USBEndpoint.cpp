@@ -16,163 +16,130 @@
 *  along with aasdk. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <f1x/aasdk/USB/USBEndpoint.hpp>
-#include <f1x/aasdk/USB/IUSBWrapper.hpp>
 #include <f1x/aasdk/Error/Error.hpp>
+#include <f1x/aasdk/USB/IUSBWrapper.hpp>
+#include <f1x/aasdk/USB/USBEndpoint.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-USBEndpoint::USBEndpoint(IUSBWrapper& usbWrapper, boost::asio::io_service& ioService, libusb_device_handle * handle, uint8_t endpointAddress)
-    : usbWrapper_(usbWrapper)
-    , strand_(ioService)
-    , handle_(std::move(handle))
-    , endpointAddress_(endpointAddress)
-{
-}
+USBEndpoint::USBEndpoint(IUSBWrapper &usbWrapper,
+                         boost::asio::io_service &ioService,
+                         libusb_device_handle *handle,
+                         uint8_t endpointAddress)
+    : usbWrapper_(usbWrapper), strand_(ioService), handle_(std::move(handle)), endpointAddress_(endpointAddress) {}
 
-void USBEndpoint::controlTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise)
-{
-    if(endpointAddress_ != 0)
-    {
+void USBEndpoint::controlTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) {
+    if (endpointAddress_ != 0) {
         promise->reject(error::Error(error::ErrorCode::USB_INVALID_TRANSFER_METHOD));
-    }
-    else
-    {
-        auto* transfer = usbWrapper_.allocTransfer(0);
-        if(transfer == nullptr)
-        {
+    } else {
+        auto *transfer = usbWrapper_.allocTransfer(0);
+        if (transfer == nullptr) {
             promise->reject(error::Error(error::ErrorCode::USB_TRANSFER_ALLOCATION));
-        }
-        else
-        {
-            usbWrapper_.fillControlTransfer(transfer, handle_, buffer.data, reinterpret_cast<libusb_transfer_cb_fn>(&USBEndpoint::transferHandler), this, timeout);
+        } else {
+            usbWrapper_.fillControlTransfer(transfer, handle_, buffer.data,
+                                            reinterpret_cast<libusb_transfer_cb_fn>(&USBEndpoint::transferHandler),
+                                            this, timeout);
             this->transfer(transfer, std::move(promise));
         }
     }
 }
 
-void USBEndpoint::interruptTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise)
-{
-    if(endpointAddress_ == 0)
-    {
+void USBEndpoint::interruptTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) {
+    if (endpointAddress_ == 0) {
         promise->reject(error::Error(error::ErrorCode::USB_INVALID_TRANSFER_METHOD));
-    }
-    else
-    {
-        auto* transfer = usbWrapper_.allocTransfer(0);
-        if(transfer == nullptr)
-        {
+    } else {
+        auto *transfer = usbWrapper_.allocTransfer(0);
+        if (transfer == nullptr) {
             promise->reject(error::Error(error::ErrorCode::USB_TRANSFER_ALLOCATION));
-        }
-        else
-        {
-            usbWrapper_.fillInterruptTransfer(transfer, handle_, endpointAddress_, buffer.data, buffer.size, reinterpret_cast<libusb_transfer_cb_fn>(&USBEndpoint::transferHandler), this, timeout);
+        } else {
+            usbWrapper_.fillInterruptTransfer(transfer, handle_, endpointAddress_, buffer.data, buffer.size,
+                                              reinterpret_cast<libusb_transfer_cb_fn>(&USBEndpoint::transferHandler),
+                                              this, timeout);
             this->transfer(transfer, std::move(promise));
         }
     }
 }
 
-void USBEndpoint::bulkTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise)
-{
-    if(endpointAddress_ == 0)
-    {
+void USBEndpoint::bulkTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) {
+    if (endpointAddress_ == 0) {
         promise->reject(error::Error(error::ErrorCode::USB_INVALID_TRANSFER_METHOD));
-    }
-    else
-    {
-        auto* transfer = usbWrapper_.allocTransfer(0);
-        if(transfer == nullptr)
-        {
+    } else {
+        auto *transfer = usbWrapper_.allocTransfer(0);
+        if (transfer == nullptr) {
             promise->reject(error::Error(error::ErrorCode::USB_TRANSFER_ALLOCATION));
-        }
-        else
-        {
-            usbWrapper_.fillBulkTransfer(transfer, handle_, endpointAddress_, buffer.data, buffer.size, reinterpret_cast<libusb_transfer_cb_fn>(&USBEndpoint::transferHandler), this, timeout);
+        } else {
+            usbWrapper_.fillBulkTransfer(transfer, handle_, endpointAddress_, buffer.data, buffer.size,
+                                         reinterpret_cast<libusb_transfer_cb_fn>(&USBEndpoint::transferHandler), this,
+                                         timeout);
             this->transfer(transfer, std::move(promise));
         }
     }
 }
 
-void USBEndpoint::transfer(libusb_transfer *transfer, Promise::Pointer promise)
-{
+void USBEndpoint::transfer(libusb_transfer *transfer, Promise::Pointer promise) {
     strand_.dispatch([this, self = this->shared_from_this(), transfer, promise = std::move(promise)]() mutable {
         auto submitResult = usbWrapper_.submitTransfer(transfer);
 
-        if(submitResult == 0)
-        {
+        if (submitResult == 0) {
             // guarantee that endpoint will live until all transfers are finished
-            if(self_ == nullptr)
-            {
+            if (self_ == nullptr) {
                 self_ = std::move(self);
             }
 
             transfers_.insert(std::make_pair(transfer, std::move(promise)));
-        }
-        else
-        {
+        } else {
             promise->reject(error::Error(error::ErrorCode::USB_TRANSFER, submitResult));
             usbWrapper_.freeTransfer(transfer);
         }
     });
 }
 
-uint8_t USBEndpoint::getAddress()
-{
+uint8_t USBEndpoint::getAddress() {
     return endpointAddress_;
 }
 
-void USBEndpoint::cancelTransfers()
-{
+void USBEndpoint::cancelTransfers() {
     strand_.dispatch([this, self = this->shared_from_this()]() mutable {
-        for(const auto& transfer : transfers_)
-        {
+        for (const auto &transfer : transfers_) {
             usbWrapper_.cancelTransfer(transfer.first);
         }
     });
 }
 
-libusb_device_handle * USBEndpoint::getDeviceHandle() const
-{
+libusb_device_handle *USBEndpoint::getDeviceHandle() const {
     return handle_;
 }
 
-void USBEndpoint::transferHandler(libusb_transfer *transfer)
-{
-    auto self = reinterpret_cast<USBEndpoint*>(transfer->user_data)->shared_from_this();
+void USBEndpoint::transferHandler(libusb_transfer *transfer) {
+    auto self = reinterpret_cast<USBEndpoint *>(transfer->user_data)->shared_from_this();
 
     self->strand_.dispatch([self, transfer]() mutable {
-        if(self->transfers_.count(transfer) == 0)
-        {
+        if (self->transfers_.count(transfer) == 0) {
             return;
         }
 
         auto promise(std::move(self->transfers_.at(transfer)));
 
-        if(transfer->status == LIBUSB_TRANSFER_COMPLETED)
-        {
+        if (transfer->status == LIBUSB_TRANSFER_COMPLETED) {
             promise->resolve(transfer->actual_length);
-        }
-        else
-        {
-            auto error = transfer->status == LIBUSB_TRANSFER_CANCELLED ? error::Error(error::ErrorCode::OPERATION_ABORTED) : error::Error(error::ErrorCode::USB_TRANSFER, transfer->status);
+        } else {
+            auto error = transfer->status == LIBUSB_TRANSFER_CANCELLED
+                             ? error::Error(error::ErrorCode::OPERATION_ABORTED)
+                             : error::Error(error::ErrorCode::USB_TRANSFER, transfer->status);
             promise->reject(error);
         }
 
         self->usbWrapper_.freeTransfer(transfer);
         self->transfers_.erase(transfer);
 
-        if(self->transfers_.empty())
-        {
+        if (self->transfers_.empty()) {
             self->self_.reset();
         }
     });
 }
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

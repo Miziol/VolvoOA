@@ -18,22 +18,22 @@
 
 #pragma once
 
-#include <string>
 #include <f1x/aasdk/USB/AccessoryModeQuery.hpp>
 #include <f1x/aasdk/USB/AccessoryModeSendStringType.hpp>
+#include <string>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-class AccessoryModeSendStringQuery: public AccessoryModeQuery, public std::enable_shared_from_this<AccessoryModeSendStringQuery>
-{
+class AccessoryModeSendStringQuery : public AccessoryModeQuery,
+                                     public std::enable_shared_from_this<AccessoryModeSendStringQuery> {
 public:
-    AccessoryModeSendStringQuery(boost::asio::io_service& ioService, IUSBWrapper& usbWrapper, IUSBEndpoint::Pointer usbEndpoint,
-                                 AccessoryModeSendStringType sendStringType, const std::string& queryValue);
+    AccessoryModeSendStringQuery(boost::asio::io_service &ioService,
+                                 IUSBWrapper &usbWrapper,
+                                 IUSBEndpoint::Pointer usbEndpoint,
+                                 AccessoryModeSendStringType sendStringType,
+                                 const std::string &queryValue);
     void start(Promise::Pointer promise) override;
 
 private:
@@ -43,6 +43,6 @@ private:
     static constexpr uint32_t ACC_REQ_SEND_STRING = 52;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

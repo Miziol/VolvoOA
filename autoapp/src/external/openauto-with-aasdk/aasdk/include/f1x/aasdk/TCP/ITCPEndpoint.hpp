@@ -18,19 +18,15 @@
 
 #pragma once
 
-#include <memory>
 #include <f1x/aasdk/Common/Data.hpp>
 #include <f1x/aasdk/IO/Promise.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace tcp
-{
+namespace f1x {
+namespace aasdk {
+namespace tcp {
 
-class ITCPEndpoint
-{
+class ITCPEndpoint {
 public:
     typedef std::shared_ptr<ITCPEndpoint> Pointer;
     typedef io::Promise<size_t> Promise;
@@ -43,6 +39,6 @@ public:
     virtual void stop() = 0;
 };
 
-}
-}
-}
+}  // namespace tcp
+}  // namespace aasdk
+}  // namespace f1x

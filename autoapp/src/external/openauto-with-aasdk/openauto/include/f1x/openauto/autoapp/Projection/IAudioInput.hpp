@@ -18,21 +18,16 @@
 
 #pragma once
 
-#include <memory>
-#include <f1x/aasdk/IO/Promise.hpp>
 #include <f1x/aasdk/Common/Data.hpp>
+#include <f1x/aasdk/IO/Promise.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-class IAudioInput
-{
+class IAudioInput {
 public:
     typedef aasdk::io::Promise<void, void> StartPromise;
     typedef aasdk::io::Promise<aasdk::common::Data, void> ReadPromise;
@@ -50,7 +45,7 @@ public:
     virtual uint32_t getSampleRate() const = 0;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

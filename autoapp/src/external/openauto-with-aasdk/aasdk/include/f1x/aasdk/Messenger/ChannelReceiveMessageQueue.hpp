@@ -18,20 +18,15 @@
 
 #pragma once
 
-#include <unordered_map>
-#include <queue>
 #include <f1x/aasdk/Messenger/Message.hpp>
+#include <queue>
+#include <unordered_map>
 
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
-
-class ChannelReceiveMessageQueue
-{
+class ChannelReceiveMessageQueue {
 public:
     void push(Message::Pointer message);
     Message::Pointer pop(ChannelId channelId);
@@ -43,6 +38,6 @@ private:
     std::unordered_map<ChannelId, MessageQueue> queue_;
 };
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

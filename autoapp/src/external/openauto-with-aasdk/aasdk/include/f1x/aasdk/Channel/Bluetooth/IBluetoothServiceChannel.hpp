@@ -18,24 +18,20 @@
 
 #pragma once
 
-#include <memory>
-#include <aasdk_proto/ChannelOpenResponseMessage.pb.h>
 #include <aasdk_proto/BluetoothPairingResponseMessage.pb.h>
-#include <f1x/aasdk/Messenger/ChannelId.hpp>
-#include <f1x/aasdk/Channel/Promise.hpp>
+#include <aasdk_proto/ChannelOpenResponseMessage.pb.h>
+
 #include <f1x/aasdk/Channel/Bluetooth/IBluetoothServiceChannelEventHandler.hpp>
+#include <f1x/aasdk/Channel/Promise.hpp>
+#include <f1x/aasdk/Messenger/ChannelId.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace channel
-{
-namespace bluetooth
-{
+namespace f1x {
+namespace aasdk {
+namespace channel {
+namespace bluetooth {
 
-class IBluetoothServiceChannel
-{
+class IBluetoothServiceChannel {
 public:
     typedef std::shared_ptr<IBluetoothServiceChannel> Pointer;
 
@@ -43,12 +39,14 @@ public:
     virtual ~IBluetoothServiceChannel() = default;
 
     virtual void receive(IBluetoothServiceChannelEventHandler::Pointer eventHandler) = 0;
-    virtual void sendChannelOpenResponse(const proto::messages::ChannelOpenResponse& response, SendPromise::Pointer promise) = 0;
-    virtual void sendBluetoothPairingResponse(const proto::messages::BluetoothPairingResponse& response, SendPromise::Pointer promise) = 0;
+    virtual void sendChannelOpenResponse(const proto::messages::ChannelOpenResponse &response,
+                                         SendPromise::Pointer promise) = 0;
+    virtual void sendBluetoothPairingResponse(const proto::messages::BluetoothPairingResponse &response,
+                                              SendPromise::Pointer promise) = 0;
     virtual messenger::ChannelId getId() const = 0;
 };
 
-}
-}
-}
-}
+}  // namespace bluetooth
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

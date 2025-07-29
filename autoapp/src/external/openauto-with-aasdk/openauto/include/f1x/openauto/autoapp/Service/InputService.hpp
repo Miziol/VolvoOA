@@ -19,37 +19,34 @@
 #pragma once
 
 #include <aasdk_proto/ButtonCodeEnum.pb.h>
+
 #include <f1x/aasdk/Channel/Input/InputServiceChannel.hpp>
-#include <f1x/openauto/autoapp/Service/IService.hpp>
 #include <f1x/openauto/autoapp/Projection/IInputDevice.hpp>
 #include <f1x/openauto/autoapp/Projection/IInputDeviceEventHandler.hpp>
+#include <f1x/openauto/autoapp/Service/IService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-class InputService:
-        public aasdk::channel::input::IInputServiceChannelEventHandler,
-        public IService,
-        public projection::IInputDeviceEventHandler,
-        public std::enable_shared_from_this<InputService>
-{
+class InputService : public aasdk::channel::input::IInputServiceChannelEventHandler,
+                     public IService,
+                     public projection::IInputDeviceEventHandler,
+                     public std::enable_shared_from_this<InputService> {
 public:
-    InputService(boost::asio::io_service& ioService, aasdk::messenger::IMessenger::Pointer messenger, projection::IInputDevice::Pointer inputDevice);
+    InputService(boost::asio::io_service &ioService,
+                 aasdk::messenger::IMessenger::Pointer messenger,
+                 projection::IInputDevice::Pointer inputDevice);
 
     void start() override;
     void stop() override;
-    void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse& response) override;
-    void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest& request) override;
-    void onBindingRequest(const aasdk::proto::messages::BindingRequest& request) override;
-    void onChannelError(const aasdk::error::Error& e) override;
-    void onButtonEvent(const projection::ButtonEvent& event) override;
-    void onTouchEvent(const projection::TouchEvent& event) override;
+    void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse &response) override;
+    void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) override;
+    void onBindingRequest(const aasdk::proto::messages::BindingRequest &request) override;
+    void onChannelError(const aasdk::error::Error &e) override;
+    void onButtonEvent(const projection::ButtonEvent &event) override;
+    void onTouchEvent(const projection::TouchEvent &event) override;
 
 private:
     using std::enable_shared_from_this<InputService>::shared_from_this;
@@ -59,7 +56,7 @@ private:
     projection::IInputDevice::Pointer inputDevice_;
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

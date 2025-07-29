@@ -18,26 +18,22 @@
 
 #pragma once
 
-#include <memory>
 #include <aasdk_proto/AVChannelSetupResponseMessage.pb.h>
-#include <aasdk_proto/VideoFocusIndicationMessage.pb.h>
 #include <aasdk_proto/AVMediaAckIndicationMessage.pb.h>
 #include <aasdk_proto/ChannelOpenResponseMessage.pb.h>
-#include <f1x/aasdk/Messenger/ChannelId.hpp>
-#include <f1x/aasdk/Channel/Promise.hpp>
+#include <aasdk_proto/VideoFocusIndicationMessage.pb.h>
+
 #include <f1x/aasdk/Channel/AV/IVideoServiceChannelEventHandler.hpp>
+#include <f1x/aasdk/Channel/Promise.hpp>
+#include <f1x/aasdk/Messenger/ChannelId.hpp>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace channel
-{
-namespace av
-{
+namespace f1x {
+namespace aasdk {
+namespace channel {
+namespace av {
 
-class IVideoServiceChannel
-{
+class IVideoServiceChannel {
 public:
     typedef std::shared_ptr<IVideoServiceChannel> Pointer;
 
@@ -45,14 +41,18 @@ public:
     virtual ~IVideoServiceChannel() = default;
 
     virtual void receive(IVideoServiceChannelEventHandler::Pointer eventHandler) = 0;
-    virtual void sendChannelOpenResponse(const proto::messages::ChannelOpenResponse& response, SendPromise::Pointer promise) = 0;
-    virtual void sendAVChannelSetupResponse(const proto::messages::AVChannelSetupResponse& response, SendPromise::Pointer promise) = 0;
-    virtual void sendVideoFocusIndication(const proto::messages::VideoFocusIndication& indication, SendPromise::Pointer promise) = 0;
-    virtual void sendAVMediaAckIndication(const proto::messages::AVMediaAckIndication& indication, SendPromise::Pointer promise) = 0;
+    virtual void sendChannelOpenResponse(const proto::messages::ChannelOpenResponse &response,
+                                         SendPromise::Pointer promise) = 0;
+    virtual void sendAVChannelSetupResponse(const proto::messages::AVChannelSetupResponse &response,
+                                            SendPromise::Pointer promise) = 0;
+    virtual void sendVideoFocusIndication(const proto::messages::VideoFocusIndication &indication,
+                                          SendPromise::Pointer promise) = 0;
+    virtual void sendAVMediaAckIndication(const proto::messages::AVMediaAckIndication &indication,
+                                          SendPromise::Pointer promise) = 0;
     virtual messenger::ChannelId getId() const = 0;
 };
 
-}
-}
-}
-}
+}  // namespace av
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

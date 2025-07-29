@@ -20,29 +20,24 @@
 
 #pragma once
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace projection {
 
-class IBluetoothDevice
-{
+class IBluetoothDevice {
 public:
     typedef aasdk::io::Promise<void, void> PairingPromise;
     typedef std::shared_ptr<IBluetoothDevice> Pointer;
 
     virtual void stop() = 0;
-    virtual bool isPaired(const std::string& address) const = 0;
-    virtual void pair(const std::string& address, PairingPromise::Pointer promise) = 0;
+    virtual bool isPaired(const std::string &address) const = 0;
+    virtual void pair(const std::string &address, PairingPromise::Pointer promise) = 0;
     virtual std::string getLocalAddress() const = 0;
     virtual bool isAvailable() const = 0;
 };
 
-}
-}
-}
-}
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

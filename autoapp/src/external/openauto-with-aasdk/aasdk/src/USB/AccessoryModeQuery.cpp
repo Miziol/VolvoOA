@@ -19,25 +19,17 @@
 #include <f1x/aasdk/USB/AccessoryModeQuery.hpp>
 #include <f1x/aasdk/USB/USBEndpoint.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-AccessoryModeQuery::AccessoryModeQuery(boost::asio::io_service& ioService, IUSBEndpoint::Pointer usbEndpoint)
-    : strand_(ioService)
-    , usbEndpoint_(std::move(usbEndpoint))
-{
+AccessoryModeQuery::AccessoryModeQuery(boost::asio::io_service &ioService, IUSBEndpoint::Pointer usbEndpoint)
+    : strand_(ioService), usbEndpoint_(std::move(usbEndpoint)) {}
 
-}
-
-void AccessoryModeQuery::cancel()
-{
+void AccessoryModeQuery::cancel() {
     usbEndpoint_->cancelTransfers();
 }
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

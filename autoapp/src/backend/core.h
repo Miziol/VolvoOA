@@ -10,7 +10,7 @@
 #include "settingsManager.h"
 #include "usb/usbService.h"
 
-Q_DECLARE_OPAQUE_POINTER(libusb_context*)
+Q_DECLARE_OPAQUE_POINTER(libusb_context *)
 
 class AppCore : public QObject {
     Q_OBJECT

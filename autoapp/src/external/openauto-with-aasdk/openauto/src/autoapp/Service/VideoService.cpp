@@ -19,44 +19,37 @@
 #include <QDebug>
 #include <f1x/openauto/autoapp/Service/VideoService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-VideoService::VideoService(boost::asio::io_service& ioService, aasdk::messenger::IMessenger::Pointer messenger, projection::IVideoOutput::Pointer videoOutput)
-    : strand_(ioService)
-    , channel_(std::make_shared<aasdk::channel::av::VideoServiceChannel>(strand_, std::move(messenger)))
-    , videoOutput_(std::move(videoOutput))
-    , session_(-1)
-{
+VideoService::VideoService(boost::asio::io_service &ioService,
+                           aasdk::messenger::IMessenger::Pointer messenger,
+                           projection::IVideoOutput::Pointer videoOutput)
+    : strand_(ioService),
+      channel_(std::make_shared<aasdk::channel::av::VideoServiceChannel>(strand_, std::move(messenger))),
+      videoOutput_(std::move(videoOutput)),
+      session_(-1) {}
 
-}
-
-void VideoService::start()
-{
+void VideoService::start() {
     strand_.dispatch([this, self = this->shared_from_this()]() {
         qInfo() << "[VideoService] start.";
         channel_->receive(this->shared_from_this());
     });
 }
 
-void VideoService::stop()
-{
+void VideoService::stop() {
     strand_.dispatch([this, self = this->shared_from_this()]() {
         qInfo() << "[VideoService] stop.";
         videoOutput_->stop();
     });
 }
 
-void VideoService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest& request)
-{
+void VideoService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) {
     qInfo() << "[VideoService] open request, priority: " << request.priority();
-    const aasdk::proto::enums::Status::Enum status = videoOutput_->open() ? aasdk::proto::enums::Status::OK : aasdk::proto::enums::Status::FAIL;
+    const aasdk::proto::enums::Status::Enum status =
+        videoOutput_->open() ? aasdk::proto::enums::Status::OK : aasdk::proto::enums::Status::FAIL;
     qInfo() << "[VideoService] open status: " << status;
 
     aasdk::proto::messages::ChannelOpenResponse response;
@@ -69,10 +62,11 @@ void VideoService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpe
     channel_->receive(this->shared_from_this());
 }
 
-void VideoService::onAVChannelSetupRequest(const aasdk::proto::messages::AVChannelSetupRequest& request)
-{
+void VideoService::onAVChannelSetupRequest(const aasdk::proto::messages::AVChannelSetupRequest &request) {
     qInfo() << "[VideoService] setup request, config index: " << request.config_index();
-    const aasdk::proto::enums::AVChannelSetupStatus::Enum status = videoOutput_->init() ? aasdk::proto::enums::AVChannelSetupStatus::OK : aasdk::proto::enums::AVChannelSetupStatus::FAIL;
+    const aasdk::proto::enums::AVChannelSetupStatus::Enum status =
+        videoOutput_->init() ? aasdk::proto::enums::AVChannelSetupStatus::OK
+                             : aasdk::proto::enums::AVChannelSetupStatus::FAIL;
     qInfo() << "[VideoService] setup status: " << status;
 
     aasdk::proto::messages::AVChannelSetupResponse response;
@@ -82,28 +76,26 @@ void VideoService::onAVChannelSetupRequest(const aasdk::proto::messages::AVChann
 
     auto promise = aasdk::channel::SendPromise::defer(strand_);
     promise->then(std::bind(&VideoService::sendVideoFocusIndication, this->shared_from_this()),
-                 std::bind(&VideoService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+                  std::bind(&VideoService::onChannelError, this->shared_from_this(), std::placeholders::_1));
     channel_->sendAVChannelSetupResponse(response, std::move(promise));
     channel_->receive(this->shared_from_this());
 }
 
-void VideoService::onAVChannelStartIndication(const aasdk::proto::messages::AVChannelStartIndication& indication)
-{
+void VideoService::onAVChannelStartIndication(const aasdk::proto::messages::AVChannelStartIndication &indication) {
     qInfo() << "[VideoService] start indication, session: " << indication.session();
     session_ = indication.session();
 
     channel_->receive(this->shared_from_this());
 }
 
-void VideoService::onAVChannelStopIndication(const aasdk::proto::messages::AVChannelStopIndication& indication)
-{
+void VideoService::onAVChannelStopIndication(const aasdk::proto::messages::AVChannelStopIndication &indication) {
     qInfo() << "[VideoService] stop indication";
 
     channel_->receive(this->shared_from_this());
 }
 
-void VideoService::onAVMediaWithTimestampIndication(aasdk::messenger::Timestamp::ValueType timestamp, const aasdk::common::DataConstBuffer& buffer)
-{
+void VideoService::onAVMediaWithTimestampIndication(aasdk::messenger::Timestamp::ValueType timestamp,
+                                                    const aasdk::common::DataConstBuffer &buffer) {
     videoOutput_->write(timestamp, buffer);
 
     aasdk::proto::messages::AVMediaAckIndication indication;
@@ -117,8 +109,7 @@ void VideoService::onAVMediaWithTimestampIndication(aasdk::messenger::Timestamp:
     channel_->receive(this->shared_from_this());
 }
 
-void VideoService::onAVMediaIndication(const aasdk::common::DataConstBuffer& buffer)
-{
+void VideoService::onAVMediaIndication(const aasdk::common::DataConstBuffer &buffer) {
     videoOutput_->write(0, buffer);
 
     aasdk::proto::messages::AVMediaAckIndication indication;
@@ -132,44 +123,39 @@ void VideoService::onAVMediaIndication(const aasdk::common::DataConstBuffer& buf
     channel_->receive(this->shared_from_this());
 }
 
-void VideoService::onChannelError(const aasdk::error::Error& e)
-{
+void VideoService::onChannelError(const aasdk::error::Error &e) {
     qCritical() << "[VideoService] channel error: " << e.what();
 }
 
-void VideoService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse& response)
-{
+void VideoService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse &response) {
     qInfo() << "[VideoService] fill features.";
 
-    auto* channelDescriptor = response.add_channels();
+    auto *channelDescriptor = response.add_channels();
     channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
 
-    auto* videoChannel = channelDescriptor->mutable_av_channel();
+    auto *videoChannel = channelDescriptor->mutable_av_channel();
     videoChannel->set_stream_type(aasdk::proto::enums::AVStreamType::VIDEO);
     videoChannel->set_available_while_in_call(true);
 
-    auto* videoConfig1 = videoChannel->add_video_configs();
+    auto *videoConfig1 = videoChannel->add_video_configs();
     videoConfig1->set_video_resolution(videoOutput_->getVideoResolution());
     videoConfig1->set_video_fps(videoOutput_->getVideoFPS());
 
-    const auto& videoMargins = videoOutput_->getVideoMargins();
+    const auto &videoMargins = videoOutput_->getVideoMargins();
     videoConfig1->set_margin_height(videoMargins.height());
     videoConfig1->set_margin_width(videoMargins.width());
     videoConfig1->set_dpi(videoOutput_->getScreenDPI());
 }
 
-void VideoService::onVideoFocusRequest(const aasdk::proto::messages::VideoFocusRequest& request)
-{
+void VideoService::onVideoFocusRequest(const aasdk::proto::messages::VideoFocusRequest &request) {
     qInfo() << "[VideoService] video focus request, display index: " << request.disp_index()
-                       << ", focus mode: " << request.focus_mode()
-                       << ", focus reason: " << request.focus_reason();
+            << ", focus mode: " << request.focus_mode() << ", focus reason: " << request.focus_reason();
 
     this->sendVideoFocusIndication();
     channel_->receive(this->shared_from_this());
 }
 
-void VideoService::sendVideoFocusIndication()
-{
+void VideoService::sendVideoFocusIndication() {
     qInfo() << "[VideoService] video focus indication.";
 
     aasdk::proto::messages::VideoFocusIndication videoFocusIndication;
@@ -181,7 +167,7 @@ void VideoService::sendVideoFocusIndication()
     channel_->sendVideoFocusIndication(videoFocusIndication, std::move(promise));
 }
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

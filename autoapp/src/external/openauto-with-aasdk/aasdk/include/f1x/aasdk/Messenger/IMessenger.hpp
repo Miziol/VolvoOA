@@ -18,21 +18,17 @@
 
 #pragma once
 
-#include <memory>
-#include <functional>
 #include <f1x/aasdk/Messenger/ICryptor.hpp>
 #include <f1x/aasdk/Messenger/Message.hpp>
 #include <f1x/aasdk/Messenger/Promise.hpp>
+#include <functional>
+#include <memory>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace messenger
-{
+namespace f1x {
+namespace aasdk {
+namespace messenger {
 
-class IMessenger
-{
+class IMessenger {
 public:
     IMessenger() = default;
     virtual ~IMessenger() = default;
@@ -44,6 +40,6 @@ public:
     virtual void stop() = 0;
 };
 
-}
-}
-}
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

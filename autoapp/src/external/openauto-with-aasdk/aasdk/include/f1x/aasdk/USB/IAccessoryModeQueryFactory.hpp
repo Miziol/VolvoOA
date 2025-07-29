@@ -23,22 +23,19 @@
 #include <f1x/aasdk/USB/IAccessoryModeQuery.hpp>
 #include <f1x/aasdk/USB/IUSBEndpoint.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace usb
-{
+namespace f1x {
+namespace aasdk {
+namespace usb {
 
-class IAccessoryModeQueryFactory
-{
+class IAccessoryModeQueryFactory {
 public:
     IAccessoryModeQueryFactory() = default;
     virtual ~IAccessoryModeQueryFactory() = default;
 
-    virtual IAccessoryModeQuery::Pointer createQuery(AccessoryModeQueryType queryType, IUSBEndpoint::Pointer usbEndpoint) = 0;
+    virtual IAccessoryModeQuery::Pointer createQuery(AccessoryModeQueryType queryType,
+                                                     IUSBEndpoint::Pointer usbEndpoint) = 0;
 };
 
-}
-}
-}
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

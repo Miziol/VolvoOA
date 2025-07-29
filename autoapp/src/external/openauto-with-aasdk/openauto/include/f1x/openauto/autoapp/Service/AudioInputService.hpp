@@ -19,33 +19,32 @@
 #pragma once
 
 #include <f1x/aasdk/Channel/AV/AVInputServiceChannel.hpp>
-#include <f1x/openauto/autoapp/Service/IService.hpp>
 #include <f1x/openauto/autoapp/Projection/IAudioInput.hpp>
+#include <f1x/openauto/autoapp/Service/IService.hpp>
 
-namespace f1x
-{
-namespace openauto
-{
-namespace autoapp
-{
-namespace service
-{
+namespace f1x {
+namespace openauto {
+namespace autoapp {
+namespace service {
 
-class AudioInputService: public aasdk::channel::av::IAVInputServiceChannelEventHandler, public IService, public std::enable_shared_from_this<AudioInputService>
-{
+class AudioInputService : public aasdk::channel::av::IAVInputServiceChannelEventHandler,
+                          public IService,
+                          public std::enable_shared_from_this<AudioInputService> {
 public:
     typedef std::shared_ptr<AudioInputService> Pointer;
 
-    AudioInputService(boost::asio::io_service& ioService, aasdk::messenger::IMessenger::Pointer messenger, projection::IAudioInput::Pointer audioInput);
+    AudioInputService(boost::asio::io_service &ioService,
+                      aasdk::messenger::IMessenger::Pointer messenger,
+                      projection::IAudioInput::Pointer audioInput);
 
     void start() override;
     void stop() override;
-    void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse& response) override;
-    void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest& request) override;
-    void onAVChannelSetupRequest(const aasdk::proto::messages::AVChannelSetupRequest& request) override;
-    void onAVInputOpenRequest(const aasdk::proto::messages::AVInputOpenRequest& request) override;
-    void onAVMediaAckIndication(const aasdk::proto::messages::AVMediaAckIndication& indication) override;
-    void onChannelError(const aasdk::error::Error& e) override;
+    void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse &response) override;
+    void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) override;
+    void onAVChannelSetupRequest(const aasdk::proto::messages::AVChannelSetupRequest &request) override;
+    void onAVInputOpenRequest(const aasdk::proto::messages::AVInputOpenRequest &request) override;
+    void onAVMediaAckIndication(const aasdk::proto::messages::AVMediaAckIndication &indication) override;
+    void onChannelError(const aasdk::error::Error &e) override;
 
 private:
     using std::enable_shared_from_this<AudioInputService>::shared_from_this;
@@ -59,7 +58,7 @@ private:
     int32_t session_;
 };
 
-}
-}
-}
-}
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

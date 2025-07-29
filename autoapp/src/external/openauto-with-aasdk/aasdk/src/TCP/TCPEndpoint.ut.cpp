@@ -17,31 +17,26 @@
 */
 
 #include <boost/test/unit_test.hpp>
-#include <f1x/aasdk/TCP/UT/TCPWrapper.mock.hpp>
-#include <f1x/aasdk/TCP/UT/TCPEndpointPromiseHandler.mock.hpp>
 #include <f1x/aasdk/TCP/TCPEndpoint.hpp>
+#include <f1x/aasdk/TCP/UT/TCPEndpointPromiseHandler.mock.hpp>
+#include <f1x/aasdk/TCP/UT/TCPWrapper.mock.hpp>
 
-namespace f1x
-{
-namespace aasdk
-{
-namespace tcp
-{
-namespace ut
-{
+namespace f1x {
+namespace aasdk {
+namespace tcp {
+namespace ut {
 
 using ::testing::_;
 using ::testing::SaveArg;
 
-class TCPEndpointUnitTest
-{
+class TCPEndpointUnitTest {
 protected:
     TCPEndpointUnitTest()
-        : socket_(std::make_shared<boost::asio::ip::tcp::socket>(ioService_))
-        , promise_(ITCPEndpoint::Promise::defer(ioService_))
-    {
-        promise_->then(std::bind(&TCPEndpointPromiseHandlerMock::onResolve, &promiseHandlerMock_, std::placeholders::_1),
-                       std::bind(&TCPEndpointPromiseHandlerMock::onReject, &promiseHandlerMock_, std::placeholders::_1));
+        : socket_(std::make_shared<boost::asio::ip::tcp::socket>(ioService_)),
+          promise_(ITCPEndpoint::Promise::defer(ioService_)) {
+        promise_->then(
+            std::bind(&TCPEndpointPromiseHandlerMock::onResolve, &promiseHandlerMock_, std::placeholders::_1),
+            std::bind(&TCPEndpointPromiseHandlerMock::onReject, &promiseHandlerMock_, std::placeholders::_1));
     }
 
     TCPWrapperMock tcpWrapperMock_;
@@ -51,8 +46,7 @@ protected:
     ITCPEndpoint::Promise::Pointer promise_;
 };
 
-BOOST_FIXTURE_TEST_CASE(TCPEndpoint_Receive, TCPEndpointUnitTest)
-{
+BOOST_FIXTURE_TEST_CASE(TCPEndpoint_Receive, TCPEndpointUnitTest) {
     auto tcpEndpoint = std::make_shared<TCPEndpoint>(tcpWrapperMock_, std::move(socket_));
 
     common::DataBuffer buffer;
@@ -74,8 +68,7 @@ BOOST_FIXTURE_TEST_CASE(TCPEndpoint_Receive, TCPEndpointUnitTest)
     BOOST_CHECK_EQUAL_COLLECTIONS(actualData.begin(), actualData.end(), expectedData.begin(), expectedData.end());
 }
 
-BOOST_FIXTURE_TEST_CASE(TCPEndpoint_ReceiveError, TCPEndpointUnitTest)
-{
+BOOST_FIXTURE_TEST_CASE(TCPEndpoint_ReceiveError, TCPEndpointUnitTest) {
     auto tcpEndpoint = std::make_shared<TCPEndpoint>(tcpWrapperMock_, std::move(socket_));
 
     common::DataBuffer buffer;
@@ -86,14 +79,14 @@ BOOST_FIXTURE_TEST_CASE(TCPEndpoint_ReceiveError, TCPEndpointUnitTest)
     tcpEndpoint->receive(common::DataBuffer(actualData), std::move(promise_));
 
     EXPECT_CALL(promiseHandlerMock_, onResolve(_)).Times(0);
-    EXPECT_CALL(promiseHandlerMock_, onReject(error::Error(error::ErrorCode::TCP_TRANSFER, boost::asio::error::bad_descriptor)));
+    EXPECT_CALL(promiseHandlerMock_,
+                onReject(error::Error(error::ErrorCode::TCP_TRANSFER, boost::asio::error::bad_descriptor)));
     handler(boost::asio::error::bad_descriptor, 0);
 
     ioService_.run();
 }
 
-BOOST_FIXTURE_TEST_CASE(TCPEndpoint_Send, TCPEndpointUnitTest)
-{
+BOOST_FIXTURE_TEST_CASE(TCPEndpoint_Send, TCPEndpointUnitTest) {
     auto tcpEndpoint = std::make_shared<TCPEndpoint>(tcpWrapperMock_, std::move(socket_));
 
     common::Data actualData(100, 0);
@@ -109,8 +102,7 @@ BOOST_FIXTURE_TEST_CASE(TCPEndpoint_Send, TCPEndpointUnitTest)
     ioService_.run();
 }
 
-BOOST_FIXTURE_TEST_CASE(TCPEndpoint_SendError, TCPEndpointUnitTest)
-{
+BOOST_FIXTURE_TEST_CASE(TCPEndpoint_SendError, TCPEndpointUnitTest) {
     auto tcpEndpoint = std::make_shared<TCPEndpoint>(tcpWrapperMock_, std::move(socket_));
 
     common::Data actualData(100, 0);
@@ -126,7 +118,7 @@ BOOST_FIXTURE_TEST_CASE(TCPEndpoint_SendError, TCPEndpointUnitTest)
     ioService_.run();
 }
 
-}
-}
-}
-}
+}  // namespace ut
+}  // namespace tcp
+}  // namespace aasdk
+}  // namespace f1x

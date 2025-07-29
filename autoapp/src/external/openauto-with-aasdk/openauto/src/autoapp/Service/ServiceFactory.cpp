@@ -24,7 +24,6 @@
 #include <f1x/openauto/autoapp/Projection/DummyBluetoothDevice.hpp>
 #include <f1x/openauto/autoapp/Projection/InputDevice.hpp>
 #include <f1x/openauto/autoapp/Projection/LocalBluetoothDevice.hpp>
-#include <f1x/openauto/autoapp/Projection/OMXVideoOutput.hpp>
 #include <f1x/openauto/autoapp/Projection/QtAudioInput.hpp>
 #include <f1x/openauto/autoapp/Projection/QtAudioOutput.hpp>
 #include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
@@ -54,7 +53,7 @@ ServiceFactory::ServiceFactory(boost::asio::io_service &ioService,
 ServiceList ServiceFactory::create(aasdk::messenger::IMessenger::Pointer messenger) {
     ServiceList serviceList;
 
-    projection::IAudioInput::Pointer audioInput(new projection::QtAudioInput(1, 16, 16000),
+    projection::IAudioInput::Pointer audioInput(new projection::QtAudioInput(1, QAudioFormat::Int16, 16000),
                                                 std::bind(&QObject::deleteLater, std::placeholders::_1));
     serviceList.emplace_back(std::make_shared<AudioInputService>(ioService_, messenger, std::move(audioInput)));
     this->createAudioServices(serviceList, messenger);
@@ -120,23 +119,26 @@ IService::Pointer ServiceFactory::createInputService(aasdk::messenger::IMessenge
 
 void ServiceFactory::createAudioServices(ServiceList &serviceList, aasdk::messenger::IMessenger::Pointer messenger) {
     if (true) {  // TODO configuration_.musicAudioChannelEnabled()
-        auto mediaAudioOutput = projection::IAudioOutput::Pointer(
-            new projection::QtAudioOutput(2, 16, 48000), std::bind(&QObject::deleteLater, std::placeholders::_1));
+        auto mediaAudioOutput =
+            projection::IAudioOutput::Pointer(new projection::QtAudioOutput(2, QAudioFormat::Int16, 48000),
+                                              std::bind(&QObject::deleteLater, std::placeholders::_1));
 
         serviceList.emplace_back(
             std::make_shared<MediaAudioService>(ioService_, messenger, std::move(mediaAudioOutput)));
     }
 
     if (true) {  // TODO configuration_.speechAudioChannelEnabled()
-        auto speechAudioOutput = projection::IAudioOutput::Pointer(
-            new projection::QtAudioOutput(1, 16, 16000), std::bind(&QObject::deleteLater, std::placeholders::_1));
+        auto speechAudioOutput =
+            projection::IAudioOutput::Pointer(new projection::QtAudioOutput(1, QAudioFormat::Int16, 16000),
+                                              std::bind(&QObject::deleteLater, std::placeholders::_1));
 
         serviceList.emplace_back(
             std::make_shared<SpeechAudioService>(ioService_, messenger, std::move(speechAudioOutput)));
     }
 
-    auto systemAudioOutput = projection::IAudioOutput::Pointer(new projection::QtAudioOutput(1, 16, 16000),
-                                                               std::bind(&QObject::deleteLater, std::placeholders::_1));
+    auto systemAudioOutput =
+        projection::IAudioOutput::Pointer(new projection::QtAudioOutput(1, QAudioFormat::Int16, 16000),
+                                          std::bind(&QObject::deleteLater, std::placeholders::_1));
 
     serviceList.emplace_back(std::make_shared<SystemAudioService>(ioService_, messenger, std::move(systemAudioOutput)));
 }
