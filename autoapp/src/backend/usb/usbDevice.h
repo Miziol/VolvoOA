@@ -4,10 +4,13 @@
 #include <libusb-1.0/libusb.h>
 
 #include <QObject>
+#include <QQueue>
 
 #include "../logging/loggingCategory.h"
 
 struct UsbDeviceCallbackStruct;
+
+struct UsbDeviceStringRequestType;
 
 enum class SendStringType { MANUFACTURER, MODEL, DESCRIPTION, VERSION, URI, SERIAL };
 
@@ -25,13 +28,13 @@ public:
     void tryToStartAndroidAutoServer();
 
 private:
-    bool m_isOpen, m_transferInProgress;
-
     QLoggingCategory category;
 
     libusb_device *device;
     libusb_device_handle *handle;
     std::vector<uint8_t> buffer;
+
+    QQueue<UsbDeviceStringRequestType> queue;
 
     static constexpr uint32_t USB_TYPE_VENDOR = 0x40;
     static constexpr uint32_t ACC_REQ_GET_PROTOCOL = 51;
@@ -44,18 +47,8 @@ private:
 
     void requestProtocolVersion();
     void requestProtocol_cb(libusb_transfer *transfer);
-    void sendDescription();
-    void sendDescription_cb(libusb_transfer *transfer);
-    void sendManufacturer();
-    void sendManufacturer_cb(libusb_transfer *transfer);
-    void sendModel();
-    void sendModel_cb(libusb_transfer *transfer);
-    void sendSerial();
-    void sendSerial_cb(libusb_transfer *transfer);
-    void sendUri();
-    void sendUri_cb(libusb_transfer *transfer);
-    void sendVersion();
-    void sendVersion_cb(libusb_transfer *transfer);
+    void sendNextElementFromQueue();
+    void sendNextElementFromQueue_cb(libusb_transfer *transfer);
     void sendStart();
     void sendStart_cb(libusb_transfer *transfer);
 
@@ -64,6 +57,12 @@ private:
 
 struct UsbDeviceCallbackStruct {
     UsbDevice *object;
+    void (UsbDevice::*callbackFunction)(libusb_transfer *);
+};
+
+struct UsbDeviceStringRequestType {
+    std::string message;
+    SendStringType type;
     void (UsbDevice::*callbackFunction)(libusb_transfer *);
 };
 

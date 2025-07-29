@@ -1,6 +1,6 @@
 #include "usbDevice.h"
 
-UsbDevice::UsbDevice(libusb_device *new_device) : category("USB DEVICE"), device(new_device), m_isOpen(false) {}
+UsbDevice::UsbDevice(libusb_device *new_device) : category("USB DEVICE"), device(new_device), handle(nullptr) {}
 
 UsbDevice::~UsbDevice() {
     close();
@@ -12,22 +12,34 @@ void UsbDevice::open() {
     if (result != 0) {
         cerror << "Error opening USB device: " << libusb_error_name(result);
     } else {
-        m_isOpen = true;
         cinfo << "Opened USB device";
     }
 }
 
 bool UsbDevice::isOpen() {
-    return m_isOpen;
+    return handle != nullptr;
 }
 
 void UsbDevice::close() {
     libusb_close(handle);
     handle = nullptr;
-    m_isOpen = false;
 }
 
 void UsbDevice::tryToStartAndroidAutoServer() {
+    queue.append(UsbDeviceStringRequestType{"Android Auto", SendStringType::DESCRIPTION,
+                                            &UsbDevice::sendNextElementFromQueue_cb});
+    queue.append(
+        UsbDeviceStringRequestType{"Android", SendStringType::MANUFACTURER, &UsbDevice::sendNextElementFromQueue_cb});
+    queue.append(
+        UsbDeviceStringRequestType{"Android Auto", SendStringType::MODEL, &UsbDevice::sendNextElementFromQueue_cb});
+    queue.append(
+        UsbDeviceStringRequestType{"HU-AAAAAA001", SendStringType::SERIAL, &UsbDevice::sendNextElementFromQueue_cb});
+    queue.append(UsbDeviceStringRequestType{"https://github.com/Miziol", SendStringType::URI,
+                                            &UsbDevice::sendNextElementFromQueue_cb});
+    queue.append(UsbDeviceStringRequestType{"1.0.0", SendStringType::VERSION, &UsbDevice::sendNextElementFromQueue_cb});
+
+    cinfo << "Trying to start android-auto-server";
+
     requestProtocolVersion();
 }
 
@@ -46,11 +58,7 @@ void UsbDevice::sendString(std::string message,
 }
 
 void UsbDevice::startTransfer(UsbDeviceCallbackStruct *user_data) {
-    m_transferInProgress = true;
-
-    libusb_transfer *transfer;
-
-    transfer = libusb_alloc_transfer(0);
+    libusb_transfer *transfer = libusb_alloc_transfer(0);
 
     libusb_fill_control_transfer(transfer, handle, &buffer[0], transfer_cb, user_data, 1000);
 
@@ -60,14 +68,11 @@ void UsbDevice::startTransfer(UsbDeviceCallbackStruct *user_data) {
 }
 
 void UsbDevice::clearTransfer(libusb_transfer *transfer) {
-    delete (UsbDeviceCallbackStruct *)(transfer->user_data);
+    delete static_cast<UsbDeviceCallbackStruct *>(transfer->user_data);
     libusb_free_transfer(transfer);
-    m_transferInProgress = false;
 }
 
 void UsbDevice::requestProtocolVersion() {
-    cinfo << "Requesting protocol version";
-
     int sizeOfProtocolVersion = sizeof(uint16_t);
     buffer.resize(8 + sizeOfProtocolVersion);
     libusb_fill_control_setup(&buffer[0], LIBUSB_ENDPOINT_IN | USB_TYPE_VENDOR, ACC_REQ_GET_PROTOCOL, 0, 0,
@@ -78,94 +83,27 @@ void UsbDevice::requestProtocolVersion() {
 }
 
 void UsbDevice::requestProtocol_cb(libusb_transfer *transfer) {
-    cinfo << "Protocol version" << static_cast<uint16_t>(transfer->buffer[8]);
-
-    sendDescription();  // TODO create queue
+    sendNextElementFromQueue();
 
     clearTransfer(transfer);
 }
 
-void UsbDevice::sendDescription() {
-    cinfo << "Sending description";
-    sendString("Android Auto", SendStringType::DESCRIPTION, &UsbDevice::sendDescription_cb);
+void UsbDevice::sendNextElementFromQueue() {
+    UsbDeviceStringRequestType request = queue.dequeue();
+    sendString(request.message, request.type, request.callbackFunction);
 }
 
-void UsbDevice::sendDescription_cb(libusb_transfer *transfer) {
-    cinfo << "Description sent";
-
-    sendManufacturer();
-
-    clearTransfer(transfer);
-}
-
-void UsbDevice::sendManufacturer() {
-    cinfo << "Sending manufacturer";
-    sendString("Android", SendStringType::MANUFACTURER, &UsbDevice::sendManufacturer_cb);
-}
-
-void UsbDevice::sendManufacturer_cb(libusb_transfer *transfer) {
-    cinfo << "Manufacturer sent";
-
-    sendModel();
-
-    clearTransfer(transfer);
-}
-
-void UsbDevice::sendModel() {
-    cinfo << "Sending model";
-    sendString("Android Auto", SendStringType::MODEL, &UsbDevice::sendModel_cb);
-}
-
-void UsbDevice::sendModel_cb(libusb_transfer *transfer) {
-    cinfo << "Model sended";
-
-    sendSerial();
-
-    clearTransfer(transfer);
-}
-
-void UsbDevice::sendSerial() {
-    cinfo << "Sending serial";
-    sendString("HU-AAAAAA001", SendStringType::SERIAL, &UsbDevice::sendSerial_cb);
-}
-
-void UsbDevice::sendSerial_cb(libusb_transfer *transfer) {
-    cinfo << "Serial sent";
-
-    sendUri();
-
-    clearTransfer(transfer);
-}
-
-void UsbDevice::sendUri() {
-    cinfo << "Sending URI";
-    sendString("https://github.com/Miziol", SendStringType::URI, &UsbDevice::sendUri_cb);
-}
-
-void UsbDevice::sendUri_cb(libusb_transfer *transfer) {
-    cinfo << "Uri sent";
-
-    sendVersion();
-
-    clearTransfer(transfer);
-}
-
-void UsbDevice::sendVersion() {
-    cinfo << "Sending version";
-    sendString("1.0.0", SendStringType::VERSION, &UsbDevice::sendVersion_cb);
-}
-
-void UsbDevice::sendVersion_cb(libusb_transfer *transfer) {
-    cinfo << "Version sent";
-
-    sendStart();
+void UsbDevice::sendNextElementFromQueue_cb(libusb_transfer *transfer) {
+    if (queue.empty()) {
+        sendStart();
+    } else {
+        sendNextElementFromQueue();
+    }
 
     clearTransfer(transfer);
 }
 
 void UsbDevice::sendStart() {
-    cinfo << "Sending start";
-
     buffer.resize(8);
     libusb_fill_control_setup(&buffer[0], LIBUSB_ENDPOINT_OUT | USB_TYPE_VENDOR, ACC_REQ_START, 0, 0, 0);
 
@@ -174,13 +112,13 @@ void UsbDevice::sendStart() {
 }
 
 void UsbDevice::sendStart_cb(libusb_transfer *transfer) {
-    cinfo << "Start sent";
+    cinfo << "Start configuration send successfully";
 
     clearTransfer(transfer);
 }
 
 void UsbDevice::transfer_cb(libusb_transfer *transfer) {
-    UsbDeviceCallbackStruct *user_data = (UsbDeviceCallbackStruct *)(transfer->user_data);
+    UsbDeviceCallbackStruct *user_data = static_cast<UsbDeviceCallbackStruct *>(transfer->user_data);
 
     (user_data->object->*user_data->UsbDeviceCallbackStruct::callbackFunction)(transfer);
 }
