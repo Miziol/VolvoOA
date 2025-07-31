@@ -122,20 +122,14 @@ Window {
 
         TabButton {
             icon.source: "qrc:/icons/settings.svg"
-
-            onClicked: selectView = !selectView
         }
 
         TabButton {
             icon.source: "qrc:/icons/dashboard.svg"
-
-            onClicked: selectView = !selectView
         }
 
         TabButton {
             icon.source: "qrc:/icons/phone.svg"
-
-            onClicked: selectView = !selectView
         }
 
         onCurrentIndexChanged: {

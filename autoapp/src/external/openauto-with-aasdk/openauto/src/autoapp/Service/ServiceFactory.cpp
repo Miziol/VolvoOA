@@ -94,6 +94,9 @@ IService::Pointer ServiceFactory::createBluetoothService(aasdk::messenger::IMess
 }
 
 IService::Pointer ServiceFactory::createInputService(aasdk::messenger::IMessenger::Pointer messenger) {
+    QObject *videoOutput = qmlRootObject->findChild<QObject *>("aaVideoOutput");
+    QRect inputGeometry = videoOutput->property("contentRect").toRect();
+
     QRect videoGeometry;
     switch (configuration_.getVideoResolution()) {
         case aasdk::proto::enums::VideoResolution::_720p:
@@ -109,10 +112,8 @@ IService::Pointer ServiceFactory::createInputService(aasdk::messenger::IMessenge
             break;
     }
 
-    QScreen *screen = QGuiApplication::primaryScreen();
-    QRect screenGeometry = screen == nullptr ? QRect(0, 0, 1, 1) : screen->geometry();
     projection::IInputDevice::Pointer inputDevice(std::make_shared<projection::InputDevice>(
-        *QGuiApplication::instance(), configuration_, std::move(screenGeometry), std::move(videoGeometry)));
+        *QGuiApplication::instance(), configuration_, std::move(inputGeometry), std::move(videoGeometry)));
 
     return std::make_shared<InputService>(ioService_, messenger, std::move(inputDevice));
 }
