@@ -178,6 +178,8 @@ void ControlServiceChannel::messageHandler(messenger::Message::Pointer message,
         case proto::ids::ControlMessage::PING_RESPONSE:
             this->handlePingResponse(payload, std::move(eventHandler));
             break;
+        case proto::ids::ControlMessage::VOICE_SESSION_REQUEST:
+            // TODO
         default:
             AASDK_LOG(error) << "[ControlServiceChannel] message not handled: " << messageId.getId();
             this->receive(std::move(eventHandler));
