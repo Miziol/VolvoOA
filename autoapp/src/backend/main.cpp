@@ -1,4 +1,5 @@
 #include <QtGui/QGuiApplication>
+#include <QIcon>
 
 #include "core.h"
 #include "logging/logger.h"
@@ -19,6 +20,8 @@ int main(int argc, char *argv[]) {
 
     // Create app
     QGuiApplication app(argc, argv);
+    app.setWindowIcon(QIcon(":/icons/logo.svg"));
+    app.setApplicationName(applicationName);
     // app.setOverrideCursor(Qt::BlankCursor); // TODO connect to Settings
 
     // Create modules
