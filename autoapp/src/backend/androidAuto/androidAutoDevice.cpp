@@ -21,7 +21,6 @@ AndroidAutoDevice::AndroidAutoDevice(
 }
 
 AndroidAutoDevice::~AndroidAutoDevice() {
-    stop();
     close();
 }
 
@@ -53,8 +52,10 @@ void AndroidAutoDevice::start() {
 }
 
 void AndroidAutoDevice::stop() {
-    if (androidAutoEntity != nullptr)
+    if (androidAutoEntity != nullptr) {
         androidAutoEntity->stop();
+        androidAutoEntity.reset();
+    }
 }
 
 libusb_device *AndroidAutoDevice::getDevice() {

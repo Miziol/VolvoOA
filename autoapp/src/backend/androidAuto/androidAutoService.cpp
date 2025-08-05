@@ -24,7 +24,7 @@ void AndroidAutoService::removeDevice(libusb_device *device) {
 }
 
 void AndroidAutoService::addNetworkDevice() {
-    ;
+    ; // TODO
 }
 
 void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioService,
@@ -45,7 +45,7 @@ void AndroidAutoService::createFactories(QObject *qmlRootObject) {
 }
 
 void AndroidAutoService::onAndroidAutoQuit() {
-    delete aaDevice;
+    aaDevice->deleteLater();
     aaDevice = nullptr;
 }
 
