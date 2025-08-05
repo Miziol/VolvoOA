@@ -1,21 +1,21 @@
 #include "androidAutoDevice.h"
 
-#include <iostream>
-
+#include "androidAutoService.h"
 #include "f1x/aasdk/USB/AOAPDevice.hpp"
 
 AndroidAutoDevice::AndroidAutoDevice(
+    QObject *parent,
     libusb_context *context,
     libusb_device *new_device,
     boost::asio::io_service &new_ioService,
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
-    : category("ANDROID AUTO DEVICE"),
+    : QObject(parent),
+      category("ANDROID AUTO DEVICE"),
       device(new_device),
       usbWrapper(f1x::aasdk::usb::USBWrapper(context)),
       ioService(new_ioService),
       androidAutoEntityFactory(new_androidAutoEntityFactory),
-      androidAutoEntity(nullptr),
-      countOnExit(0) {
+      androidAutoEntity(nullptr) {
     open();
     start();
 }
@@ -47,7 +47,7 @@ void AndroidAutoDevice::start() {
 
     auto aoapDevice(f1x::aasdk::usb::AOAPDevice::create(usbWrapper, ioService, handle));
     androidAutoEntity = androidAutoEntityFactory.create(std::move(aoapDevice));
-    androidAutoEntity->start(*this);
+    androidAutoEntity->start(*((AndroidAutoService *)(parent())));
 
     cinfo << "Started AA entity";
 }
@@ -55,15 +55,6 @@ void AndroidAutoDevice::start() {
 void AndroidAutoDevice::stop() {
     if (androidAutoEntity != nullptr)
         androidAutoEntity->stop();
-}
-
-void AndroidAutoDevice::onAndroidAutoQuit() {
-    qWarning() << "AndroidAutoQuit";
-    if (countOnExit > 0) {
-        androidAutoEntity.reset();
-        emit deleteMe();
-    }
-    countOnExit++;
 }
 
 libusb_device *AndroidAutoDevice::getDevice() {

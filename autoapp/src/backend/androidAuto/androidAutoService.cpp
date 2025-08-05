@@ -10,8 +10,7 @@ AndroidAutoService::~AndroidAutoService() {}
 void AndroidAutoService::addUSBDevice(libusb_context *context, libusb_device *device) {
     if (aaDevice == nullptr) {
         cinfo << "New AA device start processing";
-        aaDevice = new AndroidAutoDevice(context, device, ioService, *androidAutoEntityFactory);
-        connect(aaDevice, &AndroidAutoDevice::deleteMe, this, &AndroidAutoService::clearCurrentAADevice);
+        aaDevice = new AndroidAutoDevice(this, context, device, ioService, *androidAutoEntityFactory);
     } else {
         cwarning << "Android Auto entity already exist. AA device ignored";
     }
@@ -28,11 +27,6 @@ void AndroidAutoService::addNetworkDevice() {
     ;
 }
 
-void AndroidAutoService::clearCurrentAADevice() {
-    delete aaDevice;
-    aaDevice = nullptr;
-}
-
 void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioService,
                                                std::vector<std::thread> &threadPool) {
     auto ioServiceWorker = [&ioService]() { ioService.run(); };
@@ -45,6 +39,16 @@ void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioServic
 
 void AndroidAutoService::createFactories(QObject *qmlRootObject) {
     serviceFactory = new f1x::openauto::autoapp::service::ServiceFactory(ioService, settingsManager, qmlRootObject);
-    androidAutoEntityFactory =
-        new f1x::openauto::autoapp::service::AndroidAutoEntityFactory(ioService, settingsManager, *serviceFactory);
+    androidAutoEntityFactory = new f1x::openauto::autoapp::service::AndroidAutoEntityFactory(
+        this, ioService, settingsManager,
+        *serviceFactory);
+}
+
+void AndroidAutoService::onAndroidAutoQuit() {
+    delete aaDevice;
+    aaDevice = nullptr;
+}
+
+void AndroidAutoService::setFocusOnAA(bool focus) {
+    emit focusOnAA(focus);
 }

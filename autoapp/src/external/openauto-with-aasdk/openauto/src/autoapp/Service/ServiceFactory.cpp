@@ -50,7 +50,8 @@ ServiceFactory::ServiceFactory(boost::asio::io_service &ioService,
                                QObject *new_qmlRootObject)
     : ioService_(ioService), configuration_(configuration), qmlRootObject(new_qmlRootObject) {}
 
-ServiceList ServiceFactory::create(aasdk::messenger::IMessenger::Pointer messenger) {
+ServiceList ServiceFactory::create(IAndroidAutoEntityEventHandler *handler,
+                                   aasdk::messenger::IMessenger::Pointer messenger) {
     ServiceList serviceList;
 
     projection::IAudioInput::Pointer audioInput(new projection::QtAudioInput(1, QAudioFormat::Int16, 16000),
@@ -58,18 +59,19 @@ ServiceList ServiceFactory::create(aasdk::messenger::IMessenger::Pointer messeng
     serviceList.emplace_back(std::make_shared<AudioInputService>(ioService_, messenger, std::move(audioInput)));
     this->createAudioServices(serviceList, messenger);
     serviceList.emplace_back(std::make_shared<SensorService>(ioService_, messenger));
-    serviceList.emplace_back(this->createVideoService(messenger));
+    serviceList.emplace_back(this->createVideoService(handler, messenger));
     serviceList.emplace_back(this->createBluetoothService(messenger));
     serviceList.emplace_back(this->createInputService(messenger));
 
     return serviceList;
 }
 
-IService::Pointer ServiceFactory::createVideoService(aasdk::messenger::IMessenger::Pointer messenger) {
+IService::Pointer ServiceFactory::createVideoService(IAndroidAutoEntityEventHandler *handler,
+                                                     aasdk::messenger::IMessenger::Pointer messenger) {
     projection::IVideoOutput::Pointer videoOutput(new projection::QtVideoOutput(configuration_, qmlRootObject),
                                                   std::bind(&QObject::deleteLater, std::placeholders::_1));
 
-    return std::make_shared<VideoService>(ioService_, messenger, std::move(videoOutput));
+    return std::make_shared<VideoService>(handler, ioService_, messenger, std::move(videoOutput));
 }
 
 IService::Pointer ServiceFactory::createBluetoothService(aasdk::messenger::IMessenger::Pointer messenger) {
@@ -113,8 +115,7 @@ IService::Pointer ServiceFactory::createInputService(aasdk::messenger::IMessenge
     }
 
     projection::IInputDevice::Pointer inputDevice(std::make_shared<projection::InputDevice>(
-        *QGuiApplication::instance(), configuration_, std::move(inputGeometry), std::move(videoGeometry)));
-
+        configuration_, videoOutput, std::move(inputGeometry), std::move(videoGeometry)));
     return std::make_shared<InputService>(ioService_, messenger, std::move(inputDevice));
 }
 

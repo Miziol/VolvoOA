@@ -17,6 +17,7 @@
 */
 
 #include <QDebug>
+#include <QGuiApplication>
 #include <f1x/openauto/autoapp/Projection/IInputDeviceEventHandler.hpp>
 #include <f1x/openauto/autoapp/Projection/InputDevice.hpp>
 
@@ -25,58 +26,47 @@ namespace openauto {
 namespace autoapp {
 namespace projection {
 
-InputDevice::InputDevice(QObject &parent,
-                         SettingsManager &configuration,
+InputDevice::InputDevice(SettingsManager &configuration,
+                         QObject *new_videoOutput,
                          const QRect &touchscreenGeometry,
                          const QRect &displayGeometry)
-    : parent_(parent),
-      configuration_(configuration),
+    : configuration_(configuration),
+        videoOutput(new_videoOutput),
       touchscreenGeometry_(touchscreenGeometry),
       displayGeometry_(displayGeometry),
       eventHandler_(nullptr) {
-    this->moveToThread(parent.thread());
+    this->moveToThread(QGuiApplication::instance()->thread());
 }
 
 void InputDevice::start(IInputDeviceEventHandler &eventHandler) {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
     qInfo() << "[InputDevice] start.";
+
+    connect(videoOutput, SIGNAL(keyEvent(int, bool)), this, SLOT(handleKeyEvent(int, bool)));
+    connect(videoOutput, SIGNAL(mouseEvent(qreal, qreal, QString)), this,
+            SLOT(handleTouchEvent(qreal, qreal, QString)));
+
     eventHandler_ = &eventHandler;
-    parent_.installEventFilter(this);
 }
 
 void InputDevice::stop() {
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
     qInfo() << "[InputDevice] stop.";
-    parent_.removeEventFilter(this);
+
+    disconnect(videoOutput, SIGNAL(keyEvent(int, bool)), this, SLOT(handleKeyEvent(int, bool)));
+    disconnect(videoOutput, SIGNAL(mouseEvent(qreal, qreal, QString)), this,
+            SLOT(handleTouchEvent(qreal, qreal, QString)));
     eventHandler_ = nullptr;
 }
 
-bool InputDevice::eventFilter(QObject *obj, QEvent *event) {
-    std::lock_guard<decltype(mutex_)> lock(mutex_);
-
-    if (eventHandler_ != nullptr) {
-        if (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease) {
-            QKeyEvent *key = static_cast<QKeyEvent *>(event);
-            if (!key->isAutoRepeat()) {
-                return this->handleKeyEvent(event, key);
-            }
-        } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease ||
-                   event->type() == QEvent::MouseMove) {
-            return this->handleTouchEvent(event);
-        }
-    }
-
-    return QObject::eventFilter(obj, event);
-}
-
-bool InputDevice::handleKeyEvent(QEvent *event, QKeyEvent *key) {
-    auto eventType = event->type() == QEvent::KeyPress ? ButtonEventType::PRESS : ButtonEventType::RELEASE;
+bool InputDevice::handleKeyEvent(int key, bool pressed) {
+    auto eventType = pressed ? ButtonEventType::PRESS : ButtonEventType::RELEASE;
     aasdk::proto::enums::ButtonCode::Enum buttonCode;
     WheelDirection wheelDirection = WheelDirection::NONE;
 
-    switch (key->key()) {
+    switch (key) {
         case Qt::Key_Return:
         case Qt::Key_Enter:
             buttonCode = aasdk::proto::enums::ButtonCode::ENTER;
@@ -185,7 +175,7 @@ bool InputDevice::handleKeyEvent(QEvent *event, QKeyEvent *key) {
         case Qt::Key_Y:
         case Qt::Key_Z:
             buttonCode = static_cast<aasdk::proto::enums::ButtonCode::Enum>(aasdk::proto::enums::ButtonCode::A +
-                                                                            (key->key() - Qt::Key_A));
+                                                                            (key - Qt::Key_A));
             break;
 
         case Qt::Key_0:
@@ -199,51 +189,41 @@ bool InputDevice::handleKeyEvent(QEvent *event, QKeyEvent *key) {
         case Qt::Key_8:
         case Qt::Key_9:
             buttonCode = static_cast<aasdk::proto::enums::ButtonCode::Enum>(aasdk::proto::enums::ButtonCode::NUMBER_0 +
-                                                                            (key->key() - Qt::Key_0));
+                                                                            (key - Qt::Key_0));
             break;
 
         default:
             return true;
     }
 
-    const auto &buttonCodes = this->getSupportedButtonCodes();
-    if (std::find(buttonCodes.begin(), buttonCodes.end(), buttonCode) != buttonCodes.end()) {
-        if (buttonCode != aasdk::proto::enums::ButtonCode::SCROLL_WHEEL || event->type() == QEvent::KeyRelease) {
-            eventHandler_->onButtonEvent({eventType, wheelDirection, buttonCode});
-        }
+    if (buttonCode != aasdk::proto::enums::ButtonCode::SCROLL_WHEEL || !pressed) {
+        eventHandler_->onButtonEvent({eventType, wheelDirection, buttonCode});
     }
 
     return true;
 }
 
-bool InputDevice::handleTouchEvent(QEvent *event) {
+bool InputDevice::handleTouchEvent(qreal mouseX, qreal mouseY, QString type) {
     if (!configuration_.getTouchscreenEnabled()) {
         return true;
     }
 
-    aasdk::proto::enums::TouchAction::Enum type;
+    aasdk::proto::enums::TouchAction::Enum actionType;
 
-    switch (event->type()) {
-        case QEvent::MouseButtonPress:
-            type = aasdk::proto::enums::TouchAction::PRESS;
-            break;
-        case QEvent::MouseButtonRelease:
-            type = aasdk::proto::enums::TouchAction::RELEASE;
-            break;
-        case QEvent::MouseMove:
-            type = aasdk::proto::enums::TouchAction::DRAG;
-            break;
-        default:
-            return true;
-    };
+    if (type == "PRESSED")
+        actionType = aasdk::proto::enums::TouchAction::PRESS;
+    else if (type == "RELEASED")
+        actionType = aasdk::proto::enums::TouchAction::RELEASE;
+    else if (type == "DRAG")
+        actionType = aasdk::proto::enums::TouchAction::DRAG;
+    else
+        return true;
 
-    QMouseEvent *mouse = static_cast<QMouseEvent *>(event);
-    if (event->type() == QEvent::MouseButtonRelease || mouse->buttons().testFlag(Qt::LeftButton)) {
-        const uint32_t x =
-            (static_cast<float>(mouse->pos().x()) / touchscreenGeometry_.width()) * displayGeometry_.width();
-        const uint32_t y =
-            (static_cast<float>(mouse->pos().y()) / touchscreenGeometry_.height()) * displayGeometry_.height();
-        eventHandler_->onTouchEvent({type, x, y, 0});
+    if (type == "RELEASED" || true /* || mouse->buttons().testFlag(Qt::LeftButton)*/) {
+        const uint32_t x = (mouseX / touchscreenGeometry_.width()) * displayGeometry_.width();
+        const uint32_t y = (mouseY / touchscreenGeometry_.height()) * displayGeometry_.height();
+
+        eventHandler_->onTouchEvent({actionType, x, y, 0});
     }
 
     return true;

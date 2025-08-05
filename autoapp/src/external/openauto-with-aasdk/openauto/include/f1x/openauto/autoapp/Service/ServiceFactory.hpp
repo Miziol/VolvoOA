@@ -30,10 +30,12 @@ namespace service {
 class ServiceFactory : public IServiceFactory {
 public:
     ServiceFactory(boost::asio::io_service &ioService, SettingsManager &configuration, QObject *new_qmlRootObject);
-    ServiceList create(aasdk::messenger::IMessenger::Pointer messenger) override;
+    ServiceList create(IAndroidAutoEntityEventHandler *handler,
+                       aasdk::messenger::IMessenger::Pointer messenger) override;
 
 private:
-    IService::Pointer createVideoService(aasdk::messenger::IMessenger::Pointer messenger);
+    IService::Pointer createVideoService(IAndroidAutoEntityEventHandler *handler,
+                                         aasdk::messenger::IMessenger::Pointer messenger);
     IService::Pointer createBluetoothService(aasdk::messenger::IMessenger::Pointer messenger);
     IService::Pointer createInputService(aasdk::messenger::IMessenger::Pointer messenger);
     void createAudioServices(ServiceList &serviceList, aasdk::messenger::IMessenger::Pointer messenger);

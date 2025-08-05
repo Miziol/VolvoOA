@@ -33,25 +33,23 @@ class InputDevice : public QObject, public IInputDevice, boost::noncopyable {
     Q_OBJECT
 
 public:
-    InputDevice(QObject &parent,
-                SettingsManager &configuration,
+    InputDevice(SettingsManager &configuration,
+                QObject *new_videoOutput,
                 const QRect &touchscreenGeometry,
                 const QRect &videoGeometry);
 
     void start(IInputDeviceEventHandler &eventHandler) override;
     void stop() override;
     QList<f1x::aasdk::proto::enums::ButtonCode::Enum> getSupportedButtonCodes() const override;
-    bool eventFilter(QObject *obj, QEvent *event) override;
     bool hasTouchscreen() const override;
     QRect getTouchscreenGeometry() const override;
 
-private:
-    void setVideoGeometry();
-    bool handleKeyEvent(QEvent *event, QKeyEvent *key);
-    void dispatchKeyEvent(ButtonEvent event);
-    bool handleTouchEvent(QEvent *event);
+public slots:
+    bool handleKeyEvent(int key, bool pressed);
+    bool handleTouchEvent(qreal mouseX, qreal mouseY, QString type);  // TODO change `type` to enum
 
-    QObject &parent_;
+private:
+    QObject* videoOutput;
     SettingsManager &configuration_;
     QRect touchscreenGeometry_;
     QRect displayGeometry_;
