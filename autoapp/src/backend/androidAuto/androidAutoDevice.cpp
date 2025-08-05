@@ -21,6 +21,7 @@ AndroidAutoDevice::AndroidAutoDevice(
 }
 
 AndroidAutoDevice::~AndroidAutoDevice() {
+    stop();
     close();
 }
 
