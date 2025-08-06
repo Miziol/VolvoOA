@@ -46,7 +46,7 @@ AOAPDevice::AOAPDevice(IUSBWrapper &usbWrapper,
 AOAPDevice::~AOAPDevice() {
     inEndpoint_->cancelTransfers();
     outEndpoint_->cancelTransfers();
-    //usbWrapper_.releaseInterface(handle_, interfaceDescriptor_->bInterfaceNumber);
+    //usbWrapper_.releaseInterface(handle_, interfaceDescriptor_->bInterfaceNumber); // TODO check why this causes the bug
 }
 
 IUSBEndpoint &AOAPDevice::getInEndpoint() {
