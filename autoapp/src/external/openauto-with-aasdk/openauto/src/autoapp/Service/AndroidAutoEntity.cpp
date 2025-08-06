@@ -72,8 +72,6 @@ void AndroidAutoEntity::stop() {
         messenger_->stop();
         transport_->stop();
         cryptor_->deinit();
-
-        qWarning() << "TEST";
     });
 }
 
