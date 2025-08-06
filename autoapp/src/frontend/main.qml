@@ -71,6 +71,7 @@ Window {
         }
 
         AndroidAutoView {
+            id: androidAutoView
             x: selectView ?
                 miniatureSpacing + (Array.prototype.slice.call(parent.children).indexOf(this) * (miniatureSize + miniatureSpacing)) :
                 (Array.prototype.slice.call(parent.children).indexOf(this) - tabBar.currentIndex) * parent.width
@@ -122,20 +123,20 @@ Window {
 
         TabButton {
             icon.source: "qrc:/icons/settings.svg"
-
-            onClicked: selectView = !selectView
         }
 
         TabButton {
             icon.source: "qrc:/icons/dashboard.svg"
-
-            onClicked: selectView = !selectView
         }
 
         TabButton {
             icon.source: "qrc:/icons/phone.svg"
 
-            onClicked: selectView = !selectView
+            onCheckedChanged: {
+                if (checked) {
+                    androidAutoView.forceActiveFocus()
+                }
+            }
         }
 
         onCurrentIndexChanged: {
@@ -144,6 +145,18 @@ Window {
 
         Keys.onPressed: (event) => {
             keyboardKeyPressed(event)
+        }
+    }
+
+    Connections {
+        target: aaService
+
+        function onFocusOnAA(focus) {
+            if (focus) {
+                tabBar.currentIndex = 2
+            } else {
+                tabBar.currentIndex = 1
+            }
         }
     }
 

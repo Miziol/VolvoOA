@@ -15,11 +15,14 @@
 #include "f1x/aasdk/USB/USBWrapper.hpp"
 #include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
 
-class AndroidAutoDevice : public QObject, public f1x::openauto::autoapp::service::IAndroidAutoEntityEventHandler {
+class AndroidAutoDevice : public QObject {
     Q_OBJECT
 
+signals:
+
 public:
-    AndroidAutoDevice(libusb_context *context,
+    AndroidAutoDevice(QObject *parent,
+                      libusb_context *context,
                       libusb_device *new_device,
                       boost::asio::io_service &new_ioService,
                       f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
@@ -41,7 +44,8 @@ public slots:
     void close();
     void start();
     void stop();
-    void onAndroidAutoQuit() override;
+
+    libusb_device *getDevice();
 
 private:
 };

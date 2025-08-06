@@ -16,6 +16,7 @@
     </qresource>
     <qresource prefix="/icons/">
         <file alias="dashboard.svg">resources/icons/dashboard.svg</file>
+        <file alias="logo.svg">resources/icons/logo.svg</file>
         <file alias="settings.svg">resources/icons/settings.svg</file>
         <file alias="phone.svg">resources/icons/phone.svg</file>
     </qresource>

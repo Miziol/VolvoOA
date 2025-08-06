@@ -33,10 +33,11 @@ namespace openauto {
 namespace autoapp {
 namespace service {
 
-AndroidAutoEntityFactory::AndroidAutoEntityFactory(boost::asio::io_service &ioService,
+AndroidAutoEntityFactory::AndroidAutoEntityFactory(IAndroidAutoEntityEventHandler *handler,
+                                                   boost::asio::io_service &ioService,
                                                    SettingsManager &configuration,
                                                    IServiceFactory &serviceFactory)
-    : ioService_(ioService), configuration_(configuration), serviceFactory_(serviceFactory) {}
+    : eventHandler_(handler), ioService_(ioService), configuration_(configuration), serviceFactory_(serviceFactory) {}
 
 IAndroidAutoEntity::Pointer AndroidAutoEntityFactory::create(aasdk::usb::IAOAPDevice::Pointer aoapDevice) {
     auto transport(std::make_shared<aasdk::transport::USBTransport>(ioService_, std::move(aoapDevice)));
@@ -57,7 +58,7 @@ IAndroidAutoEntity::Pointer AndroidAutoEntityFactory::create(aasdk::transport::I
         ioService_, std::make_shared<aasdk::messenger::MessageInStream>(ioService_, transport, cryptor),
         std::make_shared<aasdk::messenger::MessageOutStream>(ioService_, transport, cryptor)));
 
-    auto serviceList = serviceFactory_.create(messenger);
+    auto serviceList = serviceFactory_.create(eventHandler_, messenger);
     auto pinger(std::make_shared<Pinger>(ioService_, 5000));
     return std::make_shared<AndroidAutoEntity>(ioService_, std::move(cryptor), std::move(transport),
                                                std::move(messenger), configuration_, std::move(serviceList),

@@ -24,10 +24,12 @@ namespace openauto {
 namespace autoapp {
 namespace service {
 
-VideoService::VideoService(boost::asio::io_service &ioService,
+VideoService::VideoService(IAndroidAutoEntityEventHandler *handler,
+                           boost::asio::io_service &ioService,
                            aasdk::messenger::IMessenger::Pointer messenger,
                            projection::IVideoOutput::Pointer videoOutput)
-    : strand_(ioService),
+    : eventHandler_(handler),
+      strand_(ioService),
       channel_(std::make_shared<aasdk::channel::av::VideoServiceChannel>(strand_, std::move(messenger))),
       videoOutput_(std::move(videoOutput)),
       session_(-1) {}
@@ -150,6 +152,8 @@ void VideoService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse
 void VideoService::onVideoFocusRequest(const aasdk::proto::messages::VideoFocusRequest &request) {
     qInfo() << "[VideoService] video focus request, display index: " << request.disp_index()
             << ", focus mode: " << request.focus_mode() << ", focus reason: " << request.focus_reason();
+
+    eventHandler_->setFocusOnAA(request.focus_mode() == aasdk::proto::enums::VideoFocusMode_Enum_FOCUSED);
 
     this->sendVideoFocusIndication();
     channel_->receive(this->shared_from_this());

@@ -24,6 +24,8 @@
 #include <f1x/openauto/autoapp/Service/IService.hpp>
 #include <memory>
 
+#include "IAndroidAutoEntityEventHandler.hpp"
+
 namespace f1x {
 namespace openauto {
 namespace autoapp {
@@ -35,7 +37,8 @@ class VideoService : public aasdk::channel::av::IVideoServiceChannelEventHandler
 public:
     typedef std::shared_ptr<VideoService> Pointer;
 
-    VideoService(boost::asio::io_service &ioService,
+    VideoService(IAndroidAutoEntityEventHandler *handler,
+                 boost::asio::io_service &ioService,
                  aasdk::messenger::IMessenger::Pointer messenger,
                  projection::IVideoOutput::Pointer videoOutput);
 
@@ -56,6 +59,7 @@ private:
     using std::enable_shared_from_this<VideoService>::shared_from_this;
     void sendVideoFocusIndication();
 
+    IAndroidAutoEntityEventHandler *eventHandler_;
     boost::asio::io_service::strand strand_;
     aasdk::channel::av::VideoServiceChannel::Pointer channel_;
     projection::IVideoOutput::Pointer videoOutput_;
