@@ -62,13 +62,11 @@ void InputService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse
         inputChannel->add_supported_keycodes(buttonCode);
     }
 
-    if (inputDevice_->hasTouchscreen()) {
-        const auto &touchscreenSurface = inputDevice_->getTouchscreenGeometry();
-        auto touchscreenConfig = inputChannel->mutable_touch_screen_config();
+    const auto &touchscreenSurface = inputDevice_->getTouchscreenGeometry();
+    auto touchscreenConfig = inputChannel->mutable_touch_screen_config();
 
-        touchscreenConfig->set_width(touchscreenSurface.width());
-        touchscreenConfig->set_height(touchscreenSurface.height());
-    }
+    touchscreenConfig->set_width(touchscreenSurface.width());
+    touchscreenConfig->set_height(touchscreenSurface.height());
 }
 
 void InputService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) {

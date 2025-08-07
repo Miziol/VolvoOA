@@ -23,7 +23,7 @@
 #include <f1x/openauto/autoapp/Service/IAndroidAutoEntityFactory.hpp>
 #include <f1x/openauto/autoapp/Service/IServiceFactory.hpp>
 
-#include "../../../../backend/settingsManager.h"
+#include "../../../../backend/settings/settingsManager.h"
 
 namespace f1x {
 namespace openauto {

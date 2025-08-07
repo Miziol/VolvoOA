@@ -20,7 +20,7 @@
 
 #include <f1x/openauto/autoapp/Projection/IVideoOutput.hpp>
 
-#include "../../../../backend/settingsManager.h"
+#include "../../../../backend/settings/settingsManager.h"
 
 namespace f1x {
 namespace openauto {

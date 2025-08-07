@@ -1,11 +1,6 @@
 import QtQuick
 
-Rectangle {
-    signal elementSelected
-
-    property bool asButton: false
-    property int animationTime: 200
-
+Item {
     Behavior on x {
         SmoothedAnimation {
             duration: animationTime
@@ -28,12 +23,5 @@ Rectangle {
         SmoothedAnimation {
             duration: animationTime
         }
-    }
-
-    MouseArea {
-        enabled: asButton
-        anchors.fill: parent
-
-        onClicked: elementSelected()
     }
 }

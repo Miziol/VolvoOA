@@ -38,7 +38,7 @@
 #include <f1x/openauto/autoapp/Service/SystemAudioService.hpp>
 #include <f1x/openauto/autoapp/Service/VideoService.hpp>
 
-#include "../../../../../../backend/settingsManager.h"
+#include "../../../../../../backend/settings/settingsManager.h"
 
 namespace f1x {
 namespace openauto {

@@ -6,7 +6,7 @@
 #include <QObject>
 
 #include "../logging/loggingCategory.h"
-#include "../settingsManager.h"
+#include "../settings/settingsManager.h"
 #include "androidAutoDevice.h"
 #include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
 #include "f1x/openauto/autoapp/Service/ServiceFactory.hpp"

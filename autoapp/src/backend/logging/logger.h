@@ -4,7 +4,7 @@
 #include <QDir>
 #include <QFile>
 
-#include "../settingsManager.h"
+#include "../settings/settingsManager.h"
 #include "loggingCategory.h"
 
 class Logger {

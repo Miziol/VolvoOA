@@ -3,11 +3,12 @@
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QEvent>
 
-// #include "../commons/guistyle.h"
+#include "settings/guistyle.h"
 #include "androidAuto/androidAutoService.h"
 #include "logging/loggingCategory.h"
-#include "settingsManager.h"
+#include "settings/settingsManager.h"
 #include "usb/usbService.h"
 
 Q_DECLARE_OPAQUE_POINTER(libusb_context *)
@@ -20,12 +21,13 @@ public:
     ~AppCore();
 
 public slots:
+    bool eventFilter(QObject *obj, QEvent *event);
 
 private:
     QLoggingCategory category;
 
     SettingsManager &settings;
-    // GuiStyle qmlStyle;
+    GuiStyle qmlStyle;
 
     QQmlApplicationEngine qmlEngine;
     QQmlContext *qmlRootContext;

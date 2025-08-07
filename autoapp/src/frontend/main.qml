@@ -1,16 +1,16 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Controls.Material
 
 import "qrc:/androidAuto"
 import "qrc:/main"
 import "qrc:/settings"
+import "qrc:/window"
 
 Window {
-    property bool selectView: false
-    property int miniatureSize: (mainView.width - ((mainView.children.length + 1) * miniatureSpacing)) / mainView.children.length
-    property int miniatureRadius: 10
-    property int miniatureSpacing: 20
+    property int viewIndex: 1
+
+    property int barHeight: 40
+    property int animationTime: 200
 
     width: 800
     height: 480
@@ -21,131 +21,56 @@ Window {
     Material.theme: Material.Dark
     Material.accent: Material.Green
 
-    Rectangle {
-        id: mainView
-        z: 5
+    MainBar {
+        id: appBar
+        z: 1
+        width: parent.width
+        height: viewIndex != 2 ?barHeight : 0
+
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: tabBar.top
 
-        color: "transparent"
+        onSwitchToSettings: viewIndex = 0
+        onSwitchToAndroidAuto: viewIndex = 2
 
-        SettingsView {
-            x: selectView ?
-                miniatureSpacing + (Array.prototype.slice.call(parent.children).indexOf(this) * (miniatureSize + miniatureSpacing)) :
-                (Array.prototype.slice.call(parent.children).indexOf(this) - tabBar.currentIndex) * parent.width
-
-            width: selectView ? miniatureSize : parent.width
-            height: selectView ? miniatureSize : parent.height
-
-            anchors.verticalCenter: parent.verticalCenter
-
-            radius: selectView ? miniatureRadius : 0
-            asButton: selectView
-
-            onElementSelected: {
-                tabBar.currentIndex = Array.prototype.slice.call(parent.children).indexOf(this)
-                selectView = false
-            }
-        }
-
-        MainView {
-            x: selectView ?
-                miniatureSpacing + (Array.prototype.slice.call(parent.children).indexOf(this) * (miniatureSize + miniatureSpacing)) :
-                (Array.prototype.slice.call(parent.children).indexOf(this) - tabBar.currentIndex) * parent.width
-
-            width: selectView ? miniatureSize : parent.width
-            height: selectView ? miniatureSize : parent.height
-
-            anchors.verticalCenter: parent.verticalCenter
-
-            focus: true
-            radius: selectView ? miniatureRadius : 0
-            asButton: selectView
-
-            onElementSelected: {
-                tabBar.currentIndex = Array.prototype.slice.call(parent.children).indexOf(this)
-                selectView = false
-            }
-        }
-
-        AndroidAutoView {
-            id: androidAutoView
-            x: selectView ?
-                miniatureSpacing + (Array.prototype.slice.call(parent.children).indexOf(this) * (miniatureSize + miniatureSpacing)) :
-                (Array.prototype.slice.call(parent.children).indexOf(this) - tabBar.currentIndex) * parent.width
-
-            width: selectView ? miniatureSize : parent.width
-            height: selectView ? miniatureSize : parent.height
-
-            anchors.verticalCenter: parent.verticalCenter
-
-            radius: selectView ? miniatureRadius : 0
-            asButton: selectView
-
-            onElementSelected: {
-                tabBar.currentIndex = Array.prototype.slice.call(parent.children).indexOf(this)
-                selectView = false
-            }
-        }
-
-        Keys.onPressed: (event) => {
-            keyboardKeyPressed(event)
-        }
+        KeyNavigation.backtab: null
+        KeyNavigation.tab: viewIndex == 2 ? null : viewIndex ? mainView : settingsView
     }
 
-    Rectangle {
-        id: marker
-        x: miniatureSpacing + (tabBar.currentIndex * (miniatureSize + miniatureSpacing)) - (miniatureSpacing / 4)
-        z: 0
-        width: miniatureSize + (miniatureSpacing / 2)
-        height: miniatureSize + (miniatureSpacing / 2)
-        anchors.verticalCenter: mainView.verticalCenter
-
-        visible: selectView
-        radius: miniatureRadius
-        color: Material.accent
-
-        Behavior on x {
-            SmoothedAnimation {
-                duration: 200
-            }
-        }
-    }
-
-    TabBar {
-        id: tabBar
-        anchors.left: parent.left
-        anchors.right: parent.right
+    SettingsView {
+        id: settingsView
+        x: (0 - viewIndex) * parent.width
+        anchors.top: appBar.bottom
         anchors.bottom: parent.bottom
-        currentIndex: 1
 
-        TabButton {
-            icon.source: "qrc:/icons/settings.svg"
-        }
+        width: parent.width
 
-        TabButton {
-            icon.source: "qrc:/icons/dashboard.svg"
-        }
+        KeyNavigation.backtab: appBar
+        KeyNavigation.tab: appBar
+    }
 
-        TabButton {
-            icon.source: "qrc:/icons/phone.svg"
+    MainView {
+        id: mainView
+        x: (1 - viewIndex) * parent.width
+        anchors.top: appBar.bottom
+        anchors.bottom: parent.bottom
 
-            onCheckedChanged: {
-                if (checked) {
-                    androidAutoView.forceActiveFocus()
-                }
-            }
-        }
+        width: parent.width
+        focus: true
 
-        onCurrentIndexChanged: {
-            marker.x = miniatureSpacing + (currentIndex * (miniatureSize + miniatureSpacing)) - (miniatureSpacing / 2)
-        }
+        KeyNavigation.backtab: appBar
+        KeyNavigation.tab: appBar
+    }
 
-        Keys.onPressed: (event) => {
-            keyboardKeyPressed(event)
-        }
+    AndroidAutoView {
+        id: androidAutoView
+        x: (2 - viewIndex) * parent.width
+
+        width: parent.width
+        height: parent.height
+
+        anchors.verticalCenter: parent.verticalCenter
     }
 
     Connections {
@@ -153,22 +78,10 @@ Window {
 
         function onFocusOnAA(focus) {
             if (focus) {
-                tabBar.currentIndex = 2
+                viewIndex = 2
             } else {
-                tabBar.currentIndex = 1
+                viewIndex = 1
             }
-        }
-    }
-
-    function keyboardKeyPressed(event) {
-        if (event.key == Qt.Key_Home) {
-            selectView = true
-        } else if (event.key == Qt.Key_PageUp) {
-            tabBar.currentIndex = tabBar.currentIndex > 0 ? tabBar.currentIndex - 1 : mainView.children.length - 1
-        } else if (event.key == Qt.Key_PageDown) {
-            tabBar.currentIndex = tabBar.currentIndex == mainView.children.length - 1 ? 0 : tabBar.currentIndex + 1
-        } else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
-            selectView = false
         }
     }
 }
