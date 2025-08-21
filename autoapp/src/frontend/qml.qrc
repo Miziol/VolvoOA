@@ -18,6 +18,7 @@
         <file alias="SettingsView.qml">settings/SettingsView.qml</file>
     </qresource>
     <qresource prefix="/window/">
+        <file alias="FocusIndicator.qml">window/FocusIndicator.qml</file>
         <file alias="MainBar.qml">window/MainBar.qml</file>
     </qresource>
     <qresource prefix="/icons/">

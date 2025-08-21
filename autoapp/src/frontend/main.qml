@@ -15,7 +15,7 @@ Window {
     width: 800
     height: 480
     visible: true
-    //visibility: Window.FullScreen
+    visibility: Window.FullScreen
     color: Material.background
 
     Material.theme: Material.Dark
@@ -31,7 +31,7 @@ Window {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        onSwitchToSettings: viewIndex = 0
+        onSwitchToSettings: viewIndex ? viewIndex = 0 : viewIndex = 1
         onSwitchToAndroidAuto: viewIndex = 2
 
         KeyNavigation.backtab: null
@@ -71,6 +71,19 @@ Window {
         height: parent.height
 
         anchors.verticalCenter: parent.verticalCenter
+    }
+
+    FocusIndicator {
+        id: focusIndicator
+    }
+
+    onActiveFocusItemChanged: {
+        focusIndicator.width = activeFocusItem.width
+        focusIndicator.height = activeFocusItem.height
+
+        const activeFocusItemLocation = activeFocusItem.mapToGlobal(0,0)
+        focusIndicator.x = activeFocusItemLocation.x
+        focusIndicator.y = activeFocusItemLocation.y
     }
 
     Connections {
