@@ -31,7 +31,7 @@ InputDevice::InputDevice(SettingsManager &configuration,
                          const QRect &touchscreenGeometry,
                          const QRect &displayGeometry)
     : configuration_(configuration),
-        videoOutput(new_videoOutput),
+      videoOutput(new_videoOutput),
       touchscreenGeometry_(touchscreenGeometry),
       displayGeometry_(displayGeometry),
       eventHandler_(nullptr) {
@@ -57,7 +57,7 @@ void InputDevice::stop() {
 
     disconnect(videoOutput, SIGNAL(keyEvent(int, bool)), this, SLOT(handleKeyEvent(int, bool)));
     disconnect(videoOutput, SIGNAL(mouseEvent(qreal, qreal, QString)), this,
-            SLOT(handleTouchEvent(qreal, qreal, QString)));
+               SLOT(handleTouchEvent(qreal, qreal, QString)));
     eventHandler_ = nullptr;
 }
 
@@ -204,10 +204,6 @@ bool InputDevice::handleKeyEvent(int key, bool pressed) {
 }
 
 bool InputDevice::handleTouchEvent(qreal mouseX, qreal mouseY, QString type) {
-    if (!configuration_.getTouchscreenEnabled()) {
-        return true;
-    }
-
     aasdk::proto::enums::TouchAction::Enum actionType;
 
     if (type == "PRESSED")
@@ -230,7 +226,7 @@ bool InputDevice::handleTouchEvent(qreal mouseX, qreal mouseY, QString type) {
 }
 
 bool InputDevice::hasTouchscreen() const {
-    return configuration_.getTouchscreenEnabled();
+    return true;
 }
 
 QRect InputDevice::getTouchscreenGeometry() const {
@@ -238,7 +234,7 @@ QRect InputDevice::getTouchscreenGeometry() const {
 }
 
 QList<f1x::aasdk::proto::enums::ButtonCode::Enum> InputDevice::getSupportedButtonCodes() const {
-    return configuration_.getButtonCodes();
+    return QList<aasdk::proto::enums::ButtonCode::Enum>();  // TODO create map and base on map
 }
 
 }  // namespace projection

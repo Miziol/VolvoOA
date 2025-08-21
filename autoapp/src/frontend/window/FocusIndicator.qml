@@ -1,6 +1,12 @@
 import QtQuick
+import QtQuick.Controls.Material
 
-Item {
+Rectangle {
+    border.width: activeFocusItem ? guiStyle.detailSize : 0
+    border.color: Material.accentColor
+    radius: 100
+    color: "transparent"
+
     Behavior on x {
         SmoothedAnimation {
             duration: animationTime

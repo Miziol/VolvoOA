@@ -3,7 +3,10 @@
         <file>main.qml</file>
     </qresource>
     <qresource prefix="/commons/">
+        <file alias="Label.qml">commons/Label.qml</file>
         <file alias="ScreenElement.qml">commons/ScreenElement.qml</file>
+        <file alias="Switch.qml">commons/Switch.qml</file>
+        <file alias="Title.qml">commons/Title.qml</file>
     </qresource>
     <qresource prefix="/androidAuto/">
         <file alias="AndroidAutoView.qml">androidAuto/AndroidAutoView.qml</file>
@@ -13,6 +16,10 @@
     </qresource>
     <qresource prefix="/settings/">
         <file alias="SettingsView.qml">settings/SettingsView.qml</file>
+    </qresource>
+    <qresource prefix="/window/">
+        <file alias="FocusIndicator.qml">window/FocusIndicator.qml</file>
+        <file alias="MainBar.qml">window/MainBar.qml</file>
     </qresource>
     <qresource prefix="/icons/">
         <file alias="dashboard.svg">resources/icons/dashboard.svg</file>

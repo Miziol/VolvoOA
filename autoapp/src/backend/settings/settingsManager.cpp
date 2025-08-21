@@ -44,6 +44,7 @@ bool SettingsManager::isLeftHandDrive() {
 
 void SettingsManager::setLeftHandDrive(bool value) {
     setValue(GENERAL_LEFT_HAND_DRIVE_KEY, value);
+    emit leftHandDriveChanged();
 }
 
 bool SettingsManager::getShowClock() {
@@ -52,22 +53,43 @@ bool SettingsManager::getShowClock() {
 
 void SettingsManager::setShowClock(bool value) {
     setValue(GENERAL_SHOW_CLOCK_KEY, value);
+    emit showClockChanged();
+}
+
+int SettingsManager::getVideoFPSInt() {
+    return value(VIDEO_FPS_KEY).toInt();
 }
 
 f1x::aasdk::proto::enums::VideoFPS::Enum SettingsManager::getVideoFPS() const {
     return static_cast<f1x::aasdk::proto::enums::VideoFPS::Enum>(value(VIDEO_FPS_KEY).toInt());
 }
 
+void SettingsManager::setVideoFPSInt(int value) {
+    setValue(VIDEO_FPS_KEY, value);
+    emit videoFPSChanged();
+}
+
 void SettingsManager::setVideoFPS(f1x::aasdk::proto::enums::VideoFPS::Enum value) {
     setValue(VIDEO_FPS_KEY, value);
+    emit videoFPSChanged();
+}
+
+int SettingsManager::getVideoResolutionInt() {
+    return value(VIDEO_RESOLUTION_KEY).toInt();
 }
 
 f1x::aasdk::proto::enums::VideoResolution::Enum SettingsManager::getVideoResolution() const {
     return static_cast<f1x::aasdk::proto::enums::VideoResolution_Enum>(value(VIDEO_RESOLUTION_KEY).toInt());
 }
 
+void SettingsManager::setVideoResolutionInt(int value) {
+    setValue(VIDEO_RESOLUTION_KEY, value);
+    emit videoResolutionChanged();
+}
+
 void SettingsManager::setVideoResolution(f1x::aasdk::proto::enums::VideoResolution::Enum value) {
     setValue(VIDEO_RESOLUTION_KEY, value);
+    emit videoResolutionChanged();
 }
 
 size_t SettingsManager::getScreenDPI() const {
@@ -76,6 +98,7 @@ size_t SettingsManager::getScreenDPI() const {
 
 void SettingsManager::setScreenDPI(size_t value) {
     setValue(VIDEO_SCREEN_DPI_KEY, int(value));
+    emit screenDPIChanged();
 }
 
 QRect SettingsManager::getVideoMargins() const {
@@ -85,22 +108,16 @@ QRect SettingsManager::getVideoMargins() const {
 void SettingsManager::setVideoMargins(QRect value) {
     setValue(VIDEO_MARGIN_WIDTH_KEY, value.width());
     setValue(VIDEO_MARGIN_HEIGHT_KEY, value.height());
+    emit videoMarginsChanged();
 }
 
-bool SettingsManager::getTouchscreenEnabled() const {
-    return value(NAVIGATION_TOUCHSCREEN_ENABLED_KEY).toBool();
+bool SettingsManager::getShowCursor() const {
+    return value(NAVIGATION_SHOW_CURSOR_KEY).toBool();
 }
 
-void SettingsManager::setTouchscreenEnabled(bool value) {
-    setValue(NAVIGATION_TOUCHSCREEN_ENABLED_KEY, value);
-}
-
-QList<f1x::aasdk::proto::enums::ButtonCode::Enum> SettingsManager::getButtonCodes() const {
-    return QList<f1x::aasdk::proto::enums::ButtonCode::Enum>();  // TODO
-}
-
-void SettingsManager::setButtonCodes(const QList<f1x::aasdk::proto::enums::ButtonCode::Enum> &value) {
-    // TODO
+void SettingsManager::setShowCursor(bool value) {
+    setValue(NAVIGATION_SHOW_CURSOR_KEY, value);
+    emit showCursorChanged();
 }
 
 f1x::openauto::autoapp::configuration::BluetoothAdapterType SettingsManager::getBluetoothAdapterType() const {
@@ -110,6 +127,7 @@ f1x::openauto::autoapp::configuration::BluetoothAdapterType SettingsManager::get
 
 void SettingsManager::setBluetoothAdapterType(f1x::openauto::autoapp::configuration::BluetoothAdapterType value) {
     setValue(BLUETOOTH_ADAPTER_TYPE_KEY, (int)value);
+    emit bluetoothAdapterTypeChanged();
 }
 
 QBluetoothAddress SettingsManager::getBluetoothRemoteAdapterAddress() const {
@@ -118,6 +136,7 @@ QBluetoothAddress SettingsManager::getBluetoothRemoteAdapterAddress() const {
 
 void SettingsManager::setBluetoothRemoteAdapterAddress(const QBluetoothAddress value) {
     setValue(BLUETOOTH_REMOTE_ADAPTER_ADDRESS_KEY, value.toString());
+    emit bluetoothAddressChanged();
 }
 
 void SettingsManager::setDefault(bool force) {
@@ -135,17 +154,7 @@ void SettingsManager::setDefault(bool force) {
     setDefaultValue(force, VIDEO_MARGIN_WIDTH_KEY, VIDEO_MARGIN_WIDTH_VALUE);
     setDefaultValue(force, VIDEO_MARGIN_HEIGHT_KEY, VIDEO_MARGIN_HEIGHT_VALUE);
 
-    setDefaultValue(force, NAVIGATION_TOUCHSCREEN_ENABLED_KEY, NAVIGATION_TOUCHSCREEN_ENABLED_VALUE);
-    setDefaultValue(force, NAVIGATION_ENTER_KEY, NAVIGATION_ENTER_VALUE);
-    setDefaultValue(force, NAVIGATION_ARROWS_KEY, NAVIGATION_ARROWS_VALUE);
-    setDefaultValue(force, NAVIGATION_SCROLL_WHEEL_KEY, NAVIGATION_SCROLL_WHEEL_VALUE);
-    setDefaultValue(force, NAVIGATION_BACK_KEY, NAVIGATION_BACK_VALUE);
-    setDefaultValue(force, NAVIGATION_HOME_KEY, NAVIGATION_HOME_VALUE);
-    setDefaultValue(force, NAVIGATION_MEDIA_KEY, NAVIGATION_MEDIA_VALUE);
-    setDefaultValue(force, NAVIGATION_VOICE_COMMAND_KEY, NAVIGATION_VOICE_COMMAND_VALUE);
-    setDefaultValue(force, NAVIGATION_CHARS_KEY, NAVIGATION_CHARS_VALUE);
-    setDefaultValue(force, NAVIGATION_LETTERS_KEY, NAVIGATION_LETTERS_VALUE);
-    setDefaultValue(force, NAVIGATION_NUMBERS_KEY, NAVIGATION_NUMBERS_VALUE);
+    setDefaultValue(force, NAVIGATION_SHOW_CURSOR_KEY, NAVIGATION_SHOW_CURSOR_VALUE);
 
     setDefaultValue(force, BLUETOOTH_ADAPTER_TYPE_KEY, (int)(BLUETOOTH_ADAPTER_TYPE_VALUE));
     setDefaultValue(force, BLUETOOTH_REMOTE_ADAPTER_ADDRESS_KEY, BLUETOOTH_REMOTE_ADAPTER_ADDRESS_VALUE.toString());

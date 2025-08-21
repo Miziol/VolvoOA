@@ -3,8 +3,6 @@ import QtMultimedia
 import "qrc:/commons"
 
 ScreenElement {
-    color: "blue"
-
     VideoOutput {
         id: aaVideoOutput
 

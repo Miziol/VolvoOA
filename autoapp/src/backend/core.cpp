@@ -3,19 +3,20 @@
 #include <libusb-1.0/libusb.h>
 
 #include <QGuiApplication>
-
-#include "androidAuto/androidAutoDevice.h"
+#include <QKeyEvent>
 
 AppCore::AppCore(SettingsManager &new_settings)
     : category("GUI CORE"),
       settings(new_settings),
       androidAutoService(new_settings, ioService),
-      work(ioService) /*,
-       qmlStyle(settings)*/
+      work(ioService) ,
+      qmlStyle(settings)
 {
+    QGuiApplication::instance()->installEventFilter(this);
+
     qmlRootContext = qmlEngine.rootContext();
     qmlRootContext->setContextProperty("core", this);
-    // qmlRootContext->setContextProperty("guiStyle", &qmlStyle);
+    qmlRootContext->setContextProperty("guiStyle", &qmlStyle);
     qmlRootContext->setContextProperty("settingsManager", &settings);
     qmlRootContext->setContextProperty("usbService", &usbService);
     qmlRootContext->setContextProperty("aaService", &androidAutoService);
@@ -38,10 +39,26 @@ AppCore::AppCore(SettingsManager &new_settings)
 
     connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addUSBDevice);
     connect(&usbService, &UsbService::removeAndroidAutoDevice, &androidAutoService, &AndroidAutoService::removeDevice);
-    // qmlStyle.changeTextSize(GuiStyle::textSizeType::LARGE);
-    // qmlStyle.changeDarkLightMode();
 }
 
 AppCore::~AppCore() {
     std::for_each(threadPool.begin(), threadPool.end(), std::bind(&std::thread::join, std::placeholders::_1));
+}
+
+bool AppCore::eventFilter(QObject *obj, QEvent *event) {
+    if (QGuiApplication::focusObject() != nullptr &&
+        (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+
+        if (keyEvent->key() == Qt::Key_PageUp) {
+            QGuiApplication::sendEvent(QGuiApplication::focusObject(), new QKeyEvent(keyEvent->type(), Qt::Key_Backtab,
+                                                                                     Qt::KeyboardModifier::NoModifier));
+            return true;
+        } else if (keyEvent->key() == Qt::Key_PageDown) {
+            QGuiApplication::sendEvent(QGuiApplication::focusObject(),
+                                       new QKeyEvent(keyEvent->type(), Qt::Key_Tab, Qt::KeyboardModifier::NoModifier));
+            return true;
+        }
+    }
+    return QObject::eventFilter(obj, event);
 }

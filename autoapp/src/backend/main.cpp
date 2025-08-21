@@ -1,10 +1,11 @@
-#include <QtGui/QGuiApplication>
+#include <QCursor>
 #include <QIcon>
+#include <QtGui/QGuiApplication>
 
 #include "core.h"
 #include "logging/logger.h"
 #include "logging/loggingCategory.h"
-#include "settingsManager.h"
+#include "settings/settingsManager.h"
 
 const QString applicationName = "AUTOAPP";
 
@@ -22,7 +23,9 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/icons/logo.svg"));
     app.setApplicationName(applicationName);
-    // app.setOverrideCursor(Qt::BlankCursor); // TODO connect to Settings
+    if (!settings.getShowCursor()) {
+        QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+    }
 
     // Create modules
     AppCore appCore(settings);

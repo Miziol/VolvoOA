@@ -16,7 +16,7 @@
 *  along with openauto. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <../../../../backend/settingsManager.h>
+#include <../../../../backend/settings/settingsManager.h>
 
 #include <QDebug>
 #include <QGuiApplication>

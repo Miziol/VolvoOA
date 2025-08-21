@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Material
 import "qrc:/commons"
 
 ScreenElement {
@@ -12,6 +12,4 @@ ScreenElement {
             onClicked: modelData.tryToStartAndroidAutoServer()
         }
     }
-
-    color: "green"
 }
