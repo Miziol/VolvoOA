@@ -30,19 +30,6 @@ file(GLOB_RECURSE openauto_autoapp_source_files
         src/external/openauto-with-aasdk/openauto/include/f1x/openauto/autoapp/*.hpp)
 file(GLOB_RECURSE autoapp_source_files src/backend/*.cpp src/backend/*.h src/frontend/*.qrc)
 
-add_library(LonganI2CCanBusPlugin STATIC
-        src/backend/plugins/canbus/longan-i2c/longanI2CCanBusDevice.cpp
-        src/backend/plugins/canbus/longan-i2c/longanI2CCanBusPlugin.cpp
-        src/backend/plugins/canbus/longan-i2c/longan_i2c_canbus.json
-)
-
-target_link_libraries(LonganI2CCanBusPlugin
-        PRIVATE
-        Qt6::Core
-        Qt6::SerialBus
-        Qt6::Concurrent
-)
-
 include_directories(
         src/external/openauto-with-aasdk/openauto/include/
         ${AASDK_INCLUDE_DIRS}
@@ -68,7 +55,6 @@ target_link_libraries(autoapp PRIVATE
     ${AASDK_PROTO_LIBRARIES}
     ${AASDK_LIBRARIES}
     ${Protobuf_LIBRARIES}
-    LonganI2CCanBusPlugin
 )
 
-add_dependencies(autoapp aasdk LonganI2CCanBusPlugin)
+add_dependencies(autoapp aasdk)
