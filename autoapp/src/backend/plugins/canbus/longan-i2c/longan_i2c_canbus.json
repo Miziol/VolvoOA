@@ -1,5 +1,0 @@
-{
-  "Keys": ["longan-i2c-canbus"],
-  "Description": "Longan Labs I2C-CAN adapter",
-  "Version": 1
-}

@@ -1,10 +1,12 @@
 #include "longanI2CCanBusDevice.h"
 
+#include <fcntl.h>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
-#include <fcntl.h>
 #include <unistd.h>
+
 #include <QtConcurrent/QtConcurrent>
+#include <iostream>
 
 LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent) : QCanBusDevice(parent) {
 }
