@@ -8,22 +8,25 @@
 #include <QtConcurrent/QtConcurrent>
 #include <iostream>
 
-LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent) : QCanBusDevice(parent) {
-}
+LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent) : QCanBusDevice(parent) {}
 
 LonganI2CCanBusDevice::~LonganI2CCanBusDevice() {
     disconnectDevice();
 }
 
 bool LonganI2CCanBusDevice::open() {
+    setState(QCanBusDevice::ConnectedState);
+
     deviceFileDescriptor = ::open(("/dev/" + bus).toLocal8Bit().constData(), O_RDWR);
     if (deviceFileDescriptor < 0) {
         setError("Failed to open I2C device", QCanBusDevice::ConnectionError);
+        setState(QCanBusDevice::UnconnectedState);
         return false;
     }
 
     if (ioctl(deviceFileDescriptor, I2C_SLAVE, address) < 0) {
         setError("Failed to set I2C address", QCanBusDevice::ConnectionError);
+        setState(QCanBusDevice::UnconnectedState);
         ::close(deviceFileDescriptor);
         return false;
     }
@@ -36,6 +39,7 @@ bool LonganI2CCanBusDevice::open() {
 }
 
 void LonganI2CCanBusDevice::close() {
+    setState(QCanBusDevice::ClosingState);
     if (deviceFileDescriptor >= 0) {
         ::close(deviceFileDescriptor);
         deviceFileDescriptor = -1;
@@ -60,7 +64,7 @@ bool LonganI2CCanBusDevice::writeFrame(const QCanBusFrame &frame) {
 }
 
 QString LonganI2CCanBusDevice::interpretErrorFrame(const QCanBusFrame &frame) {
-    return QString(); // TODO
+    return QString();  // TODO
 }
 
 void LonganI2CCanBusDevice::readLoop() {

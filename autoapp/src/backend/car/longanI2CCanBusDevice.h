@@ -3,8 +3,6 @@
 
 #include <QtSerialBus/QCanBusDevice>
 
-
-
 class LonganI2CCanBusDevice : public QCanBusDevice {
     Q_OBJECT
 signals:
@@ -14,8 +12,6 @@ public:
     ~LonganI2CCanBusDevice() override;
 
 private:
-     // QLoggingCategory category; // TODO check if needed
-
     QString bus;
     uint8_t address;
     int deviceFileDescriptor;
