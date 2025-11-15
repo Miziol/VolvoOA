@@ -10,7 +10,7 @@
 
 #include "../../external/LonganLabs I2C CAN/I2C_CAN_dfs.h"
 
-LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent) : QCanBusDevice(parent) {}
+LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent) : QCanBusDevice(parent), address(DEFAULT_I2C_ADDR), deviceFileDescriptor(-1) {}
 
 LonganI2CCanBusDevice::~LonganI2CCanBusDevice() {
     disconnectDevice();
