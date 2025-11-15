@@ -10,7 +10,7 @@
 
 #include "../../external/LonganLabs I2C CAN/I2C_CAN_dfs.h"
 
-LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent) : QCanBusDevice(parent), address(DEFAULT_I2C_ADDR), deviceFileDescriptor(-1) {}
+LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent) : QCanBusDevice(parent), bus("i2c-1"), address(DEFAULT_I2C_ADDR), deviceFileDescriptor(-1) {}
 
 LonganI2CCanBusDevice::~LonganI2CCanBusDevice() {
     disconnectDevice();
@@ -21,7 +21,7 @@ bool LonganI2CCanBusDevice::open() {
 
     deviceFileDescriptor = ::open(("/dev/" + bus).toLocal8Bit().constData(), O_RDWR);
     if (deviceFileDescriptor < 0) {
-        setError("Failed to open I2C device", QCanBusDevice::ConnectionError);
+        setError("Failed to open I2C device " + QString::fromLocal8Bit(strerror(errno)), QCanBusDevice::ConnectionError);
         setState(QCanBusDevice::UnconnectedState);
         return false;
     }
@@ -89,7 +89,7 @@ bool LonganI2CCanBusDevice::writeFrame(const QCanBusFrame &frame) {
     data.append(frame.payload().size());
     data.append(frame.payload());
     data.append(makeCheckSum(data));
-    return setRegister(REG_SEND, data.constData());
+    return setRegister(REG_SEND, data);
 }
 
 QString LonganI2CCanBusDevice::interpretErrorFrame(const QCanBusFrame &frame) {
@@ -113,7 +113,6 @@ void LonganI2CCanBusDevice::readLoop() {
 bool LonganI2CCanBusDevice::setRegister(unsigned char reg, QByteArray data) {
     data.prepend(reg);
     int transferedBytes = ::write(deviceFileDescriptor, data.constData(), data.size());
-
     return transferedBytes == data.size();
 }
 
