@@ -12,3 +12,5 @@ VolvoOA is a project which extend OpenAuto project with car integration parts.
 ### Outside part of project
 
 - AAsdk and Openauto forks from [imchos](https://github.com/imchos/openauto-dhu)
+
+qt6-serialbus-dev qml6-module-qtquick-layouts

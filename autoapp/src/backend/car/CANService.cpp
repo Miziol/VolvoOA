@@ -25,8 +25,6 @@ CANService::~CANService() {
 }
 
 void CANService::openScreen() {
-    screenTimer.stop();
-
     lowSpeedCanBusDevice->writeFrame(QCanBusFrame(
         HLDF_ID,
         QByteArray::fromRawData(reinterpret_cast<const char *>(HLDF_OPEN_MESSAGE), sizeof(HLDF_OPEN_MESSAGE))));

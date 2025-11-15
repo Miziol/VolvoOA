@@ -6,11 +6,11 @@
 
 #include "../logging/loggingCategory.h"
 
-const int speedOfLowSpeedCan = 250 * 1000;
+const int speedOfLowSpeedCan = 125 * 1000;
 
-const unsigned int HLDF_ID = 160;
+const unsigned int HLDF_ID = 0x160;
 const unsigned char HLDF_OPEN_MESSAGE[] = {0x75, 0x61, 0x2D, 0x3A, 0x77, 0x53, 0xB8, 0xF4};
-const unsigned char HLDF_CLOSE_MESSAGE[] = {0, 0, 0, 0, 0, 0, 0, 0};
+const unsigned char HLDF_CLOSE_MESSAGE[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 class CANService : public QObject {
     Q_OBJECT
