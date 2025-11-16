@@ -12,8 +12,7 @@ CANService::CANService(QObject *parent) : QObject(parent), category("CAN SERVICE
     lowSpeedCanBusDevice = new LonganI2CCanBusDevice(this);
 
     if (lowSpeedCanBusDevice->connectDevice()) {
-        lowSpeedCanBusDevice->setConfigurationParameter(QCanBusDevice::BitRateKey,
-                                                        QVariant(speedOfLowSpeedCan));
+        lowSpeedCanBusDevice->setConfigurationParameter(QCanBusDevice::BitRateKey, QVariant(speedOfLowSpeedCan));
         screenTimer.start();
     } else {
         cerror << lowSpeedCanBusDevice->errorString();

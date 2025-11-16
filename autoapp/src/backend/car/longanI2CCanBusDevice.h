@@ -19,7 +19,7 @@ private:
 protected:
     bool open() override;
     void close() override;
-    void setConfigurationParameter(ConfigurationKey key, const QVariant & value) override;
+    void setConfigurationParameter(ConfigurationKey key, const QVariant &value) override;
 
     bool writeFrame(const QCanBusFrame &frame) override;
     QString interpretErrorFrame(const QCanBusFrame &errorFrame) override;
@@ -32,7 +32,6 @@ private:
 
     int mapSpeedToDefine(const QVariant &speed);
     unsigned char makeCheckSum(QByteArray frame);
-
 };
 
 #endif  // ANDROID_AUTO_LONGANI2CCANBUSDEVICE_H

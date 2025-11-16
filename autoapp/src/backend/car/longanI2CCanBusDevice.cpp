@@ -10,7 +10,8 @@
 
 #include "../../external/LonganLabs I2C CAN/I2C_CAN_dfs.h"
 
-LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent) : QCanBusDevice(parent), bus("i2c-1"), address(DEFAULT_I2C_ADDR), deviceFileDescriptor(-1) {}
+LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent)
+    : QCanBusDevice(parent), bus("i2c-1"), address(DEFAULT_I2C_ADDR), deviceFileDescriptor(-1) {}
 
 LonganI2CCanBusDevice::~LonganI2CCanBusDevice() {
     disconnectDevice();
@@ -21,7 +22,8 @@ bool LonganI2CCanBusDevice::open() {
 
     deviceFileDescriptor = ::open(("/dev/" + bus).toLocal8Bit().constData(), O_RDWR);
     if (deviceFileDescriptor < 0) {
-        setError("Failed to open I2C device " + QString::fromLocal8Bit(strerror(errno)), QCanBusDevice::ConnectionError);
+        setError("Failed to open I2C device " + QString::fromLocal8Bit(strerror(errno)),
+                 QCanBusDevice::ConnectionError);
         setState(QCanBusDevice::UnconnectedState);
         return false;
     }
