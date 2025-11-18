@@ -21,7 +21,7 @@ sudo apt install git g++ cmake make protobuf-compiler
 
 ### Libs
 
-sudo apt install libboost-all-dev libssl-dev qt6-multimedia-dev qt6-base-dev qt6-declarative-dev qt6-connectivity-dev libusb-1.0-0-dev qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates qml6-module-qtmultimedia
+sudo apt install libboost-all-dev libssl-dev qt6-multimedia-dev qt6-base-dev qt6-declarative-dev qt6-connectivity-dev libusb-1.0-0-dev qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-templates qml6-module-qtmultimedia qt6-serialbus-dev qml6-module-qtquick-layouts
 
 ## Build
 

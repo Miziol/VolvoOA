@@ -21,7 +21,7 @@ set(CMAKE_AUTORCC ON)
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(PkgConfig REQUIRED)
 find_package(Protobuf REQUIRED)
-find_package(Qt6 COMPONENTS Core Gui Multimedia Network Qml Bluetooth REQUIRED)
+find_package(Qt6 COMPONENTS Core Gui Multimedia Network Qml Bluetooth SerialBus REQUIRED)
 pkg_check_modules(LibUSB REQUIRED IMPORTED_TARGET libusb-1.0)
 
 file(GLOB_RECURSE openauto_autoapp_source_files
@@ -50,6 +50,7 @@ target_link_libraries(autoapp PRIVATE
     Qt6::Multimedia
     Qt6::Network
     Qt6::Qml
+    Qt6::SerialBus
     PkgConfig::LibUSB
     ${AASDK_PROTO_LIBRARIES}
     ${AASDK_LIBRARIES}

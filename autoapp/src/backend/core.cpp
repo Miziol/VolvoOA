@@ -9,9 +9,8 @@ AppCore::AppCore(SettingsManager &new_settings)
     : category("GUI CORE"),
       settings(new_settings),
       androidAutoService(new_settings, ioService),
-      work(ioService) ,
-      qmlStyle(settings)
-{
+      work(ioService),
+      qmlStyle(settings) {
     QGuiApplication::instance()->installEventFilter(this);
 
     qmlRootContext = qmlEngine.rootContext();
