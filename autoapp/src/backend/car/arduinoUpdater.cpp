@@ -1,5 +1,7 @@
 #include "arduinoUpdater.h"
 
+#include <QGuiApplication>
+
 ArduinoUpdater::ArduinoUpdater() : category("ARDUINO UPDATER") {
     connect(&process, &QProcess::readyReadStandardOutput, this, &ArduinoUpdater::newLine);
     connect(&process, &QProcess::readyReadStandardError, this, &ArduinoUpdater::newLine);
@@ -14,6 +16,7 @@ void ArduinoUpdater::run() {
     }
 
     QString command = "arduino-cli compile --fqbn " + fqbn + " --port " + port + " --upload ../../LINbusKeyboardEmulator/LINbusKeyboardEmulator.ino";
+    process.setWorkingDirectory(QGuiApplication::applicationDirPath());
     process.startCommand(command);
     process.waitForFinished(-1);
 
