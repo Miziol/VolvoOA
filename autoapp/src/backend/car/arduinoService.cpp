@@ -31,6 +31,10 @@ void ArduinoService::tryToConnectToArduino(QSerialPortInfo portInfo) {
 }
 
 void ArduinoService::updateSelectedArduinoFirmware() {
+    if (currentArduinoIndex < 0 || currentArduinoIndex >= arduinos.size()) {
+        cerror << "Invalid arduino index";
+        return;
+    }
     updater.setTarget("arduino:uri:leonardo", "/dev/" + arduinos[currentArduinoIndex]->portName());
     threadPool->start(&updater);
 }

@@ -19,6 +19,7 @@ AppCore::AppCore(SettingsManager &new_settings)
     qmlRootContext->setContextProperty("settingsManager", &settings);
     qmlRootContext->setContextProperty("usbService", &usbService);
     qmlRootContext->setContextProperty("aaService", &androidAutoService);
+    qmlRootContext->setContextProperty("arduinoService", &arduinoService);
 
     cinfo << "Base QML contexts set";
 

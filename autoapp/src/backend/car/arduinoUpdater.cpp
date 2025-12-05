@@ -13,7 +13,7 @@ void ArduinoUpdater::run() {
         return;
     }
 
-    QString command = "arduino-cli compile --fqbn " + fqbn + " --port " + port + " --upload ../../";
+    QString command = "arduino-cli compile --fqbn " + fqbn + " --port " + port + " --upload ../../LINbusKeyboardEmulator/LINbusKeyboardEmulator.ino";
     process.startCommand(command);
     process.waitForFinished(-1);
 
