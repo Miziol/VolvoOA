@@ -7,6 +7,7 @@
 
 #include "androidAuto/androidAutoService.h"
 #include "car/CANService.h"
+#include "car/arduinoService.h"
 #include "logging/loggingCategory.h"
 #include "settings/guistyle.h"
 #include "settings/settingsManager.h"
@@ -40,6 +41,7 @@ private:
     AndroidAutoService androidAutoService;
     UsbService usbService;
     CANService canbusService;
+    ArduinoService arduinoService;
 };
 
 #endif  // AUTOAPP_GUICORE_H
