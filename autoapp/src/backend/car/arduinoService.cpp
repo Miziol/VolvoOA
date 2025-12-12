@@ -1,6 +1,9 @@
 #include "arduinoService.h"
 
-ArduinoService::ArduinoService(QObject *parent) : QObject(parent), category("ARDUINO SERVICE"), currentArduinoIndex(-1), threadPool(QThreadPool::globalInstance()) {
+ArduinoService::ArduinoService(QObject *parent)
+    : QObject(parent), category("ARDUINO SERVICE"), currentArduinoIndex(-1), threadPool(QThreadPool::globalInstance()) {
+    updater.setAutoDelete(false);
+
     lookForConnectedArduinos();
 }
 
@@ -22,6 +25,7 @@ void ArduinoService::tryToConnectToArduino(QSerialPortInfo portInfo) {
     if (serialPort->open(QIODeviceBase::ReadOnly)) {
         connect(serialPort, &QSerialPort::readyRead, this, &ArduinoService::receiveArduinoMessage);
         arduinos.append(serialPort);
+        currentArduinoIndex = 0;
         cinfo << "Connected to" << portInfo.description() << "on:" << portInfo.systemLocation();
     } else {
         cwarning << "Failed to open port:" << portInfo.portName() << "describe as:" << portInfo.description()
@@ -53,4 +57,3 @@ void ArduinoService::receiveArduinoMessage() {
 void ArduinoService::analizeLineContent(QString line) {
     // TODO
 }
-

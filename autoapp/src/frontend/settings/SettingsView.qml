@@ -4,184 +4,43 @@ import QtQuick.Layouts
 import "qrc:/commons"
 
 ScreenElement {
-    property int margin: 40
+    property int margin: 20
     property int elementHeight: guiStyle.mediumElementSize
 
-    GridLayout {
+    Item {
         anchors.fill: parent
         anchors.margins: margin
 
-        columns: 2
-        columnSpacing: margin
+        TabBar {
+            id: bar
+            width: parent.width
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
 
-        Title {
-            height: elementHeight
-            Layout.columnSpan: 2
-            text: qsTr("General settings")
-        }
-
-        Switch {
-            width: 400
-            height: elementHeight
-            text: qsTr("Show clock in AA")
-
-            checked: settingsManager.showClock
-            onClicked: settingsManager.showClock = checked
-        }
-
-        Switch {
-            width: 400
-            height: elementHeight
-            text: qsTr("Left hand drive")
-
-            checked: settingsManager.leftHandDrive
-            onClicked: settingsManager.leftHandDrive = checked
-        }
-
-        Title {
-            height: elementHeight
-            Layout.columnSpan: 2
-            text: qsTr("Video")
-        }
-
-        Row {
-            ButtonGroup {
-                id: resolutionGroup
+            TabButton {
+                text: qsTr("Android Auto")
             }
 
-            Label {
-                height: elementHeight
-                text: qsTr("Resolution")
-            }
-
-            RoundButton {
-                height: elementHeight
-                ButtonGroup.group: resolutionGroup
-                checkable: true
-                checked: settingsManager.videoResolution === 0
-
-                text: qsTr("-")
-                onClicked: {
-                    settingsManager.videoResolution = 0
-                }
-            }
-
-            RoundButton {
-                height: elementHeight
-                ButtonGroup.group: resolutionGroup
-                checkable: true
-                checked: settingsManager.videoResolution === 1
-
-                text: qsTr("480")
-                onClicked: {
-                    settingsManager.videoResolution = 1
-                }
-            }
-
-            RoundButton{
-                height: elementHeight
-                ButtonGroup.group: resolutionGroup
-                checkable: true
-                checked: settingsManager.videoResolution === 2
-
-                text: qsTr("720")
-                onClicked: {
-                    settingsManager.videoResolution = 2
-                }
-            }
-
-            RoundButton{
-                height: elementHeight
-                ButtonGroup.group: resolutionGroup
-                checkable: true
-                checked: settingsManager.videoResolution === 3
-
-                text: qsTr("1080")
-                onClicked: {
-                    settingsManager.videoResolution = 3
-                }
+            TabButton {
+                text: qsTr("Management")
             }
         }
 
-        Row {
-            ButtonGroup {
-                id: fpsGroup
-            }
+        SwipeView {
+            width: parent.width
+            anchors.top: bar.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.topMargin: margin
 
-            Label {
-                height: elementHeight
-                text: qsTr("FPS")
-            }
+            clip: true
+            currentIndex: bar.currentIndex
 
-            RoundButton {
-                height: elementHeight
-                ButtonGroup.group: fpsGroup
-                checkable: true
-                checked: settingsManager.videoFPS === 0
+            AndroidAutoTab {}
 
-                text: qsTr("-")
-                onClicked: {
-                    settingsManager.videoFPS = 0
-                }
-            }
-
-            RoundButton {
-                height: elementHeight
-                ButtonGroup.group: fpsGroup
-                checkable: true
-                checked: settingsManager.videoFPS === 1
-
-                text: qsTr("30")
-                onClicked: {
-                    settingsManager.videoFPS = 1
-                }
-            }
-
-            RoundButton {
-                height: elementHeight
-                ButtonGroup.group: fpsGroup
-                checkable: true
-                checked: settingsManager.videoFPS === 2
-
-                text: qsTr("60")
-                onClicked: {
-                    settingsManager.videoFPS = 2
-                }
-            }
-        }
-
-        Row {
-            Label {
-                height: elementHeight
-                text: qsTr("DPI") + " " + settingsManager.screenDPI
-            }
-
-            Slider {
-                height: elementHeight
-                from: 120
-                to: 240
-                value: settingsManager.screenDPI
-                onValueChanged: {
-                    if (value != settingsManager.screenDPI) {
-                        settingsManager.screenDPI = value
-                    }
-                }
-            }
-        }
-
-        Title {
-            height: elementHeight
-            Layout.columnSpan: 2
-            text: qsTr("Navigation")
-        }
-
-        Switch {
-            width: 400
-            height: elementHeight
-            text: qsTr("Show cursor")
-
-            checked: settingsManager.showCursor
-            onClicked: settingsManager.showCursor = checked
+            ManagementTab {}
         }
     }
 }

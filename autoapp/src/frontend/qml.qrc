@@ -15,6 +15,8 @@
         <file alias="MainView.qml">main/MainView.qml</file>
     </qresource>
     <qresource prefix="/settings/">
+        <file alias="AndroidAutoTab.qml">settings/AndroidAutoTab.qml</file>
+        <file alias="ManagementTab.qml">settings/ManagementTab.qml</file>
         <file alias="SettingsView.qml">settings/SettingsView.qml</file>
     </qresource>
     <qresource prefix="/window/">

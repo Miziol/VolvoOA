@@ -25,13 +25,10 @@ public slots:
 private:
     QLoggingCategory category;
 
+    bool running;
     QString fqbn, port;
-    QProcess process;
-
-    QStringList output;
 
 private slots:
-    void newLine();
 };
 
 #endif  // ANDROID_AUTO_ARDUINOUPDATER_H
