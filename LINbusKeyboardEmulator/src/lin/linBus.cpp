@@ -10,9 +10,15 @@ LinBus::LinBus(int rxPin, int txPin) {
     frames.setStorage(framesStorage);
 }
 
+bool LinBus::isActive()
+{
+    return (millis() - lastLinActivityTimestamp) > LIN_TIMEOUT;
+}
+
 void LinBus::readBus() {
     while (softSerial->available()) {
         bytes.push_back(softSerial->read());
+        lastLinActivityTimestamp = millis();
     }
 
     analizeBytes();
@@ -38,22 +44,20 @@ void LinBus::clearEmptyBytes() {
     }
 }
 
-int LinBus::incommingFrameSize() {
+int LinBus::incommingFrameSize()
+{
     if (bytes.size() >= 2 && bytes[0] == SYNC_BYTE) {
-        return sizeOfFrame(bytes[1] & 0b00111111);
-    }
 
-    return 0;
-}
-
-int LinBus::sizeOfFrame(uint8_t id) {
-    switch (id >> 4) {
+        switch (bytes[1] & 0b00111111 >> 4) {
         case 3:
             return 11; // sync + header + 8 + checksum
         case 2:
             return 7; // sync + header + 4 + checksum
+        }
+        return 5; // sync + header + 2 + checksum
     }
-    return 5; // sync + header + 2 + checksum
+
+    return 0;
 }
 
 void LinBus::analizeBytes() {

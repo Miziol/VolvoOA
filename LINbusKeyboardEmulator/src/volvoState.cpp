@@ -7,7 +7,7 @@ void VolvoState::updateStateSWM(const byte* bytes) {
     sendButtonState(BACK_BUTTON, (bool) (bytes[1] & 0b01000000));
     sendButtonState(ENTER_BUTTON, (bool) (bytes[1] & 0b00100000));
     sendButtonState(NEXT_BUTTON, (bool) (bytes[1] & 0b00010000));
-    //sendButtonState(MUTE_BUTTON, (bool) (bytes[1] & 0b00000100));
+    //sendButtonState(MUTE_BUTTON, (bool) (bytes[1] & 0b00000100)); // TODO
     sendButtonState(MIC_BUTTON, (bool) (bytes[1] & 0b00000100));
     sendButtonState(PREVIOUS_BUTTON, (bool) (bytes[1] & 0b00000010));
 
@@ -66,7 +66,7 @@ void VolvoState::updateStateSWM(const byte* bytes) {
                     Serial << "Scroll down" << "\t";
                 }
             } else {
-                sendPreviouseItem();
+                sendPreviousItem();
                 if (DEBUG_SWM) {
                     Serial << "Scroll up" << "\t";
                 }
@@ -94,7 +94,7 @@ void VolvoState::sendNextItem() {
     Keyboard.write(NEXT_ITEM_BUTTON);
 }
 
-void VolvoState::sendPreviouseItem() {
+void VolvoState::sendPreviousItem() {
     Keyboard.write(PREVIOUS_ITEM_BUTTON);
 
 }

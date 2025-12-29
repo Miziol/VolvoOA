@@ -32,7 +32,7 @@ private:
     void sendButtonState(int button, bool isPressed);
 
     void sendNextItem();
-    void sendPreviouseItem();
+    void sendPreviousItem();
 };
 
 #endif // VOLVO_STATE_H
