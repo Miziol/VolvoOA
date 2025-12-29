@@ -1,6 +1,5 @@
 #include <Streaming.h>
 
-#include "keyboardEmulator.h"
 #include "linFrame.h"
 
 LinFrame::LinFrame() {}
