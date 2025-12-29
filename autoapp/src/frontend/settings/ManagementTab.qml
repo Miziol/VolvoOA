@@ -35,10 +35,20 @@ GridLayout {
         onClicked: arduinoService.updateSelectedArduinoFirmware()
     }
 
-    Button {
-        text: qsTr("Update Arduino Firmware")
+    Row {
+        Button {
+            height: elementHeight
+            enabled: !systemUpdater.running
 
-        onClicked: arduinoService.updateSelectedArduinoFirmware()
+            text: qsTr("Update System")
+
+            onClicked: core.updateSystem()
+        }
+
+        BusyIndicator {
+            height: elementHeight
+            running: systemUpdater.running
+        }
     }
 
     Rectangle {

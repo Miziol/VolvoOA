@@ -13,6 +13,8 @@ AppCore::AppCore(SettingsManager &new_settings)
       qmlStyle(settings) {
     QGuiApplication::instance()->installEventFilter(this);
 
+    systemUpdater.setAutoDelete(false);
+
     qmlRootContext = qmlEngine.rootContext();
     qmlRootContext->setContextProperty("core", this);
     qmlRootContext->setContextProperty("guiStyle", &qmlStyle);
@@ -20,6 +22,7 @@ AppCore::AppCore(SettingsManager &new_settings)
     qmlRootContext->setContextProperty("usbService", &usbService);
     qmlRootContext->setContextProperty("aaService", &androidAutoService);
     qmlRootContext->setContextProperty("arduinoService", &arduinoService);
+    qmlRootContext->setContextProperty("systemUpdater", &systemUpdater);
 
     cinfo << "Base QML contexts set";
 
@@ -61,4 +64,9 @@ bool AppCore::eventFilter(QObject *obj, QEvent *event) {
         }
     }
     return QObject::eventFilter(obj, event);
+}
+
+void AppCore::updateSystem()
+{
+    QThreadPool::globalInstance()->start(&systemUpdater);
 }

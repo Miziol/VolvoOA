@@ -6,6 +6,7 @@
 #include <QQmlContext>
 
 #include "androidAuto/androidAutoService.h"
+#include "app/systemUpdater.h"
 #include "car/CANService.h"
 #include "car/arduinoService.h"
 #include "logging/loggingCategory.h"
@@ -25,6 +26,8 @@ public:
 public slots:
     bool eventFilter(QObject *obj, QEvent *event);
 
+    void updateSystem();
+
 private:
     QLoggingCategory category;
 
@@ -42,6 +45,8 @@ private:
     UsbService usbService;
     CANService canbusService;
     ArduinoService arduinoService;
+
+    SystemUpdater systemUpdater;
 };
 
 #endif  // AUTOAPP_GUICORE_H
