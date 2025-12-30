@@ -28,8 +28,6 @@ void SystemUpdater::run() {
         cerror << process.readAllStandardError().split('\n');
     }
 
-    // TODO report middle step
-
     command = "apt upgrade -y";
 
     cinfo << "Upgrading System packages:" << command;

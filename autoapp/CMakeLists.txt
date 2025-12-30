@@ -66,6 +66,3 @@ configure_file(
         "${CMAKE_CURRENT_BINARY_DIR}/autoapp.service"
         @ONLY
 )
-
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/autoapp.service"
-        DESTINATION /etc/systemd/system)

@@ -14,6 +14,7 @@ AppCore::AppCore(SettingsManager &new_settings)
     QGuiApplication::instance()->installEventFilter(this);
 
     systemUpdater.setAutoDelete(false);
+    appUpdater.setAutoDelete(false);
 
     qmlRootContext = qmlEngine.rootContext();
     qmlRootContext->setContextProperty("core", this);
@@ -23,6 +24,7 @@ AppCore::AppCore(SettingsManager &new_settings)
     qmlRootContext->setContextProperty("aaService", &androidAutoService);
     qmlRootContext->setContextProperty("arduinoService", &arduinoService);
     qmlRootContext->setContextProperty("systemUpdater", &systemUpdater);
+    qmlRootContext->setContextProperty("appUpdater", &appUpdater);
 
     cinfo << "Base QML contexts set";
 
@@ -64,6 +66,11 @@ bool AppCore::eventFilter(QObject *obj, QEvent *event) {
         }
     }
     return QObject::eventFilter(obj, event);
+}
+
+void AppCore::updateApp()
+{
+    QThreadPool::globalInstance()->start(&appUpdater);
 }
 
 void AppCore::updateSystem()

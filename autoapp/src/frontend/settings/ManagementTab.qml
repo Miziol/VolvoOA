@@ -29,14 +29,43 @@ GridLayout {
         text: qsTr("Updates")
     }
 
-    Button {
-        text: qsTr("Update Arduino Firmware")
+    Row {
+        RoundButton {
+            height: elementHeight
+            enabled: !systemUpdater.running
 
-        onClicked: arduinoService.updateSelectedArduinoFirmware()
+            text: qsTr("Update Arduino Firmware")
+
+            // onClicked: core.updateSystem() // TODO
+        }
+
+        BusyIndicator {
+            height: elementHeight
+            // running: systemUpdater.running // TODO
+        }
     }
 
     Row {
-        Button {
+        spacing: margin
+
+        RoundButton {
+            height: elementHeight
+            enabled: !appUpdater.running
+
+            text: qsTr("Update App")
+
+            onClicked: core.updateApp()
+        }
+
+        ProgressBar {
+            height: elementHeight
+            visible: appUpdater.running
+            value: appUpdater.step / appUpdater.steps
+        }
+    }
+
+    Row {
+        RoundButton {
             height: elementHeight
             enabled: !systemUpdater.running
 

@@ -6,6 +6,7 @@
 #include <QQmlContext>
 
 #include "androidAuto/androidAutoService.h"
+#include "app/appUpdater.h"
 #include "app/systemUpdater.h"
 #include "car/CANService.h"
 #include "car/arduinoService.h"
@@ -26,6 +27,7 @@ public:
 public slots:
     bool eventFilter(QObject *obj, QEvent *event);
 
+    void updateApp();
     void updateSystem();
 
 private:
@@ -47,6 +49,7 @@ private:
     ArduinoService arduinoService;
 
     SystemUpdater systemUpdater;
+    AppUpdater appUpdater;
 };
 
 #endif  // AUTOAPP_GUICORE_H
