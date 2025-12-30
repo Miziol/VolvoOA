@@ -1,0 +1,15 @@
+[Unit]
+Description=Autoapp Android Auto
+After=graphical.target
+
+[Service]
+ExecStart=@BUILD_DIR@/autoapp
+WorkingDirectory=@BUILD_DIR@
+
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/root/.Xauthority
+User=root
+Restart=always
+
+[Install]
+WantedBy=graphical.target
