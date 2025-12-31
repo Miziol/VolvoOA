@@ -3,13 +3,22 @@ Description=Autoapp Android Auto
 After=graphical.target
 
 [Service]
-ExecStart=@BUILD_DIR@/autoapp
+User=root
 WorkingDirectory=@BUILD_DIR@
 
-Environment=DISPLAY=:0
-Environment=XAUTHORITY=/root/.Xauthority
-User=root
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=WAYLAND_DISPLAY=wayland-0
+Environment=QT_QPA_PLATFORM=wayland;xcb
+
+# Opcjonalnie: Jeśli aplikacja nadal szuka bibliotek Qt
+# Environment=LD_LIBRARY_PATH=/usr/lib/arm-linux-gnueabihf
+
+ExecStartPre=/bin/sh -c 'chmod 777 /run/user/1000/wayland-0'
+
+ExecStart=@BUILD_DIR@/autoapp
+
 Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=graphical.target
