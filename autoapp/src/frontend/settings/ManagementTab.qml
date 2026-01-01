@@ -29,14 +29,21 @@ GridLayout {
         text: qsTr("Updates")
     }
 
+    ComboBox {
+        model: arduinoService.arduinos.map(a => a.portName)
+        currentIndex: arduinoService.currentIndex
+
+        onCurrentIndexChanged: arduinoService.currentIndex = currentIndex
+    }
+
     Row {
         RoundButton {
             height: elementHeight
-            enabled: !systemUpdater.running
+            enabled: arduinoService.currentIndex != -1
 
             text: qsTr("Update Arduino Firmware")
 
-            // onClicked: core.updateSystem() // TODO
+            onClicked: arduinoService.updateSelectedArduinoFirmware()
         }
 
         BusyIndicator {

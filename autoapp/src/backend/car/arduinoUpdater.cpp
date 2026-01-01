@@ -29,7 +29,7 @@ void ArduinoUpdater::run() {
     QString command = "arduino-cli compile --fqbn " + fqbn + " --port " + port + " --upload " + inoFile.absolutePath();
     QProcess process;
 
-    cinfo << "Updating Arduino firmaware with command:" << command;
+    cinfo << "Updating Arduino firmware with command:" << command;
     process.setWorkingDirectory(QGuiApplication::applicationDirPath());
     process.startCommand(command);
     process.waitForFinished(-1);

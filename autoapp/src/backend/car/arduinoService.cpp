@@ -9,7 +9,7 @@ ArduinoService::ArduinoService(QObject *parent)
 
 ArduinoService::~ArduinoService() {
     for (auto port : arduinos) {
-        port->close();
+        ((QSerialPort*) port)->close();
         delete port;
     }
 }
@@ -26,6 +26,7 @@ void ArduinoService::tryToConnectToArduino(QSerialPortInfo portInfo) {
         connect(serialPort, &QSerialPort::readyRead, this, &ArduinoService::receiveArduinoMessage);
         arduinos.append(serialPort);
         currentArduinoIndex = 0;
+        emit arduinoIndexChanged();
         cinfo << "Connected to" << portInfo.description() << "on:" << portInfo.systemLocation();
     } else {
         cwarning << "Failed to open port:" << portInfo.portName() << "describe as:" << portInfo.description()
@@ -39,14 +40,15 @@ void ArduinoService::updateSelectedArduinoFirmware() {
         cerror << "Invalid arduino index";
         return;
     }
-    updater.setTarget("arduino:uri:leonardo", "/dev/" + arduinos[currentArduinoIndex]->portName());
+    updater.setTarget("arduino:avr:leonardo", "/dev/" + ((QSerialPort*) arduinos[currentArduinoIndex])->portName());
     threadPool->start(&updater);
 }
 
 void ArduinoService::receiveArduinoMessage() {
     for (const auto arduino : arduinos) {
-        while (arduino->canReadLine()) {
-            QString line = arduino->readLine();
+        QSerialPort* port = ((QSerialPort *) arduino);
+        while (port->canReadLine()) {
+            QString line = port->readLine();
             if (currentArduinoIndex >= 0 && arduino == arduinos[currentArduinoIndex])
                 newLineFromCurrentArduino(line);
             analizeLineContent(line);

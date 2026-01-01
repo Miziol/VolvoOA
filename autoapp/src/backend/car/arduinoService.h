@@ -13,11 +13,14 @@ class ArduinoService : public QObject {
     Q_OBJECT
 
 signals:
+    void arduinosChanged();
+    void arduinoIndexChanged();
     void newLineFromCurrentArduino(QString line);
     void closeRequestReceived();
 
 public:
-    //Q_PROPERTY();
+    Q_PROPERTY(QList<QObject*> arduinos MEMBER arduinos NOTIFY arduinosChanged);
+    Q_PROPERTY(int currentIndex MEMBER currentArduinoIndex NOTIFY arduinoIndexChanged);
 
 private:
     static inline uint16_t VENDOR_ARDUINO_SA = 0x2341;
@@ -37,7 +40,7 @@ public slots:
 private:
     QLoggingCategory category;
 
-    QList<QSerialPort *> arduinos;
+    QList<QObject *> arduinos;
     int currentArduinoIndex;
 
     QThreadPool *threadPool;
