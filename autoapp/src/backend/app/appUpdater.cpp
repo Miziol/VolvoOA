@@ -3,7 +3,7 @@
 #include <qcoreapplication.h>
 #include <QGuiApplication>
 
-AppUpdater::AppUpdater() : category("SYSTEM UPDATER"), m_running(false), m_step(0), commands(QStringList() << "git pull" << "cmake .." << "make") {}
+AppUpdater::AppUpdater() : category("SYSTEM UPDATER"), m_running(false), m_step(0), commands(QStringList() << "git pull" << "bash ../../install_requirements.sh" << "cmake .." << "make") {}
 
 AppUpdater::~AppUpdater() {}
 
@@ -33,6 +33,7 @@ void AppUpdater::run() {
         } else {
             cerror << "Step failed";
             cerror << process.readAllStandardError().split('\n');
+            break;
         }
 
         m_step++;
