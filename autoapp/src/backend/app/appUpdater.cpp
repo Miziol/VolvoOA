@@ -3,7 +3,7 @@
 #include <qcoreapplication.h>
 #include <QGuiApplication>
 
-AppUpdater::AppUpdater() : category("SYSTEM UPDATER"), m_running(false), m_step(0), commands(QStringList() << "git pull" << "bash ../../install_requirements.sh" << "cmake .." << "make") {}
+AppUpdater::AppUpdater() : category("APP UPDATER"), m_running(false), m_step(0), commands(QStringList() << "git pull" << "bash ../../install_requirements.sh" << "cmake .." << "make") {}
 
 AppUpdater::~AppUpdater() {}
 
