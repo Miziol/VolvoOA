@@ -1,0 +1,20 @@
+[Unit]
+Description=Autoapp Android Auto
+After=graphical.target
+
+[Service]
+User=root
+WorkingDirectory=@BUILD_DIR@
+
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=WAYLAND_DISPLAY=wayland-0
+Environment=QT_QPA_PLATFORM=wayland;xcb
+
+ExecStartPre=/bin/sh -c 'chmod 777 /run/user/1000/wayland-0'
+ExecStart=@BUILD_DIR@/autoapp
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

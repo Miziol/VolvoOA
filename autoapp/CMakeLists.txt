@@ -18,6 +18,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+set(BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
+
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(PkgConfig REQUIRED)
 find_package(Protobuf REQUIRED)
@@ -58,3 +60,9 @@ target_link_libraries(autoapp PRIVATE
 )
 
 add_dependencies(autoapp aasdk)
+
+configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/autoapp.service.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/autoapp.service"
+        @ONLY
+)

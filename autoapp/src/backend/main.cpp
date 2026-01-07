@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/icons/logo.svg"));
     app.setApplicationName(applicationName);
+    app.setQuitOnLastWindowClosed(true);
     if (!settings.getShowCursor()) {
         QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
     }
