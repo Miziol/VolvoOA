@@ -10,8 +10,13 @@
 
 class ArduinoUpdater : public QObject, public QRunnable {
     Q_OBJECT
+
 signals:
+    void runningChanged();
     void outputChanged();
+
+public:
+    Q_PROPERTY(bool running MEMBER running NOTIFY runningChanged);
 
 public:
     ArduinoUpdater();

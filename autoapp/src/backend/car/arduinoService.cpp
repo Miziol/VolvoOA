@@ -9,7 +9,7 @@ ArduinoService::ArduinoService(QObject *parent)
 
 ArduinoService::~ArduinoService() {
     for (auto port : arduinos) {
-        ((QSerialPort*) port)->close();
+        port->close();
         delete port;
     }
 }
@@ -35,6 +35,20 @@ void ArduinoService::tryToConnectToArduino(QSerialPortInfo portInfo) {
     }
 }
 
+QStringList ArduinoService::getArduinosList(){
+    QStringList list;
+    for (const auto arduino : arduinos)
+    {
+        list.append(QSerialPortInfo(*arduino).description());
+    }
+    return list;
+}
+
+QObject* ArduinoService::getUpdater()
+{
+    return &updater;
+}
+
 void ArduinoService::updateSelectedArduinoFirmware() {
     if (currentArduinoIndex < 0 || currentArduinoIndex >= arduinos.size()) {
         cerror << "Invalid arduino index";
@@ -46,9 +60,8 @@ void ArduinoService::updateSelectedArduinoFirmware() {
 
 void ArduinoService::receiveArduinoMessage() {
     for (const auto arduino : arduinos) {
-        QSerialPort* port = ((QSerialPort *) arduino);
-        while (port->canReadLine()) {
-            QString line = port->readLine();
+        while (arduino->canReadLine()) {
+            QString line = arduino->readLine();
             if (currentArduinoIndex >= 0 && arduino == arduinos[currentArduinoIndex])
                 newLineFromCurrentArduino(line);
             analizeLineContent(line);

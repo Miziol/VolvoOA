@@ -15,12 +15,15 @@ class ArduinoService : public QObject {
 signals:
     void arduinosChanged();
     void arduinoIndexChanged();
+    void updaterRunningChanged();
     void newLineFromCurrentArduino(QString line);
     void closeRequestReceived();
 
 public:
-    Q_PROPERTY(QList<QObject*> arduinos MEMBER arduinos NOTIFY arduinosChanged);
+    Q_PROPERTY(QStringList arduinosList READ getArduinosList NOTIFY arduinosChanged);
     Q_PROPERTY(int currentIndex MEMBER currentArduinoIndex NOTIFY arduinoIndexChanged);
+
+    Q_PROPERTY(QObject* arduinoUpdater READ getUpdater CONSTANT);
 
 private:
     static inline uint16_t VENDOR_ARDUINO_SA = 0x2341;
@@ -33,6 +36,9 @@ public slots:
     void lookForConnectedArduinos();
     void tryToConnectToArduino(QSerialPortInfo portInfo);
 
+    QStringList getArduinosList();
+    QObject* getUpdater();
+
     void updateSelectedArduinoFirmware();
 
     void receiveArduinoMessage();
@@ -40,7 +46,7 @@ public slots:
 private:
     QLoggingCategory category;
 
-    QList<QObject *> arduinos;
+    QList<QSerialPort*> arduinos;
     int currentArduinoIndex;
 
     QThreadPool *threadPool;

@@ -30,10 +30,14 @@ GridLayout {
     }
 
     ComboBox {
-        model: arduinoService.arduinos.map(a => a.portName)
+        model: arduinoService.arduinosList
         currentIndex: arduinoService.currentIndex
 
+        onModelChanged: console.error(model)
+
         onCurrentIndexChanged: arduinoService.currentIndex = currentIndex
+
+        Component.onCompleted: console.error(model)
     }
 
     Row {
@@ -48,7 +52,7 @@ GridLayout {
 
         BusyIndicator {
             height: elementHeight
-            // running: systemUpdater.running // TODO
+            running: arduinoService.arduinoUpdater.running
         }
     }
 
@@ -84,24 +88,6 @@ GridLayout {
         BusyIndicator {
             height: elementHeight
             running: systemUpdater.running
-        }
-    }
-
-    Rectangle {
-        Layout.columnSpan: 2
-
-        color: "black"
-
-        Flickable {
-            Column {
-                Repeater {
-                    model: ["TET", "TEST"] // arduinoUpdater.output
-
-                    Text {
-                        text: modelData
-                    }
-                }
-            }
         }
     }
 }

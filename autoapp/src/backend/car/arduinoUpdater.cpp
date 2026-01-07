@@ -13,6 +13,7 @@ void ArduinoUpdater::run() {
         return;
     }
     running = true;
+    emit runningChanged();
 
     if (fqbn.isEmpty() || port.isEmpty()) {
         cerror << "Empty fqbn or port";
@@ -43,6 +44,7 @@ void ArduinoUpdater::run() {
     }
 
     running = false;
+    emit runningChanged();
 }
 
 void ArduinoUpdater::setTarget(QString newFqbn, QString newPort) {
