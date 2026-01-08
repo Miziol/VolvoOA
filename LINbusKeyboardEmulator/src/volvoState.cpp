@@ -2,41 +2,47 @@
 
 #include "volvoState.h"
 
-void VolvoState::updateStateSWM(const byte* bytes) {
+void VolvoState::updateStateSWM(const byte *bytes) {
     //Buttons
-    sendButtonState(BACK_BUTTON, (bool) (bytes[1] & 0b01000000));
-    sendButtonState(ENTER_BUTTON, (bool) (bytes[1] & 0b00100000));
-    sendButtonState(NEXT_BUTTON, (bool) (bytes[1] & 0b00010000));
+    sendButtonState(BACK_BUTTON, (bool)(bytes[1] & 0b01000000));
+    sendButtonState(ENTER_BUTTON, (bool)(bytes[1] & 0b00100000));
+    sendButtonState(NEXT_BUTTON, (bool)(bytes[1] & 0b00010000));
     //sendButtonState(MUTE_BUTTON, (bool) (bytes[1] & 0b00000100)); // TODO
-    sendButtonState(MIC_BUTTON, (bool) (bytes[1] & 0b00000100));
-    sendButtonState(PREVIOUS_BUTTON, (bool) (bytes[1] & 0b00000010));
+    sendButtonState(MIC_BUTTON, (bool)(bytes[1] & 0b00000100));
+    sendButtonState(PREVIOUS_BUTTON, (bool)(bytes[1] & 0b00000010));
 
-
-    if (bytes[1] & 0b10000000) { // Sound down
+    if (bytes[1] & 0b10000000) {
+        // Sound down
         if (DEBUG_SWM)
             Serial << "Sound down" << "\t";
     }
-    if (bytes[1] & 0b01000000) { // Back
+    if (bytes[1] & 0b01000000) {
+        // Back
         if (DEBUG_SWM)
             Serial << "Back" << "\t";
     }
-    if (bytes[1] & 0b00100000) { // Enter
+    if (bytes[1] & 0b00100000) {
+        // Enter
         if (DEBUG_SWM)
             Serial << "Enter" << "\t";
     }
-    if (bytes[1] & 0b00010000) { // Next
+    if (bytes[1] & 0b00010000) {
+        // Next
         if (DEBUG_SWM)
             Serial << "Next" << "\t";
     }
-    if (bytes[1] & 0b00000100) { // Mute/Mic
+    if (bytes[1] & 0b00000100) {
+        // Mute/Mic
         if (DEBUG_SWM)
             Serial << "Mute/Mic" << "\t";
     }
-    if (bytes[1] & 0b00000010) { // Previous
+    if (bytes[1] & 0b00000010) {
+        // Previous
         if (DEBUG_SWM)
             Serial << "Previous" << "\t";
     }
-    if (bytes[2] & 0b00000001) { // Sound up
+    if (bytes[2] & 0b00000001) {
+        // Sound up
         if (DEBUG_SWM)
             Serial << "Sound up" << "\t";
     }
@@ -76,7 +82,7 @@ void VolvoState::updateStateSWM(const byte* bytes) {
     }
 }
 
-void VolvoState::updateStateLSM(const byte* bytes) {
+void VolvoState::updateStateLSM(const byte *bytes) {
     uint8_t brightness = bytes[0] & 0b00001111;
     if (DEBUG_LSM)
         Serial << "Brightness: " << brightness << endl;
@@ -96,5 +102,4 @@ void VolvoState::sendNextItem() {
 
 void VolvoState::sendPreviousItem() {
     Keyboard.write(PREVIOUS_ITEM_BUTTON);
-
 }

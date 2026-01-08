@@ -38,8 +38,8 @@ void loop() {
                 break;
             default:
                 if (DEBUG) {
-                    Serial << "Header: " << _HEX ((uint8_t) frame.getHeader())
-                        << " ID: " << _HEX (frame.getID())
+                    Serial << "Header: " << _HEX((uint8_t)frame.getHeader())
+                        << " ID: " << _HEX(frame.getID())
                         << " response: ";
                     frame.printResponse();
                     Serial << endl;
@@ -61,8 +61,7 @@ void loop() {
 void updateState() {
     if (!lin.isActive())
         systemState = STOPPING;
-    else
-    {
+    else {
         switch (systemState) {
             case STOPPED:
                 systemState = STARTING;

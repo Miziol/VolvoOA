@@ -25,8 +25,8 @@ class VolvoState {
     bool isDown;
 
 public:
-    void updateStateSWM(const byte* bytes);
-    void updateStateLSM(const byte* bytes);
+    void updateStateSWM(const byte *bytes);
+    void updateStateLSM(const byte *bytes);
 
 private:
     void sendButtonState(int button, bool isPressed);

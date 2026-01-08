@@ -1,18 +1,18 @@
 #include "linBus.h"
 
-LinBus::LinBus() {}
+LinBus::LinBus() {
+}
 
 LinBus::LinBus(int rxPin, int txPin) {
     softSerial = new SoftwareSerial(rxPin, txPin);
     softSerial->begin(9600);
-    
+
     bytes.setStorage(bytesStorage);
     frames.setStorage(framesStorage);
 }
 
-bool LinBus::isActive()
-{
-    return (millis() - lastLinActivityTimestamp) > LIN_TIMEOUT;
+bool LinBus::isActive() {
+    return (millis() - lastLinActivityTimestamp) > LIN_TIMEOUT; // TODO what if millis go over?
 }
 
 void LinBus::readBus() {
@@ -44,15 +44,13 @@ void LinBus::clearEmptyBytes() {
     }
 }
 
-int LinBus::incommingFrameSize()
-{
+int LinBus::incommingFrameSize() {
     if (bytes.size() >= 2 && bytes[0] == SYNC_BYTE) {
-
         switch (bytes[1] & 0b00111111 >> 4) {
-        case 3:
-            return 11; // sync + header + 8 + checksum
-        case 2:
-            return 7; // sync + header + 4 + checksum
+            case 3:
+                return 11; // sync + header + 8 + checksum
+            case 2:
+                return 7; // sync + header + 4 + checksum
         }
         return 5; // sync + header + 2 + checksum
     }
@@ -64,16 +62,20 @@ void LinBus::analizeBytes() {
     while (bytes.size()) {
         clearEmptyBytes();
         int frameSize = incommingFrameSize();
-        if (frameSize == 0) { // invalid frame begging or too low bytes
-            if (bytes.size() < 2) { // too low bytes
+        if (frameSize == 0) {
+            // invalid frame begging or too low bytes
+            if (bytes.size() < 2) {
+                // too low bytes
                 return;
-            } else { // invalid frame
+            } else {
+                // invalid frame
                 while (bytes[0] != 0 && bytes.size()) {
                     bytes.remove(0);
                 }
             }
         } else {
-            if (bytes.size() < frameSize) { // frame incompleate
+            if (bytes.size() < frameSize) {
+                // frame incompleate
                 return;
             } else {
                 const uint8_t responseSize = frameSize - 3; // frameSize - sync - header - checksum
@@ -82,9 +84,9 @@ void LinBus::analizeBytes() {
                 response.setStorage(responseStorage, responseSize, 0);
 
                 for (int i = 0; i < frameSize - 3; i++) {
-                    response.push_back(bytes[2+i]);
+                    response.push_back(bytes[2 + i]);
                 }
-                frames.push_back(LinFrame(bytes[1], response, bytes[frameSize-1]));
+                frames.push_back(LinFrame(bytes[1], response, bytes[frameSize - 1]));
 
                 for (int i = 0; i < frameSize; i++) {
                     bytes.remove(0);
