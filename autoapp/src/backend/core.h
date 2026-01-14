@@ -4,6 +4,7 @@
 #include <QEvent>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QSocketNotifier>
 
 #include "androidAuto/androidAutoService.h"
 #include "app/appUpdater.h"
@@ -28,9 +29,13 @@ public slots:
     bool eventFilter(QObject *obj, QEvent *event);
 
     void shutdownSystem();
+    void handleSigTerm();
 
     void updateApp();
     void updateSystem();
+
+public:
+    static void terminateSignalHandler(int signal);
 
 private:
     QLoggingCategory category;
@@ -42,6 +47,9 @@ private:
     QQmlContext *qmlRootContext;
     QObject *qmlRootObject;
 
+    static int sigterm[2];
+    QSocketNotifier* sigtermSocketNotifier;
+
     boost::asio::io_service ioService;
     boost::asio::io_service::work work;
     std::vector<std::thread> threadPool;
@@ -52,6 +60,9 @@ private:
 
     SystemUpdater systemUpdater;
     AppUpdater appUpdater;
+
+private:
+    static int setupUnixSignalHandlers();
 };
 
 #endif  // AUTOAPP_GUICORE_H

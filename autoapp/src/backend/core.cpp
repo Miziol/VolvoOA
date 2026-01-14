@@ -5,6 +5,8 @@
 #include <QGuiApplication>
 #include <QKeyEvent>
 
+int AppCore::sigterm[2] = {0, 0};
+
 AppCore::AppCore(SettingsManager &new_settings)
     : category("GUI CORE"),
       settings(new_settings),
@@ -44,6 +46,12 @@ AppCore::AppCore(SettingsManager &new_settings)
 
     connect(&arduinoService, &ArduinoService::piShutdownRequestReceived, this, &AppCore::shutdownSystem);
 
+    setupUnixSignalHandlers();
+    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigterm))
+        qFatal("Couldn't create TERM socketpair");
+    sigtermSocketNotifier = new QSocketNotifier(sigterm[1], QSocketNotifier::Read, this);
+    connect(sigtermSocketNotifier, &QSocketNotifier::activated, this, &AppCore::handleSigTerm);
+
     connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addUSBDevice);
     connect(&usbService, &UsbService::removeAndroidAutoDevice, &androidAutoService, &AndroidAutoService::removeDevice);
 }
@@ -77,6 +85,17 @@ void AppCore::shutdownSystem()
     process.waitForFinished(-1);
 }
 
+void AppCore::handleSigTerm()
+{
+    sigtermSocketNotifier->setEnabled(false);
+    char tmp;
+    ::read(sigterm[1], &tmp, sizeof(tmp));
+
+    QGuiApplication::quit();
+
+    sigtermSocketNotifier->setEnabled(true);
+}
+
 void AppCore::updateApp()
 {
     QThreadPool::globalInstance()->start(&appUpdater);
@@ -85,4 +104,25 @@ void AppCore::updateApp()
 void AppCore::updateSystem()
 {
     QThreadPool::globalInstance()->start(&systemUpdater);
+}
+
+void AppCore::terminateSignalHandler(int signal)
+{
+    char a = 1;
+    ::write(sigterm[0], &a, sizeof(a));
+}
+
+int AppCore::setupUnixSignalHandlers()
+{
+    struct sigaction term;
+
+    term.sa_handler = AppCore::terminateSignalHandler;
+    sigemptyset(&term.sa_mask);
+    term.sa_flags = 0;
+    term.sa_flags |= SA_RESTART;
+
+    if (sigaction(SIGTERM, &term, 0))
+        return 1;
+
+    return 0;
 }
