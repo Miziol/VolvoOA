@@ -12,7 +12,7 @@ LinBus::LinBus(int rxPin, int txPin) {
 }
 
 bool LinBus::isActive() {
-    return (millis() - lastLinActivityTimestamp) > LIN_TIMEOUT; // TODO what if millis go over?
+    return (millis() - lastLinActivityTimestamp) > LIN_TIMEOUT;
 }
 
 void LinBus::readBus() {

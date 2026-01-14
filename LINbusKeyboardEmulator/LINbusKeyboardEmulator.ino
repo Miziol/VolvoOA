@@ -54,8 +54,6 @@ void loop() {
     }
 
     updateState();
-
-    // TODO on updateSTATE
 }
 
 void updateState() {
@@ -65,6 +63,9 @@ void updateState() {
         switch (systemState) {
             case STOPPED:
                 systemState = STARTING;
+                state.setPhonePower(true);
+                state.setScreenPower(true);
+                state.sendStartPISignal();
                 break;
 
             case STARTING:
@@ -78,6 +79,8 @@ void updateState() {
             case STOPPING:
                 if (millis() - stoppingStartTime > STOPPING_TIMEOUT) {
                     systemState = STOPPED;
+                    state.setPhonePower(false);
+                    state.setScreenPower(false);
                 }
                 break;
         }

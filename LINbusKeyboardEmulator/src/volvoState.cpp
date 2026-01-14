@@ -2,6 +2,17 @@
 
 #include "volvoState.h"
 
+VolvoState::VolvoState()
+{
+    pinMode(SCREEN_POWER_PIN, OUTPUT);
+    pinMode(PHONE_POWER_PIN, OUTPUT);
+    pinMode(PI_POWER_ON_PIN, OUTPUT);
+
+    digitalWrite(SCREEN_POWER_PIN, LOW);
+    digitalWrite(PHONE_POWER_PIN, LOW);
+    digitalWrite(PI_POWER_ON_PIN, LOW);
+}
+
 void VolvoState::updateStateSWM(const byte *bytes) {
     //Buttons
     sendButtonState(BACK_BUTTON, (bool)(bytes[1] & 0b01000000));
@@ -94,6 +105,23 @@ void VolvoState::sendButtonState(int button, bool isPressed) {
     } else {
         Keyboard.release(button);
     }
+}
+
+void VolvoState::setScreenPower(bool power)
+{
+    digitalWrite(SCREEN_POWER_PIN, power ? HIGH : LOW);
+}
+
+void VolvoState::setPhonePower(bool power)
+{
+    digitalWrite(PHONE_POWER_PIN, power ? HIGH : LOW);
+}
+
+void VolvoState::sendStartPISignal()
+{
+    digitalWrite(PI_POWER_ON_PIN, HIGH);
+    delay(200);
+    digitalWrite(PI_POWER_ON_PIN, LOW);
 }
 
 void VolvoState::sendNextItem() {
