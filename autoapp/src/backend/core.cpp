@@ -47,6 +47,7 @@ AppCore::AppCore(SettingsManager &new_settings)
 }
 
 AppCore::~AppCore() {
+    ioService.stop();
     std::for_each(threadPool.begin(), threadPool.end(), std::bind(&std::thread::join, std::placeholders::_1));
 }
 
