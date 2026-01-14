@@ -27,6 +27,8 @@ public:
 public slots:
     bool eventFilter(QObject *obj, QEvent *event);
 
+    void shutdownSystem();
+
     void updateApp();
     void updateSystem();
 

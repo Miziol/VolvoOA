@@ -19,6 +19,8 @@ signals:
     void newLineFromCurrentArduino(QString line);
     void closeRequestReceived();
 
+    void piShutdownRequestReceived();
+
 public:
     Q_PROPERTY(QStringList arduinosList READ getArduinosList NOTIFY arduinosChanged);
     Q_PROPERTY(int currentIndex MEMBER currentArduinoIndex NOTIFY arduinoIndexChanged);

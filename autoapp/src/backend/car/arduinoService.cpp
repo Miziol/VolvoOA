@@ -54,7 +54,7 @@ void ArduinoService::updateSelectedArduinoFirmware() {
         cerror << "Invalid arduino index";
         return;
     }
-    updater.setTarget("arduino:avr:leonardo", "/dev/" + ((QSerialPort*) arduinos[currentArduinoIndex])->portName());
+    updater.setTarget("arduino:avr:leonardo", "/dev/" + arduinos[currentArduinoIndex]->portName());
     threadPool->start(&updater);
 }
 
@@ -70,5 +70,7 @@ void ArduinoService::receiveArduinoMessage() {
 }
 
 void ArduinoService::analizeLineContent(QString line) {
-    // TODO
+    if (line == "SHUTDOWN") {
+        emit piShutdownRequestReceived();
+    }
 }

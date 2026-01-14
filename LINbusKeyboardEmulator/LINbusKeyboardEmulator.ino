@@ -49,7 +49,7 @@ void loop() {
 
     while (Serial.available()) {
         String message = Serial.readStringUntil('\n');
-        if (message == "STARTED") // TODO advanced analysis
+        if (message == "STARTED")
             systemState = ACTIVE;
     }
 
@@ -57,9 +57,10 @@ void loop() {
 }
 
 void updateState() {
-    if (!lin.isActive())
+    if (!lin.isActive()) {
         systemState = STOPPING;
-    else {
+        Serial << "SHUTDOWN" << endl;
+    } else {
         switch (systemState) {
             case STOPPED:
                 systemState = STARTING;

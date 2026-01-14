@@ -37,6 +37,8 @@ int main(int argc, char *argv[]) {
     // Run app loop
     app.exec();
 
+    cinfo << "Application loop stop. Application closing";
+
     /* TODO
     *
     aasdk::usb::USBWrapper usbWrapper(usbContext);

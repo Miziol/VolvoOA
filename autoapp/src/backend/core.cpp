@@ -42,6 +42,8 @@ AppCore::AppCore(SettingsManager &new_settings)
     qRegisterMetaType<libusb_context *>("libusb_context *");
     qRegisterMetaType<libusb_device *>("libusb_device *");
 
+    connect(&arduinoService, &ArduinoService::piShutdownRequestReceived, this, &AppCore::shutdownSystem);
+
     connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addUSBDevice);
     connect(&usbService, &UsbService::removeAndroidAutoDevice, &androidAutoService, &AndroidAutoService::removeDevice);
 }
@@ -66,6 +68,13 @@ bool AppCore::eventFilter(QObject *obj, QEvent *event) {
         }
     }
     return QObject::eventFilter(obj, event);
+}
+
+void AppCore::shutdownSystem()
+{
+    QProcess process;
+    process.startCommand("shutdown now -h");
+    process.waitForFinished(-1);
 }
 
 void AppCore::updateApp()
