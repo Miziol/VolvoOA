@@ -38,19 +38,4 @@ int main(int argc, char *argv[]) {
     app.exec();
 
     cinfo << "Application loop stop. Application closing";
-
-    /* TODO
-    *
-    aasdk::usb::USBWrapper usbWrapper(usbContext);
-    aasdk::usb::AccessoryModeQueryFactory queryFactory(usbWrapper, ioService);
-    aasdk::usb::AccessoryModeQueryChainFactory queryChainFactory(usbWrapper, ioService, queryFactory);
-    */
-
-    /* TODO
-    *
-    auto usbHub(std::make_shared<aasdk::usb::USBHub>(usbWrapper, ioService, queryChainFactory));
-    auto connectedAccessoriesEnumerator(std::make_shared<aasdk::usb::ConnectedAccessoriesEnumerator>(usbWrapper,
-    ioService, queryChainFactory)); auto app = std::make_shared<autoapp::App>(ioService, usbWrapper, tcpWrapper,
-    androidAutoEntityFactory, std::move(usbHub), std::move(connectedAccessoriesEnumerator));
-    */
 }
