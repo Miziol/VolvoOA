@@ -11,9 +11,9 @@ BraceWrapping:
   AfterFunction: false
   AfterStruct: false
   BeforeLambdaBody: false
-  BraceWrappingAfterControlStatementStyle: BWACS_Never
   SplitEmptyFunction: false
 InsertNewlineAtEOF: true
 KeepEmptyLinesAtEOF: true
 IndentAccessModifiers: false
 EmptyLineBeforeAccessModifier: Always
+AllowShortBlocksOnASingleLine: Always

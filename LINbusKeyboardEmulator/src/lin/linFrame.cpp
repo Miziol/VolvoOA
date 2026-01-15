@@ -2,8 +2,7 @@
 
 #include "linFrame.h"
 
-LinFrame::LinFrame() {
-}
+LinFrame::LinFrame() {}
 
 LinFrame::LinFrame(byte new_header, Vector<byte> new_response, byte new_checksum) {
     header = new_header;

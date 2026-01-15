@@ -1,7 +1,6 @@
 #include "linBus.h"
 
-LinBus::LinBus() {
-}
+LinBus::LinBus() {}
 
 LinBus::LinBus(int rxPin, int txPin) {
     softSerial = new SoftwareSerial(rxPin, txPin);
