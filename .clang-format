@@ -5,5 +5,15 @@ ColumnLimit: 120
 PointerAlignment: Right
 IncludeBlocks: Regroup
 SortIncludes: CaseSensitive
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterEnum: true
+  AfterFunction: false
+  AfterStruct: false
+  BeforeLambdaBody: false
+  BraceWrappingAfterControlStatementStyle: BWACS_Never
+  SplitEmptyFunction: false
 InsertNewlineAtEOF: true
 KeepEmptyLinesAtEOF: true
+IndentAccessModifiers: false
+EmptyLineBeforeAccessModifier: Always

@@ -2,8 +2,7 @@
 
 #include "volvoState.h"
 
-VolvoState::VolvoState()
-{
+VolvoState::VolvoState() {
     pinMode(SCREEN_POWER_PIN, OUTPUT);
     pinMode(PHONE_POWER_PIN, OUTPUT);
     pinMode(PI_POWER_ON_PIN, OUTPUT);
@@ -107,18 +106,15 @@ void VolvoState::sendButtonState(int button, bool isPressed) {
     }
 }
 
-void VolvoState::setScreenPower(bool power)
-{
+void VolvoState::setScreenPower(bool power) {
     digitalWrite(SCREEN_POWER_PIN, power ? HIGH : LOW);
 }
 
-void VolvoState::setPhonePower(bool power)
-{
+void VolvoState::setPhonePower(bool power) {
     digitalWrite(PHONE_POWER_PIN, power ? HIGH : LOW);
 }
 
-void VolvoState::sendStartPISignal()
-{
+void VolvoState::sendStartPISignal() {
     digitalWrite(PI_POWER_ON_PIN, HIGH);
     delay(200);
     digitalWrite(PI_POWER_ON_PIN, LOW);
