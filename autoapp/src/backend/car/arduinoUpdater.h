@@ -24,8 +24,7 @@ public:
 
     void run();
 
-public
-slots :
+public slots :
     void setTarget(QString newFqbn, QString newPort);
 
 private:
@@ -33,9 +32,6 @@ private:
 
     bool running;
     QString fqbn, port;
-
-private
-slots :
 };
 
 #endif  // ANDROID_AUTO_ARDUINOUPDATER_H
