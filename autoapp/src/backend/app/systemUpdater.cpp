@@ -12,7 +12,6 @@ void SystemUpdater::run() {
     m_running = true;
     emit runningChanged(m_running);
 
-
     QString command = "apt update";
     QProcess process;
 

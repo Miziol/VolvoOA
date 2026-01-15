@@ -32,14 +32,15 @@ signals:
     void bluetoothAdapterTypeChanged();
     void bluetoothAddressChanged();
 
-    void appLanguageChanged(QString lang);  // TODO impl translations
+    void appLanguageChanged(QString lang); // TODO impl translations
 
 public:
     Q_PROPERTY(bool showClock READ getShowClock WRITE setShowClock NOTIFY showClockChanged)
     Q_PROPERTY(bool leftHandDrive READ isLeftHandDrive WRITE setLeftHandDrive NOTIFY leftHandDriveChanged)
 
     Q_PROPERTY(int videoFPS READ getVideoFPSInt WRITE setVideoFPSInt NOTIFY videoFPSChanged) // TODO enum
-    Q_PROPERTY(int videoResolution READ getVideoResolutionInt WRITE setVideoResolutionInt NOTIFY videoResolutionChanged) // TODO enum
+    Q_PROPERTY(int videoResolution READ getVideoResolutionInt WRITE setVideoResolutionInt NOTIFY videoResolutionChanged)
+    // TODO enum
     Q_PROPERTY(int screenDPI READ getScreenDPI WRITE setScreenDPI NOTIFY screenDPIChanged)
     // Q_PROPERTY() // TODO video margin
 

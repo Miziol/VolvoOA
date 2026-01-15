@@ -3,7 +3,10 @@
 #include <qcoreapplication.h>
 #include <QGuiApplication>
 
-AppUpdater::AppUpdater() : category("APP UPDATER"), m_running(false), m_step(0), commands(QStringList() << "git pull" << "bash ../../install_requirements.sh" << "cmake .." << "make") {}
+AppUpdater::AppUpdater() : category("APP UPDATER"), m_running(false), m_step(0),
+                           commands(
+                               QStringList() << "git pull" << "bash ../../install_requirements.sh" << "cmake .." <<
+                               "make") {}
 
 AppUpdater::~AppUpdater() {}
 
@@ -21,8 +24,7 @@ void AppUpdater::run() {
 
     qWarning() << process.workingDirectory() << QGuiApplication::applicationDirPath();
 
-    for (QString& command : commands)
-    {
+    for (QString &command : commands) {
         cinfo << "Processing step:" << command;
         process.startCommand(command);
         process.waitForFinished(-1);
@@ -44,7 +46,6 @@ void AppUpdater::run() {
     emit runningChanged(m_running);
 }
 
-int AppUpdater::getStepsNumber()
-{
+int AppUpdater::getStepsNumber() {
     return commands.size();
 }

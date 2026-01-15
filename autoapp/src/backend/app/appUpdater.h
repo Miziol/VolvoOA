@@ -10,6 +10,7 @@
 
 class AppUpdater : public QObject, public QRunnable {
     Q_OBJECT
+
 signals:
     void runningChanged(bool running);
     void stepChanged(int step);
