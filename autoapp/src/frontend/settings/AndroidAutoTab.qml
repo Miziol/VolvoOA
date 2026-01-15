@@ -72,7 +72,7 @@ GridLayout {
             }
         }
 
-        RoundButton{
+        RoundButton {
             height: elementHeight
             ButtonGroup.group: resolutionGroup
             checkable: true
@@ -84,7 +84,7 @@ GridLayout {
             }
         }
 
-        RoundButton{
+        RoundButton {
             height: elementHeight
             ButtonGroup.group: resolutionGroup
             checkable: true

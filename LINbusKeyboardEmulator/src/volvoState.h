@@ -9,6 +9,10 @@
 #define SWM_ID 0x20
 #define LSM_ID 0x10
 
+#define SCREEN_POWER_PIN 0 // TODO
+#define PHONE_POWER_PIN 0 // TODO
+#define PI_POWER_ON_PIN 0 // TODO
+
 #define BACK_BUTTON KEY_HOME
 #define ENTER_BUTTON KEY_RETURN
 #define NEXT_BUTTON 176
@@ -25,14 +29,22 @@ class VolvoState {
     bool isDown;
 
 public:
-    void updateStateSWM(const byte* bytes);
-    void updateStateLSM(const byte* bytes);
+    VolvoState();
+
+public:
+    void updateStateSWM(const byte *bytes);
+    void updateStateLSM(const byte *bytes);
+
+    void setScreenPower(bool power);
+    void setPhonePower(bool power);
+
+    void sendStartPISignal();
 
 private:
     void sendButtonState(int button, bool isPressed);
 
     void sendNextItem();
-    void sendPreviouseItem();
+    void sendPreviousItem();
 };
 
 #endif // VOLVO_STATE_H

@@ -8,8 +8,12 @@
 
 #define SYNC_BYTE 0x55
 
+const unsigned long LIN_TIMEOUT = 15000;
+
 class LinBus {
     SoftwareSerial *softSerial;
+
+    unsigned long lastLinActivityTimestamp = 0;
 
     Vector<char> bytes;
     char bytesStorage[100];
@@ -21,19 +25,15 @@ public:
     LinBus();
     LinBus(int rxPin, int txPin);
 
+    bool isActive();
+
     void readBus();
     bool frameAvailable();
     LinFrame popFrame();
 
+private:
     void clearEmptyBytes();
     int incommingFrameSize();
-
-    static int sizeOfFrame(uint8_t id);
-    static void analizeSteeringWheelFrame(const byte* bytes, uint8_t size);
-    static void analizeLightFrame(const byte* bytes, uint8_t size);
-    static void analizeCEM(const byte* bytes, uint8_t size);
-
-private:
     void analizeBytes();
 };
 

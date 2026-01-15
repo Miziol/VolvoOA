@@ -39,24 +39,24 @@ include_directories(
 )
 
 add_executable(autoapp
-    src/backend/main.cpp
-    ${autoapp_source_files}
-    ${openauto_autoapp_source_files}
+        src/backend/main.cpp
+        ${autoapp_source_files}
+        ${openauto_autoapp_source_files}
 )
 
 target_link_libraries(autoapp PRIVATE
-    Boost::headers
-    Qt6::Bluetooth
-    Qt6::Core
-    Qt6::Gui
-    Qt6::Multimedia
-    Qt6::Network
-    Qt6::Qml
-    Qt6::SerialBus
-    PkgConfig::LibUSB
-    ${AASDK_PROTO_LIBRARIES}
-    ${AASDK_LIBRARIES}
-    ${Protobuf_LIBRARIES}
+        Boost::headers
+        Qt6::Bluetooth
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Multimedia
+        Qt6::Network
+        Qt6::Qml
+        Qt6::SerialBus
+        PkgConfig::LibUSB
+        ${AASDK_PROTO_LIBRARIES}
+        ${AASDK_LIBRARIES}
+        ${Protobuf_LIBRARIES}
 )
 
 add_dependencies(autoapp aasdk)

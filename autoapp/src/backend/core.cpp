@@ -42,11 +42,14 @@ AppCore::AppCore(SettingsManager &new_settings)
     qRegisterMetaType<libusb_context *>("libusb_context *");
     qRegisterMetaType<libusb_device *>("libusb_device *");
 
+    connect(&arduinoService, &ArduinoService::piShutdownRequestReceived, this, &AppCore::shutdownSystem);
+
     connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addUSBDevice);
     connect(&usbService, &UsbService::removeAndroidAutoDevice, &androidAutoService, &AndroidAutoService::removeDevice);
 }
 
 AppCore::~AppCore() {
+    ioService.stop();
     std::for_each(threadPool.begin(), threadPool.end(), std::bind(&std::thread::join, std::placeholders::_1));
 }
 
@@ -57,7 +60,7 @@ bool AppCore::eventFilter(QObject *obj, QEvent *event) {
 
         if (keyEvent->key() == Qt::Key_PageUp) {
             QGuiApplication::sendEvent(QGuiApplication::focusObject(), new QKeyEvent(keyEvent->type(), Qt::Key_Backtab,
-                                                                                     Qt::KeyboardModifier::NoModifier));
+                                           Qt::KeyboardModifier::NoModifier));
             return true;
         } else if (keyEvent->key() == Qt::Key_PageDown) {
             QGuiApplication::sendEvent(QGuiApplication::focusObject(),
@@ -68,12 +71,16 @@ bool AppCore::eventFilter(QObject *obj, QEvent *event) {
     return QObject::eventFilter(obj, event);
 }
 
-void AppCore::updateApp()
-{
+void AppCore::shutdownSystem() {
+    QProcess process;
+    process.startCommand("shutdown now -h");
+    process.waitForFinished(-1);
+}
+
+void AppCore::updateApp() {
     QThreadPool::globalInstance()->start(&appUpdater);
 }
 
-void AppCore::updateSystem()
-{
+void AppCore::updateSystem() {
     QThreadPool::globalInstance()->start(&systemUpdater);
 }

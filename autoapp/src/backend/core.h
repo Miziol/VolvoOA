@@ -15,7 +15,7 @@
 #include "settings/settingsManager.h"
 #include "usb/usbService.h"
 
-Q_DECLARE_OPAQUE_POINTER(libusb_context *)
+Q_DECLARE_OPAQUE_POINTER(libusb_context*)
 
 class AppCore : public QObject {
     Q_OBJECT
@@ -24,8 +24,11 @@ public:
     AppCore(SettingsManager &new_settings);
     ~AppCore();
 
-public slots:
+public
+slots :
     bool eventFilter(QObject *obj, QEvent *event);
+
+    void shutdownSystem();
 
     void updateApp();
     void updateSystem();

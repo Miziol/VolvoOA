@@ -1,6 +1,5 @@
 #include <Streaming.h>
 
-#include "keyboardEmulator.h"
 #include "linFrame.h"
 
 LinFrame::LinFrame() {}
@@ -26,7 +25,7 @@ uint8_t LinFrame::getResponseSize() {
     return responseSize;
 }
 
-byte* LinFrame::getResponse() {
+byte *LinFrame::getResponse() {
     return response;
 }
 
@@ -37,15 +36,15 @@ byte LinFrame::getChecksum() {
 void LinFrame::printResponse() {
     Serial.print("[");
     for (int i = 0; i < responseSize; i++) {
-        Serial.print((uint8_t) response[i], BIN);
-        if ( i < responseSize - 1) {
+        Serial.print((uint8_t)response[i], BIN);
+        if (i < responseSize - 1) {
             Serial.print(",");
         }
     }
     Serial.print("]");
 }
 
-LinFrame& LinFrame::operator=(const LinFrame& other) {
+LinFrame &LinFrame::operator=(const LinFrame &other) {
     this->header = other.header;
     this->responseSize = other.responseSize;
     for (int i = 0; i < responseSize; i++) {

@@ -1,15 +1,40 @@
 #include <QCursor>
 #include <QIcon>
 #include <QtGui/QGuiApplication>
+#include <QSocketNotifier>
+#include <csignal>
+#include <sys/socket.h>
+#include <unistd.h>
+
 
 #include "core.h"
 #include "logging/logger.h"
 #include "logging/loggingCategory.h"
 #include "settings/settingsManager.h"
 
+static int sigTermFd[2];
 const QString applicationName = "AUTOAPP";
 
+static void handleSigTerm(int) {
+    char a = 1;
+    ::write(sigTermFd[0], &a, sizeof(a));
+}
+
 int main(int argc, char *argv[]) {
+    // Closing logic
+    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigTermFd)) {
+        qFatal("Nie można utworzyć socketpair dla handlera sygnałów");
+    }
+
+    struct sigaction term;
+    term.sa_handler = handleSigTerm;
+    sigemptyset(&term.sa_mask);
+    term.sa_flags = SA_RESTART;
+    if (sigaction(SIGTERM, &term, nullptr) > 0)
+        return 1;
+    if (sigaction(SIGINT, &term, nullptr) > 0)
+        return 1;
+
     // Open settings
     SettingsManager::defineSettings(applicationName);
     SettingsManager settings;
@@ -28,6 +53,12 @@ int main(int argc, char *argv[]) {
         QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
     }
 
+    // Connect to close signal
+    QSocketNotifier closingSocket(sigTermFd[1], QSocketNotifier::Read);
+    QObject::connect(&closingSocket, &QSocketNotifier::activated, [&app]() {
+        app.quit();
+    });
+
     // Create modules
     AppCore appCore(settings);
 
@@ -37,18 +68,5 @@ int main(int argc, char *argv[]) {
     // Run app loop
     app.exec();
 
-    /* TODO
-    *
-    aasdk::usb::USBWrapper usbWrapper(usbContext);
-    aasdk::usb::AccessoryModeQueryFactory queryFactory(usbWrapper, ioService);
-    aasdk::usb::AccessoryModeQueryChainFactory queryChainFactory(usbWrapper, ioService, queryFactory);
-    */
-
-    /* TODO
-    *
-    auto usbHub(std::make_shared<aasdk::usb::USBHub>(usbWrapper, ioService, queryChainFactory));
-    auto connectedAccessoriesEnumerator(std::make_shared<aasdk::usb::ConnectedAccessoriesEnumerator>(usbWrapper,
-    ioService, queryChainFactory)); auto app = std::make_shared<autoapp::App>(ioService, usbWrapper, tcpWrapper,
-    androidAutoEntityFactory, std::move(usbHub), std::move(connectedAccessoriesEnumerator));
-    */
+    cinfo << "Application loop stop. Application closing";
 }

@@ -8,7 +8,7 @@ class LinFrame {
     uint8_t responseSize;
     char response[8];
     char checksum;
-    
+
 public:
     LinFrame();
     LinFrame(const LinFrame &other) = default;
@@ -17,12 +17,12 @@ public:
     byte getHeader();
     uint8_t getID();
     uint8_t getResponseSize();
-    byte* getResponse();
+    byte *getResponse();
     byte getChecksum();
 
     void printResponse();
 
-    LinFrame& operator=(const LinFrame& other);
+    LinFrame &operator=(const LinFrame &other);
 };
 
 #endif  // LIN_FRAME_H

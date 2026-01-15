@@ -1,0 +1,19 @@
+BasedOnStyle: Chromium
+IndentWidth: 4
+AccessModifierOffset: -4
+ColumnLimit: 120
+PointerAlignment: Right
+IncludeBlocks: Regroup
+SortIncludes: CaseSensitive
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterEnum: true
+  AfterFunction: false
+  AfterStruct: false
+  BeforeLambdaBody: false
+  SplitEmptyFunction: false
+InsertNewlineAtEOF: true
+KeepEmptyLinesAtEOF: true
+IndentAccessModifiers: false
+EmptyLineBeforeAccessModifier: Always
+AllowShortBlocksOnASingleLine: Always
