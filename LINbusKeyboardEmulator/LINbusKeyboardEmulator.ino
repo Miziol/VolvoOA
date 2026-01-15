@@ -11,7 +11,7 @@
 
 #define DEBUG 0
 
-unsigned long stoppingStartTime = 0; // TODO same ?
+unsigned long stoppingStartTime = 0;
 const unsigned long STOPPING_TIMEOUT = 60000;
 
 LinBus lin(RX_PIN, TX_PIN);
@@ -59,6 +59,7 @@ void loop() {
 void updateState() {
     if (!lin.isActive()) {
         systemState = STOPPING;
+        stoppingStartTime = millis();
         Serial << "SHUTDOWN" << endl;
     } else {
         switch (systemState) {
