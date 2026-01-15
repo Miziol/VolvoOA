@@ -22,6 +22,7 @@ void updateState();
 
 void setup() {
     Serial.begin(9600);
+    systemState = SystemState::STOPPED;
 }
 
 void loop() {
@@ -49,8 +50,10 @@ void loop() {
 
     while (Serial.available()) {
         String message = Serial.readStringUntil('\n');
-        if (message == "STARTED")
+        if (message == "STARTED") {
             systemState = ACTIVE;
+            if (DEBUG) Serial << "State changed to: " << "ACTIVE" << endl;
+        }
     }
 
     updateState();
@@ -58,13 +61,38 @@ void loop() {
 
 void updateState() {
     if (!lin.isActive()) {
-        systemState = STOPPING;
-        stoppingStartTime = millis();
-        Serial << "SHUTDOWN" << endl;
+        switch (systemState) {
+            case STOPPED:
+                // EVERY THING IS OK
+                break;
+
+            case STARTING:
+                systemState = STOPPING;
+                if (DEBUG) Serial << "State changed to: " << "STOPPING" << endl;
+                stoppingStartTime = millis();
+                break;
+
+            case ACTIVE:
+                systemState = STOPPING;
+                if (DEBUG) Serial << "State changed to: " << "STOPPING" << endl;
+                stoppingStartTime = millis();
+                break;
+
+            case STOPPING:
+                Serial << "SHUTDOWN" << endl;
+                if (millis() - stoppingStartTime > STOPPING_TIMEOUT) {
+                    systemState = STOPPED;
+                    if (DEBUG) Serial << "State changed to: " << "STOPPED" << endl;
+                    state.setPhonePower(false);
+                    state.setScreenPower(false);
+                }
+                break;
+        }
     } else {
         switch (systemState) {
             case STOPPED:
                 systemState = STARTING;
+                if (DEBUG) Serial << "State changed to: " << "STARTING" << endl;
                 state.setPhonePower(true);
                 state.setScreenPower(true);
                 state.sendStartPISignal();
@@ -79,11 +107,7 @@ void updateState() {
                 break;
 
             case STOPPING:
-                if (millis() - stoppingStartTime > STOPPING_TIMEOUT) {
-                    systemState = STOPPED;
-                    state.setPhonePower(false);
-                    state.setScreenPower(false);
-                }
+                // TODO Unexpected state
                 break;
         }
     }
