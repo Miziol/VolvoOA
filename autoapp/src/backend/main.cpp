@@ -15,8 +15,7 @@
 static int sigTermFd[2];
 const QString applicationName = "AUTOAPP";
 
-static void handleSigTerm(int)
-{
+static void handleSigTerm(int) {
     char a = 1;
     ::write(sigTermFd[0], &a, sizeof(a));
 }
@@ -31,8 +30,10 @@ int main(int argc, char *argv[]) {
     term.sa_handler = handleSigTerm;
     sigemptyset(&term.sa_mask);
     term.sa_flags = SA_RESTART;
-    if (sigaction(SIGTERM, &term, nullptr) > 0) return 1;
-    if (sigaction(SIGINT, &term, nullptr) > 0) return 1;
+    if (sigaction(SIGTERM, &term, nullptr) > 0)
+        return 1;
+    if (sigaction(SIGINT, &term, nullptr) > 0)
+        return 1;
 
     // Open settings
     SettingsManager::defineSettings(applicationName);

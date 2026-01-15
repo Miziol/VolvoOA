@@ -60,7 +60,7 @@ bool AppCore::eventFilter(QObject *obj, QEvent *event) {
 
         if (keyEvent->key() == Qt::Key_PageUp) {
             QGuiApplication::sendEvent(QGuiApplication::focusObject(), new QKeyEvent(keyEvent->type(), Qt::Key_Backtab,
-                                                                                     Qt::KeyboardModifier::NoModifier));
+                                           Qt::KeyboardModifier::NoModifier));
             return true;
         } else if (keyEvent->key() == Qt::Key_PageDown) {
             QGuiApplication::sendEvent(QGuiApplication::focusObject(),
@@ -71,19 +71,16 @@ bool AppCore::eventFilter(QObject *obj, QEvent *event) {
     return QObject::eventFilter(obj, event);
 }
 
-void AppCore::shutdownSystem()
-{
+void AppCore::shutdownSystem() {
     QProcess process;
     process.startCommand("shutdown now -h");
     process.waitForFinished(-1);
 }
 
-void AppCore::updateApp()
-{
+void AppCore::updateApp() {
     QThreadPool::globalInstance()->start(&appUpdater);
 }
 
-void AppCore::updateSystem()
-{
+void AppCore::updateSystem() {
     QThreadPool::globalInstance()->start(&systemUpdater);
 }

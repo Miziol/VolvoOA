@@ -11,7 +11,7 @@
 class ArduinoUpdater : public QObject, public QRunnable {
     Q_OBJECT
 
-signals:
+signals :
     void runningChanged();
     void outputChanged();
 
@@ -24,7 +24,8 @@ public:
 
     void run();
 
-public slots:
+public
+slots :
     void setTarget(QString newFqbn, QString newPort);
 
 private:
@@ -33,7 +34,8 @@ private:
     bool running;
     QString fqbn, port;
 
-private slots:
+private
+slots :
 };
 
 #endif  // ANDROID_AUTO_ARDUINOUPDATER_H

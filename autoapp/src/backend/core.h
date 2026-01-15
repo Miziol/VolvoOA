@@ -15,17 +15,22 @@
 #include "settings/settingsManager.h"
 #include "usb/usbService.h"
 
-Q_DECLARE_OPAQUE_POINTER(libusb_context *)
+Q_DECLARE_OPAQUE_POINTER(libusb_context*)
 
-class AppCore : public QObject {
+class AppCore : public QObject
+{
     Q_OBJECT
 
 public:
-    AppCore(SettingsManager &new_settings);
+    AppCore(SettingsManager& new_settings);
     ~AppCore();
 
-public slots:
-    bool eventFilter(QObject *obj, QEvent *event);
+public
+    slots  :
+
+
+    
+    bool eventFilter(QObject* obj, QEvent* event);
 
     void shutdownSystem();
 
@@ -35,12 +40,12 @@ public slots:
 private:
     QLoggingCategory category;
 
-    SettingsManager &settings;
+    SettingsManager& settings;
     GuiStyle qmlStyle;
 
     QQmlApplicationEngine qmlEngine;
-    QQmlContext *qmlRootContext;
-    QObject *qmlRootObject;
+    QQmlContext* qmlRootContext;
+    QObject* qmlRootObject;
 
     boost::asio::io_service ioService;
     boost::asio::io_service::work work;

@@ -30,22 +30,20 @@ void ArduinoService::tryToConnectToArduino(QSerialPortInfo portInfo) {
         cinfo << "Connected to" << portInfo.description() << "on:" << portInfo.systemLocation();
     } else {
         cwarning << "Failed to open port:" << portInfo.portName() << "describe as:" << portInfo.description()
-                 << "with error:" << serialPort->errorString();
+            << "with error:" << serialPort->errorString();
         delete serialPort;
     }
 }
 
-QStringList ArduinoService::getArduinosList(){
+QStringList ArduinoService::getArduinosList() {
     QStringList list;
-    for (const auto arduino : arduinos)
-    {
+    for (const auto arduino : arduinos) {
         list.append(QSerialPortInfo(*arduino).description());
     }
     return list;
 }
 
-QObject* ArduinoService::getUpdater()
-{
+QObject *ArduinoService::getUpdater() {
     return &updater;
 }
 

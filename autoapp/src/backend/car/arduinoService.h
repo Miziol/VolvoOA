@@ -12,7 +12,7 @@
 class ArduinoService : public QObject {
     Q_OBJECT
 
-signals:
+signals :
     void arduinosChanged();
     void arduinoIndexChanged();
     void updaterRunningChanged();
@@ -34,12 +34,13 @@ public:
     ArduinoService(QObject *parent = nullptr);
     ~ArduinoService();
 
-public slots:
+public
+slots :
     void lookForConnectedArduinos();
     void tryToConnectToArduino(QSerialPortInfo portInfo);
 
     QStringList getArduinosList();
-    QObject* getUpdater();
+    QObject *getUpdater();
 
     void updateSelectedArduinoFirmware();
 
@@ -48,13 +49,14 @@ public slots:
 private:
     QLoggingCategory category;
 
-    QList<QSerialPort*> arduinos;
+    QList<QSerialPort *> arduinos;
     int currentArduinoIndex;
 
     QThreadPool *threadPool;
     ArduinoUpdater updater;
 
-private slots:
+private
+slots :
     void analizeLineContent(QString line);
 };
 
