@@ -25,7 +25,7 @@ Window {
         id: appBar
         z: 1
         width: parent.width
-        height: viewIndex != 2 ?barHeight : 0
+        height: viewIndex != 2 ? barHeight : 0
 
         anchors.top: parent.top
         anchors.left: parent.left
@@ -81,7 +81,7 @@ Window {
         focusIndicator.width = activeFocusItem.width
         focusIndicator.height = activeFocusItem.height
 
-        const activeFocusItemLocation = activeFocusItem.mapToGlobal(0,0)
+        const activeFocusItemLocation = activeFocusItem.mapToGlobal(0, 0)
         focusIndicator.x = activeFocusItemLocation.x
         focusIndicator.y = activeFocusItemLocation.y
     }
