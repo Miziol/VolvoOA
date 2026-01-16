@@ -38,15 +38,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build with CMake
         run: |
-          cmake -S . -B build
+          cmake -S autoapp -B autoapp/build
           cmake --build build
 
   build-arduino:
-    needs: [clang, install_requierments]
+    needs: clang
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Setup environment
+        run: sudo ./install_requirements.sh
       - name: Compile Sketch
-        run: |
-          arduino-cli core install arduino:avr # lub inna płytka
-          arduino-cli compile --fqbn arduino:avr:uno ./path/to/sketch
+        run: arduino-cli compile --fqbn arduino:avr:leonardo LINbusKeyboardEmulator/LINbusKeyboardEmulator.ino
