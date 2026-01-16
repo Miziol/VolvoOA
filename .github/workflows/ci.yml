@@ -36,6 +36,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Setup environment
+        run: sudo ./install_requirements.sh
       - name: Build with CMake
         run: |
           cmake -S autoapp -B autoapp/build
