@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup environment
-        run: sudo ./install_requirements.sh
       - name: Compile Sketch
-        run: arduino-cli compile --fqbn arduino:avr:leonardo LINbusKeyboardEmulator/LINbusKeyboardEmulator.ino
+        run: |
+          arduino-cli core install arduino:avr
+          arduino-cli compile --fqbn arduino:avr:leonardo LINbusKeyboardEmulator/LINbusKeyboardEmulator.ino
