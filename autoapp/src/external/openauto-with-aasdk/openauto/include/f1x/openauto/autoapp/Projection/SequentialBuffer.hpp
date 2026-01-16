@@ -48,7 +48,7 @@ private:
     boost::circular_buffer<aasdk::common::Data::value_type> data_;
     mutable std::mutex mutex_;
 };
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

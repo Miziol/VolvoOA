@@ -47,11 +47,11 @@ int LinBus::incommingFrameSize() {
     if (bytes.size() >= 2 && bytes[0] == SYNC_BYTE) {
         switch (bytes[1] & 0b00111111 >> 4) {
             case 3:
-                return 11; // sync + header + 8 + checksum
+                return 11;  // sync + header + 8 + checksum
             case 2:
-                return 7; // sync + header + 4 + checksum
+                return 7;   // sync + header + 4 + checksum
         }
-        return 5; // sync + header + 2 + checksum
+        return 5;           // sync + header + 2 + checksum
     }
 
     return 0;
@@ -77,7 +77,7 @@ void LinBus::analizeBytes() {
                 // frame incompleate
                 return;
             } else {
-                const uint8_t responseSize = frameSize - 3; // frameSize - sync - header - checksum
+                const uint8_t responseSize = frameSize - 3;  // frameSize - sync - header - checksum
                 byte responseStorage[responseSize];
                 Vector<byte> response;
                 response.setStorage(responseStorage, responseSize, 0);

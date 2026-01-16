@@ -38,7 +38,7 @@ public:
     virtual void onSensorStartRequest(const proto::messages::SensorStartRequestMessage &request) = 0;
     virtual void onChannelError(const error::Error &e) = 0;
 };
-} // namespace sensor
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace sensor
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

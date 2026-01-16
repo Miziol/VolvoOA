@@ -60,5 +60,5 @@ enum class ErrorCode {
     TCP_TRANSFER = 33
 };
 }
-} // namespace aasdk
-} // namespace f1x
+}  // namespace aasdk
+}  // namespace f1x

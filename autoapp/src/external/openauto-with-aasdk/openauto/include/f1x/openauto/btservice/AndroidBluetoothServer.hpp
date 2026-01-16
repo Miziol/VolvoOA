@@ -41,6 +41,6 @@ private slots:
 private:
     std::unique_ptr<QBluetoothServer> rfcommServer_;
 };
-} // namespace btservice
-} // namespace openauto
-} // namespace f1x
+}  // namespace btservice
+}  // namespace openauto
+}  // namespace f1x

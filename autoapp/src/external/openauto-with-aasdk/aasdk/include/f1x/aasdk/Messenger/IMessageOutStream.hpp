@@ -34,6 +34,6 @@ public:
 
     virtual void stream(Message::Pointer message, SendPromise::Pointer promise) = 0;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

@@ -41,7 +41,7 @@ std::string RemoteBluetoothDevice::getLocalAddress() const {
 bool RemoteBluetoothDevice::isAvailable() const {
     return true;
 }
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

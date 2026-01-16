@@ -56,6 +56,6 @@ void ChannelReceivePromiseQueue::clear() {
 ReceivePromise::Pointer ChannelReceivePromiseQueue::pop() {
     return this->pop(queue_.begin()->first);
 }
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

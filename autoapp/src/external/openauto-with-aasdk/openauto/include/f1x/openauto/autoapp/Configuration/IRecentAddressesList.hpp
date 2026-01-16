@@ -33,7 +33,7 @@ public:
     virtual void insertAddress(const std::string &address) = 0;
     virtual RecentAddresses getList() const = 0;
 };
-} // namespace configuration
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace configuration
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

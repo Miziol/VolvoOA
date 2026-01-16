@@ -43,7 +43,7 @@ struct TouchEvent {
     uint32_t y;
     uint32_t pointerId;
 };
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

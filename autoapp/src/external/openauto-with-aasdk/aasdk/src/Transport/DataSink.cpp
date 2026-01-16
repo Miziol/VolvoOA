@@ -56,6 +56,6 @@ common::Data DataSink::consume(common::Data::size_type size) {
 
     return data;
 }
-} // namespace transport
-} // namespace aasdk
-} // namespace f1x
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

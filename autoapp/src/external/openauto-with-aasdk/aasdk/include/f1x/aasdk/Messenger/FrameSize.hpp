@@ -40,6 +40,6 @@ private:
     size_t frameSize_;
     size_t totalSize_;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

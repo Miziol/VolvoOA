@@ -37,6 +37,6 @@ enum class ChannelId {
 };
 
 std::string channelIdToString(ChannelId channelId);
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

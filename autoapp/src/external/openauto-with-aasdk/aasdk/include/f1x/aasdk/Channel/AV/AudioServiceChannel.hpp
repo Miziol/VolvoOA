@@ -45,8 +45,7 @@ public:
 
 private:
     using std::enable_shared_from_this<AudioServiceChannel>::shared_from_this;
-    void messageHandler(messenger::Message::Pointer message,
-                        IAudioServiceChannelEventHandler::Pointer eventHandler);
+    void messageHandler(messenger::Message::Pointer message, IAudioServiceChannelEventHandler::Pointer eventHandler);
     void handleAVChannelSetupRequest(const common::DataConstBuffer &payload,
                                      IAudioServiceChannelEventHandler::Pointer eventHandler);
     void handleStartIndication(const common::DataConstBuffer &payload,
@@ -58,7 +57,7 @@ private:
     void handleAVMediaWithTimestampIndication(const common::DataConstBuffer &payload,
                                               IAudioServiceChannelEventHandler::Pointer eventHandler);
 };
-} // namespace av
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace av
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

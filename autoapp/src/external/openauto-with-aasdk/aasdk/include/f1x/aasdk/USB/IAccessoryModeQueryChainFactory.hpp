@@ -29,6 +29,6 @@ public:
 
     virtual IAccessoryModeQueryChain::Pointer create() = 0;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

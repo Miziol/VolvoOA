@@ -37,8 +37,7 @@ public:
     void stop() override;
     void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse &response) override;
     void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) override;
-    void onBluetoothPairingRequest(
-        const aasdk::proto::messages::BluetoothPairingRequest &request) override;
+    void onBluetoothPairingRequest(const aasdk::proto::messages::BluetoothPairingRequest &request) override;
     void onChannelError(const aasdk::error::Error &e) override;
 
 private:
@@ -48,7 +47,7 @@ private:
     aasdk::channel::bluetooth::BluetoothServiceChannel::Pointer channel_;
     projection::IBluetoothDevice::Pointer bluetoothDevice_;
 };
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

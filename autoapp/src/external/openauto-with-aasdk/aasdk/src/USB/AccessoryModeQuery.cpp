@@ -22,13 +22,12 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-AccessoryModeQuery::AccessoryModeQuery(boost::asio::io_service &ioService,
-                                       IUSBEndpoint::Pointer usbEndpoint)
+AccessoryModeQuery::AccessoryModeQuery(boost::asio::io_service &ioService, IUSBEndpoint::Pointer usbEndpoint)
     : strand_(ioService), usbEndpoint_(std::move(usbEndpoint)) {}
 
 void AccessoryModeQuery::cancel() {
     usbEndpoint_->cancelTransfers();
 }
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

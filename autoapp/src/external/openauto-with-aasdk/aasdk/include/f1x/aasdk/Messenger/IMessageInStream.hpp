@@ -33,6 +33,6 @@ public:
 
     virtual void startReceive(ReceivePromise::Pointer promise) = 0;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

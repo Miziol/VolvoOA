@@ -38,6 +38,6 @@ protected:
     messenger::IMessenger::Pointer messenger_;
     messenger::ChannelId channelId_;
 };
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

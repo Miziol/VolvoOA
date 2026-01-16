@@ -36,13 +36,11 @@ public:
 private:
     using std::enable_shared_from_this<TCPEndpoint>::shared_from_this;
 
-    void asyncOperationHandler(const boost::system::error_code &ec,
-                               size_t bytesTransferred,
-                               Promise::Pointer promise);
+    void asyncOperationHandler(const boost::system::error_code &ec, size_t bytesTransferred, Promise::Pointer promise);
 
     ITCPWrapper &tcpWrapper_;
     SocketPointer socket_;
 };
-} // namespace tcp
-} // namespace aasdk
-} // namespace f1x
+}  // namespace tcp
+}  // namespace aasdk
+}  // namespace f1x

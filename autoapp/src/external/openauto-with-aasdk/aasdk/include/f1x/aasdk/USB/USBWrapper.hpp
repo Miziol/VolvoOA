@@ -86,6 +86,6 @@ public:
 private:
     libusb_context *usbContext_;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

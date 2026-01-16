@@ -50,7 +50,7 @@ private:
     QObject *qmlRootObject;
     QMediaPlayer mediaPlayer;
 };
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

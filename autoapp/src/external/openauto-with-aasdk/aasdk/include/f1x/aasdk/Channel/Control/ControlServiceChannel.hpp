@@ -31,8 +31,7 @@ class ControlServiceChannel : public IControlServiceChannel,
                               public ServiceChannel,
                               public std::enable_shared_from_this<ControlServiceChannel> {
 public:
-    ControlServiceChannel(boost::asio::io_service::strand &strand,
-                          messenger::IMessenger::Pointer messenger);
+    ControlServiceChannel(boost::asio::io_service::strand &strand, messenger::IMessenger::Pointer messenger);
 
     void receive(IControlServiceChannelEventHandler::Pointer eventHandler) override;
 
@@ -44,21 +43,16 @@ public:
                                       SendPromise::Pointer promise) override;
     void sendAudioFocusResponse(const proto::messages::AudioFocusResponse &response,
                                 SendPromise::Pointer promise) override;
-    void sendShutdownRequest(const proto::messages::ShutdownRequest &request,
-                             SendPromise::Pointer promise) override;
-    void sendShutdownResponse(const proto::messages::ShutdownResponse &response,
-                              SendPromise::Pointer promise) override;
+    void sendShutdownRequest(const proto::messages::ShutdownRequest &request, SendPromise::Pointer promise) override;
+    void sendShutdownResponse(const proto::messages::ShutdownResponse &response, SendPromise::Pointer promise) override;
     void sendNavigationFocusResponse(const proto::messages::NavigationFocusResponse &respons,
                                      SendPromise::Pointer promisee) override;
-    void sendPingRequest(const proto::messages::PingRequest &request,
-                         SendPromise::Pointer promise) override;
-    void sendPingResponse(const proto::messages::PingResponse &response,
-                          SendPromise::Pointer promise) override;
+    void sendPingRequest(const proto::messages::PingRequest &request, SendPromise::Pointer promise) override;
+    void sendPingResponse(const proto::messages::PingResponse &response, SendPromise::Pointer promise) override;
 
 private:
     using std::enable_shared_from_this<ControlServiceChannel>::shared_from_this;
-    void messageHandler(messenger::Message::Pointer message,
-                        IControlServiceChannelEventHandler::Pointer eventHandler);
+    void messageHandler(messenger::Message::Pointer message, IControlServiceChannelEventHandler::Pointer eventHandler);
 
     void handleVersionResponse(const common::DataConstBuffer &payload,
                                IControlServiceChannelEventHandler::Pointer eventHandler);
@@ -77,7 +71,7 @@ private:
     void handlePingResponse(const common::DataConstBuffer &payload,
                             IControlServiceChannelEventHandler::Pointer eventHandler);
 };
-} // namespace control
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace control
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

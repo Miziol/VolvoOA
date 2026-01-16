@@ -7,6 +7,7 @@ ScreenElement {
         id: aaVideoOutput
 
         signal keyEvent(key: int, pressed: bool)
+
         signal mouseEvent(x: real, y: real, type: string)
 
         objectName: "aaVideoOutput"

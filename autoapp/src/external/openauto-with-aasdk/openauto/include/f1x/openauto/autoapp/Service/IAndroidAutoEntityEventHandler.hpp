@@ -30,7 +30,7 @@ public:
     virtual void onAndroidAutoQuit() = 0;
     virtual void setFocusOnAA(bool focus) = 0;
 };
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

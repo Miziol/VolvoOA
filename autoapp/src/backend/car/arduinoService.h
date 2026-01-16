@@ -25,7 +25,7 @@ public:
     Q_PROPERTY(QStringList arduinosList READ getArduinosList NOTIFY arduinosChanged);
     Q_PROPERTY(int currentIndex MEMBER currentArduinoIndex NOTIFY arduinoIndexChanged);
 
-    Q_PROPERTY(QObject* arduinoUpdater READ getUpdater CONSTANT);
+    Q_PROPERTY(QObject *arduinoUpdater READ getUpdater CONSTANT);
 
 private:
     static inline uint16_t VENDOR_ARDUINO_SA = 0x2341;

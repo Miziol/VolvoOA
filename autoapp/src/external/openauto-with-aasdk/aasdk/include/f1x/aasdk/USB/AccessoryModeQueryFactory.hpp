@@ -33,6 +33,6 @@ private:
     usb::IUSBWrapper &usbWrapper_;
     boost::asio::io_service &ioService_;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

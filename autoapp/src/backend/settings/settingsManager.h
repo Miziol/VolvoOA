@@ -32,13 +32,13 @@ signals:
     void bluetoothAdapterTypeChanged();
     void bluetoothAddressChanged();
 
-    void appLanguageChanged(QString lang); // TODO impl translations
+    void appLanguageChanged(QString lang);  // TODO impl translations
 
 public:
     Q_PROPERTY(bool showClock READ getShowClock WRITE setShowClock NOTIFY showClockChanged)
     Q_PROPERTY(bool leftHandDrive READ isLeftHandDrive WRITE setLeftHandDrive NOTIFY leftHandDriveChanged)
 
-    Q_PROPERTY(int videoFPS READ getVideoFPSInt WRITE setVideoFPSInt NOTIFY videoFPSChanged) // TODO enum
+    Q_PROPERTY(int videoFPS READ getVideoFPSInt WRITE setVideoFPSInt NOTIFY videoFPSChanged)  // TODO enum
     Q_PROPERTY(int videoResolution READ getVideoResolutionInt WRITE setVideoResolutionInt NOTIFY videoResolutionChanged)
     // TODO enum
     Q_PROPERTY(int screenDPI READ getScreenDPI WRITE setScreenDPI NOTIFY screenDPIChanged)
@@ -107,13 +107,13 @@ public slots:
     bool getShowClock();
     void setShowClock(bool value);
 
-    int getVideoFPSInt(); // TODO remove
+    int getVideoFPSInt();                   // TODO remove
     f1x::aasdk::proto::enums::VideoFPS::Enum getVideoFPS() const;
-    void setVideoFPSInt(int value); // TODO remove
+    void setVideoFPSInt(int value);         // TODO remove
     void setVideoFPS(f1x::aasdk::proto::enums::VideoFPS::Enum value);
-    int getVideoResolutionInt(); // TODO remove
+    int getVideoResolutionInt();            // TODO remove
     f1x::aasdk::proto::enums::VideoResolution::Enum getVideoResolution() const;
-    void setVideoResolutionInt(int value); // TODO remove
+    void setVideoResolutionInt(int value);  // TODO remove
     void setVideoResolution(f1x::aasdk::proto::enums::VideoResolution::Enum value);
     size_t getScreenDPI() const;
     void setScreenDPI(size_t value);

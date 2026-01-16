@@ -28,9 +28,7 @@ namespace autoapp {
 namespace service {
 class ServiceFactory : public IServiceFactory {
 public:
-    ServiceFactory(boost::asio::io_service &ioService,
-                   SettingsManager &configuration,
-                   QObject *new_qmlRootObject);
+    ServiceFactory(boost::asio::io_service &ioService, SettingsManager &configuration, QObject *new_qmlRootObject);
     ServiceList create(IAndroidAutoEntityEventHandler *handler,
                        aasdk::messenger::IMessenger::Pointer messenger) override;
 
@@ -45,7 +43,7 @@ private:
     SettingsManager &configuration_;
     QObject *qmlRootObject;
 };
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

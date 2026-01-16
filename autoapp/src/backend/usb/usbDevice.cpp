@@ -53,20 +53,16 @@ QString UsbDevice::getDeviceName() {
 }
 
 void UsbDevice::tryToStartAndroidAutoServer() {
-    queue.append(UsbDeviceStringRequestType{
-        "Android Auto", SendStringType::DESCRIPTION,
-        &UsbDevice::sendNextElementFromQueue_cb
-    });
+    queue.append(UsbDeviceStringRequestType{"Android Auto", SendStringType::DESCRIPTION,
+                                            &UsbDevice::sendNextElementFromQueue_cb});
     queue.append(
         UsbDeviceStringRequestType{"Android", SendStringType::MANUFACTURER, &UsbDevice::sendNextElementFromQueue_cb});
     queue.append(
         UsbDeviceStringRequestType{"Android Auto", SendStringType::MODEL, &UsbDevice::sendNextElementFromQueue_cb});
     queue.append(
         UsbDeviceStringRequestType{"HU-AAAAAA001", SendStringType::SERIAL, &UsbDevice::sendNextElementFromQueue_cb});
-    queue.append(UsbDeviceStringRequestType{
-        "https://github.com/Miziol", SendStringType::URI,
-        &UsbDevice::sendNextElementFromQueue_cb
-    });
+    queue.append(UsbDeviceStringRequestType{"https://github.com/Miziol", SendStringType::URI,
+                                            &UsbDevice::sendNextElementFromQueue_cb});
     queue.append(UsbDeviceStringRequestType{"1.0.0", SendStringType::VERSION, &UsbDevice::sendNextElementFromQueue_cb});
 
     cinfo << "Trying to start android-auto-server";

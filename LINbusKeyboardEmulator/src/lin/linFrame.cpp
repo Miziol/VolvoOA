@@ -1,6 +1,6 @@
-#include <Streaming.h>
-
 #include "linFrame.h"
+
+#include <Streaming.h>
 
 LinFrame::LinFrame() {}
 

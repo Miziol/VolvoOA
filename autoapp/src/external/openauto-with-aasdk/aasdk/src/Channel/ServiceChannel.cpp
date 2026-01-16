@@ -36,6 +36,6 @@ void ServiceChannel::send(messenger::Message::Pointer message, SendPromise::Poin
     io::PromiseLink<>::forward(*sendPromise, std::move(promise));
     messenger_->enqueueSend(std::move(message), std::move(sendPromise));
 }
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

@@ -26,5 +26,5 @@ namespace aasdk {
 namespace channel {
 typedef io::Promise<void> SendPromise;
 }
-} // namespace aasdk
-} // namespace f1x
+}  // namespace aasdk
+}  // namespace f1x

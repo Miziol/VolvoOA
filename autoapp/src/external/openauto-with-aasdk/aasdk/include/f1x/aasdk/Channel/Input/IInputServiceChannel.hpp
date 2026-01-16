@@ -48,7 +48,7 @@ public:
                                      SendPromise::Pointer promise) = 0;
     virtual messenger::ChannelId getId() const = 0;
 };
-} // namespace input
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace input
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

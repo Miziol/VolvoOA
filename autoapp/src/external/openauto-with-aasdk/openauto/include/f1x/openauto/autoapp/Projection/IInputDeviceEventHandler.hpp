@@ -31,7 +31,7 @@ public:
     virtual void onButtonEvent(const ButtonEvent &event) = 0;
     virtual void onTouchEvent(const TouchEvent &event) = 0;
 };
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

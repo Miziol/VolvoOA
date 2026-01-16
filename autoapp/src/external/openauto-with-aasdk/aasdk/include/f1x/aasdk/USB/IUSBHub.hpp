@@ -40,6 +40,6 @@ public:
     virtual void start(Promise::Pointer promise) = 0;
     virtual void cancel() = 0;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

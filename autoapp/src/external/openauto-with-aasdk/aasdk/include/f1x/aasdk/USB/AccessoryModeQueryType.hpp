@@ -35,5 +35,5 @@ enum class AccessoryModeQueryType {
     START
 };
 }
-} // namespace aasdk
-} // namespace f1x
+}  // namespace aasdk
+}  // namespace f1x

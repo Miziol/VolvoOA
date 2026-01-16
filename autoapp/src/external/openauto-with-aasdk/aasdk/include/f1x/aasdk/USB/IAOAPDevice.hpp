@@ -33,6 +33,6 @@ public:
     virtual IUSBEndpoint &getInEndpoint() = 0;
     virtual IUSBEndpoint &getOutEndpoint() = 0;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

@@ -52,6 +52,6 @@ private:
     Message::Pointer message_;
     Message::Pointer messageBig_;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

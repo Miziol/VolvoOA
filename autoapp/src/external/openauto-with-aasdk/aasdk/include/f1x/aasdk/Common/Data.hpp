@@ -74,6 +74,6 @@ common::Data createData(const DataConstBuffer &buffer);
 
 std::string dump(const Data &data);
 std::string dump(const DataConstBuffer &buffer);
-} // namespace common
-} // namespace aasdk
-} // namespace f1x
+}  // namespace common
+}  // namespace aasdk
+}  // namespace f1x

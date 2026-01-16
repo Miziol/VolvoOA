@@ -20,7 +20,7 @@
 
 #include <boost/asio.hpp>
 #include <memory>
-//#include <libusb.h>
+// #include <libusb.h>
 #include <f1x/aasdk/IO/Promise.hpp>
 #include <f1x/aasdk/USB/IUSBEndpoint.hpp>
 #include <f1x/aasdk/USB/IUSBWrapper.hpp>
@@ -39,6 +39,6 @@ public:
     virtual void start(Promise::Pointer promise) = 0;
     virtual void cancel() = 0;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

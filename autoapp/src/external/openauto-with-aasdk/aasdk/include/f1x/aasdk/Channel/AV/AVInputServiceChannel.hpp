@@ -31,8 +31,7 @@ class AVInputServiceChannel : public IAVInputServiceChannel,
                               public ServiceChannel,
                               public std::enable_shared_from_this<AVInputServiceChannel> {
 public:
-    AVInputServiceChannel(boost::asio::io_service::strand &strand,
-                          messenger::IMessenger::Pointer messenger);
+    AVInputServiceChannel(boost::asio::io_service::strand &strand, messenger::IMessenger::Pointer messenger);
 
     void receive(IAVInputServiceChannelEventHandler::Pointer eventHandler) override;
     void sendChannelOpenResponse(const proto::messages::ChannelOpenResponse &response,
@@ -48,8 +47,7 @@ public:
 
 private:
     using std::enable_shared_from_this<AVInputServiceChannel>::shared_from_this;
-    void messageHandler(messenger::Message::Pointer message,
-                        IAVInputServiceChannelEventHandler::Pointer eventHandler);
+    void messageHandler(messenger::Message::Pointer message, IAVInputServiceChannelEventHandler::Pointer eventHandler);
     void handleAVChannelSetupRequest(const common::DataConstBuffer &payload,
                                      IAVInputServiceChannelEventHandler::Pointer eventHandler);
     void handleAVInputOpenRequest(const common::DataConstBuffer &payload,
@@ -59,7 +57,7 @@ private:
     void handleChannelOpenRequest(const common::DataConstBuffer &payload,
                                   IAVInputServiceChannelEventHandler::Pointer eventHandler);
 };
-} // namespace av
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace av
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

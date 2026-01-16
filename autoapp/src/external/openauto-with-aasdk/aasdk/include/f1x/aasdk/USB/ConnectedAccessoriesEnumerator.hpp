@@ -52,6 +52,6 @@ private:
     DeviceListHandle deviceListHandle_;
     DeviceList::iterator actualDeviceIter_;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

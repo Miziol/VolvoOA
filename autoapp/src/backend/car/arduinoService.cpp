@@ -30,7 +30,7 @@ void ArduinoService::tryToConnectToArduino(QSerialPortInfo portInfo) {
         cinfo << "Connected to" << portInfo.description() << "on:" << portInfo.systemLocation();
     } else {
         cwarning << "Failed to open port:" << portInfo.portName() << "describe as:" << portInfo.description()
-            << "with error:" << serialPort->errorString();
+                 << "with error:" << serialPort->errorString();
         delete serialPort;
     }
 }

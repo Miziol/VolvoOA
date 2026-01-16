@@ -1,6 +1,6 @@
-#include <Streaming.h>
-
 #include "volvoState.h"
+
+#include <Streaming.h>
 
 VolvoState::VolvoState() {
     pinMode(SCREEN_POWER_PIN, OUTPUT);
@@ -13,11 +13,11 @@ VolvoState::VolvoState() {
 }
 
 void VolvoState::updateStateSWM(const byte *bytes) {
-    //Buttons
+    // Buttons
     sendButtonState(BACK_BUTTON, (bool)(bytes[1] & 0b01000000));
     sendButtonState(ENTER_BUTTON, (bool)(bytes[1] & 0b00100000));
     sendButtonState(NEXT_BUTTON, (bool)(bytes[1] & 0b00010000));
-    //sendButtonState(MUTE_BUTTON, (bool) (bytes[1] & 0b00000100));
+    // sendButtonState(MUTE_BUTTON, (bool) (bytes[1] & 0b00000100));
     sendButtonState(MIC_BUTTON, (bool)(bytes[1] & 0b00000100));
     sendButtonState(PREVIOUS_BUTTON, (bool)(bytes[1] & 0b00000010));
 

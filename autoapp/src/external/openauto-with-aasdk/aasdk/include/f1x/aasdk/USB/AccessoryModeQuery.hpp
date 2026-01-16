@@ -19,7 +19,7 @@
 #pragma once
 
 #include <boost/asio.hpp>
-//#include <libusb.h>
+// #include <libusb.h>
 #include <f1x/aasdk/USB/IAccessoryModeQuery.hpp>
 #include <f1x/aasdk/USB/IUSBEndpoint.hpp>
 #include <f1x/aasdk/USB/IUSBWrapper.hpp>
@@ -42,6 +42,6 @@ protected:
     static constexpr uint32_t cTransferTimeoutMs = 1000;
     static constexpr uint32_t USB_TYPE_VENDOR = 0x40;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

@@ -41,6 +41,6 @@ private:
     AccessoryModeSendStringType sendStringType_;
     static constexpr uint32_t ACC_REQ_SEND_STRING = 52;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

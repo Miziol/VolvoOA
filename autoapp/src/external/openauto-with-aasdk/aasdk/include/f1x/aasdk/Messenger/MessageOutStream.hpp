@@ -58,6 +58,6 @@ private:
 
     static constexpr size_t cMaxFramePayloadSize = 0x4000;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

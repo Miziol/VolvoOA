@@ -20,7 +20,7 @@
 
 #include <boost/asio.hpp>
 #include <utility>
-//#include <libusb.h>
+// #include <libusb.h>
 #include <f1x/aasdk/USB/IAOAPDevice.hpp>
 #include <f1x/aasdk/USB/IUSBWrapper.hpp>
 
@@ -43,8 +43,7 @@ public:
                                        libusb_device_handle *handle);
 
 private:
-    static ConfigDescriptorHandle
-    getConfigDescriptor(IUSBWrapper &usbWrapper, libusb_device_handle *handle);
+    static ConfigDescriptorHandle getConfigDescriptor(IUSBWrapper &usbWrapper, libusb_device_handle *handle);
     static const libusb_interface *getInterface(const ConfigDescriptorHandle &configDescriptorHandle);
     static const libusb_interface_descriptor *getInterfaceDescriptor(const libusb_interface *interface);
 
@@ -58,6 +57,6 @@ private:
     static constexpr uint16_t cAOAPId = 0x2D00;
     static constexpr uint16_t cAOAPWithAdbId = 0x2D01;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

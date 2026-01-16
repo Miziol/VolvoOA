@@ -86,7 +86,7 @@ qint64 SequentialBuffer::bytesAvailable() const {
 bool SequentialBuffer::canReadLine() const {
     return true;
 }
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

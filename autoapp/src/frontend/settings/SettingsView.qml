@@ -38,9 +38,11 @@ ScreenElement {
             clip: true
             currentIndex: bar.currentIndex
 
-            AndroidAutoTab {}
+            AndroidAutoTab {
+            }
 
-            ManagementTab {}
+            ManagementTab {
+            }
         }
     }
 }

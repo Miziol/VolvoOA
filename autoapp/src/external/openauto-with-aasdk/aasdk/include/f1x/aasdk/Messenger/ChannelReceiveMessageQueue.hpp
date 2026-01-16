@@ -36,6 +36,6 @@ private:
     typedef std::queue<Message::Pointer> MessageQueue;
     std::unordered_map<ChannelId, MessageQueue> queue_;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

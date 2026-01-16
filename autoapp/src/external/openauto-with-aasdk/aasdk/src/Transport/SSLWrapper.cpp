@@ -165,6 +165,6 @@ int SSLWrapper::sslWrite(SSL *ssl, const void *buf, int num) {
 int SSLWrapper::getError(SSL *ssl, int returnCode) {
     return SSL_get_error(ssl, returnCode);
 }
-} // namespace transport
-} // namespace aasdk
-} // namespace f1x
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

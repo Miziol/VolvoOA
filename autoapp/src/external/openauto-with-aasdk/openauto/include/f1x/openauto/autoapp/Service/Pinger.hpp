@@ -45,7 +45,7 @@ private:
     int64_t pingsCount_;
     int64_t pongsCount_;
 };
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

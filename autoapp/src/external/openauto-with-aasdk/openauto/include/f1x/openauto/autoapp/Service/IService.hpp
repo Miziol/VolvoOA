@@ -39,7 +39,7 @@ public:
 };
 
 typedef std::vector<IService::Pointer> ServiceList;
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

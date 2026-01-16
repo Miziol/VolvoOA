@@ -54,7 +54,7 @@ private:
     aasdk::channel::input::InputServiceChannel::Pointer channel_;
     projection::IInputDevice::Pointer inputDevice_;
 };
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

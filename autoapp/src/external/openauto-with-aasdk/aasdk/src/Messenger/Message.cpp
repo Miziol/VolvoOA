@@ -78,6 +78,6 @@ void Message::insertPayload(const common::DataConstBuffer &buffer) {
 void Message::insertPayload(common::DataBuffer &buffer) {
     common::copy(payload_, buffer);
 }
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

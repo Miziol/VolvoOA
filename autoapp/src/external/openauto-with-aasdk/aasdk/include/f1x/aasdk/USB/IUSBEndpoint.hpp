@@ -37,12 +37,10 @@ public:
     virtual uint8_t getAddress() = 0;
     virtual void controlTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) = 0;
     virtual void bulkTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) = 0;
-    virtual void interruptTransfer(common::DataBuffer buffer,
-                                   uint32_t timeout,
-                                   Promise::Pointer promise) = 0;
+    virtual void interruptTransfer(common::DataBuffer buffer, uint32_t timeout, Promise::Pointer promise) = 0;
     virtual void cancelTransfers() = 0;
     virtual libusb_device_handle *getDeviceHandle() const = 0;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

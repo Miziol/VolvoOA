@@ -27,9 +27,7 @@ TCPTransport::TCPTransport(boost::asio::io_service &ioService, tcp::ITCPEndpoint
 void TCPTransport::enqueueReceive(common::DataBuffer buffer) {
     auto receivePromise = tcp::ITCPEndpoint::Promise::defer(receiveStrand_);
     receivePromise->then(
-        [this, self = this->shared_from_this()](auto bytesTransferred) {
-            this->receiveHandler(bytesTransferred);
-        },
+        [this, self = this->shared_from_this()](auto bytesTransferred) { this->receiveHandler(bytesTransferred); },
         [this, self = this->shared_from_this()](auto e) { this->rejectReceivePromises(e); });
 
     tcpEndpoint_->receive(buffer, std::move(receivePromise));
@@ -42,9 +40,7 @@ void TCPTransport::enqueueSend(SendQueue::iterator queueElement) {
         [this, self = this->shared_from_this(), queueElement](auto) {
             this->sendHandler(queueElement, error::Error());
         },
-        [this, self = this->shared_from_this(), queueElement](auto e) {
-            this->sendHandler(queueElement, e);
-        });
+        [this, self = this->shared_from_this(), queueElement](auto e) { this->sendHandler(queueElement, e); });
 
     tcpEndpoint_->send(common::DataConstBuffer(queueElement->first), std::move(sendPromise));
 }
@@ -66,6 +62,6 @@ void TCPTransport::sendHandler(SendQueue::iterator queueElement, const error::Er
         this->enqueueSend(sendQueue_.begin());
     }
 }
-} // namespace transport
-} // namespace aasdk
-} // namespace f1x
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

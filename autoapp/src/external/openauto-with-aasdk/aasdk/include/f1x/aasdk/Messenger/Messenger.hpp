@@ -56,6 +56,6 @@ private:
     ChannelReceiveMessageQueue channelReceiveMessageQueue_;
     ChannelSendQueue channelSendPromiseQueue_;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

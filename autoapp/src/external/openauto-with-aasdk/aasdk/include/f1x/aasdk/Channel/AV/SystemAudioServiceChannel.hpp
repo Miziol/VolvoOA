@@ -26,10 +26,9 @@ namespace channel {
 namespace av {
 class SystemAudioServiceChannel : public AudioServiceChannel {
 public:
-    SystemAudioServiceChannel(boost::asio::io_service::strand &strand,
-                              messenger::IMessenger::Pointer messenger);
+    SystemAudioServiceChannel(boost::asio::io_service::strand &strand, messenger::IMessenger::Pointer messenger);
 };
-} // namespace av
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace av
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

@@ -62,6 +62,6 @@ private:
     service::IAndroidAutoEntity::Pointer androidAutoEntity_;
     bool isStopped_;
 };
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x
