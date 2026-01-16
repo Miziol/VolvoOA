@@ -3,50 +3,44 @@ name: AutoApp
 on: [push, pull_request]
 
 jobs:
+  install_requierments:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup environment
+        run: |
+          chmod +x install_requirements.sh
+          sudo ./install_requirements.sh
+        
+
   qmllint:
     runs-on: ubuntu-latest
     steps:
       - name: Install qmllint
         run: sudo apt install -y qt6-qmllint-plugins
+      - name: Run QML Check
+        run: find . -name "*.qml" | xargs qmllint
 
-
-  # Zadanie 1: Linting (zawsze na początku)
-  linting:
+  clang:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Lint Tools
-        run: sudo apt-get update && sudo apt-get install -y clang-format qt6-lupdate-opensource-src qt6-declarative-dev
+      - name: Install clang
+        run: sudo apt-get update && sudo apt-get install -y clang-format
       - name: Run Clang Check
         run: find . -name "*.cpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
-      - name: Run QML Check
-        uses: opengisch/qmlformat-lint@v1
 
-  # Zadanie 2: Budowanie aplikacji C++
-  build-cpp:
-    needs: linting
+  build-autoapp:
+    needs: [clang, qmllint, install_requierments]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup environment
-        run: |
-          chmod +x install_requirements.sh
-          sudo ./install_requirements.sh
       - name: Build with CMake
         run: |
           cmake -S . -B build
           cmake --build build
 
-  # Zadanie 3: Budowanie Arduino
   build-arduino:
-    needs: linting
+    needs: [clang, install_requierments]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup environment
-        run: |
-          chmod +x install_requirements.sh
-          sudo ./install_requirements.sh
       - name: Compile Sketch
         run: |
           arduino-cli core install arduino:avr # lub inna płytka
