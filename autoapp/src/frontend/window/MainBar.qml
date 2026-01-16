@@ -3,7 +3,6 @@ import QtQuick.Controls.Material
 
 Item {
     signal switchToSettings()
-
     signal switchToAndroidAuto()
 
     clip: true
