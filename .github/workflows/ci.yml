@@ -1,6 +1,6 @@
 name: AutoApp
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   install_requierments:
