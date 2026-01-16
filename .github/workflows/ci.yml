@@ -46,6 +46,7 @@ jobs:
         run: |
           arduino-cli core update-index
           arduino-cli core install arduino:avr
+          arduino-cli lib install Streaming Vector Keyboard
       - name: Compile Sketch
         run: |
           arduino-cli compile --fqbn arduino:avr:leonardo LINbusKeyboardEmulator/LINbusKeyboardEmulator.ino
