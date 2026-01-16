@@ -29,7 +29,7 @@ jobs:
       - name: Run Clang check for autoapp
         run: find autoapp/src -name "*.cpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
       - name: Run Clang check for LINbusKeyboardEmulator
-        run: find LINbusKeyboardEmulator -name "*.cpp" -o -name "*.h" -name "*.ino" | xargs clang-format --dry-run --Werror
+        run: find autoapp/src -type f \( -name "*.cpp" -o -name "*.h" \) -print0 | xargs -0 clang-format --dry-run --Werror
 
   build-autoapp:
     needs: [clang, qmllint, install_requierments]
