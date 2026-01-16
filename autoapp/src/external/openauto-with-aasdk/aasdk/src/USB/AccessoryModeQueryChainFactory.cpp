@@ -30,6 +30,6 @@ AccessoryModeQueryChainFactory::AccessoryModeQueryChainFactory(IUSBWrapper &usbW
 IAccessoryModeQueryChain::Pointer AccessoryModeQueryChainFactory::create() {
     return std::make_shared<AccessoryModeQueryChain>(usbWrapper_, ioService_, queryFactory_);
 }
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

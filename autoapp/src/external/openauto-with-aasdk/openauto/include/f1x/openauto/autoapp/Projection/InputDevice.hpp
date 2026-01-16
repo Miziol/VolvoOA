@@ -45,7 +45,7 @@ public:
 
 public slots:
     bool handleKeyEvent(int key, bool pressed);
-    bool handleTouchEvent(qreal mouseX, qreal mouseY, QString type); // TODO change `type` to enum
+    bool handleTouchEvent(qreal mouseX, qreal mouseY, QString type);  // TODO change `type` to enum
 
 private:
     QObject *videoOutput;
@@ -55,7 +55,7 @@ private:
     IInputDeviceEventHandler *eventHandler_;
     std::mutex mutex_;
 };
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

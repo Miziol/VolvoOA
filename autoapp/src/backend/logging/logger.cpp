@@ -58,91 +58,76 @@ void Logger::loggerHandler(QtMsgType type, const QMessageLogContext &context, co
         case QtDebugMsg:
             if (LOG_LEVEL >= 4) {
                 if (isFromQML) {
-                    std::clog << "\033[1;34m"
-                        << "Debug:\t\t" << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;34m" << "Debug:\t\t" << stdString << "\033[0m" << std::endl;
                 } else {
-                    std::clog << "\033[1;34m"
-                        << "Debug:\t\t"
-                        << "[" << context.category << "] " << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;34m" << "Debug:\t\t" << "[" << context.category << "] " << stdString
+                              << "\033[0m" << std::endl;
                 }
             }
             fileLine =
                 formattedDateTime +
-                (!isFromQML
-                     ? ("[" + QString(context.category) + "] " + "Debug: " + msg)
-                     : ("Debug: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
+                (!isFromQML ? ("[" + QString(context.category) + "] " + "Debug: " + msg)
+                            : ("Debug: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
                 "\n";
             break;
         case QtInfoMsg:
             if (LOG_LEVEL >= 3) {
                 if (isFromQML) {
-                    std::clog << "\033[1;32m"
-                        << "Info:\t\t" << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;32m" << "Info:\t\t" << stdString << "\033[0m" << std::endl;
                 } else {
-                    std::clog << "\033[1;32m"
-                        << "Info:\t\t"
-                        << "[" << context.category << "] " << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;32m" << "Info:\t\t" << "[" << context.category << "] " << stdString
+                              << "\033[0m" << std::endl;
                 }
             }
             fileLine =
                 formattedDateTime +
-                (!isFromQML
-                     ? ("[" + QString(context.category) + "] " + "Info: " + msg)
-                     : ("Info: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
+                (!isFromQML ? ("[" + QString(context.category) + "] " + "Info: " + msg)
+                            : ("Info: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
                 "\n";
             break;
         case QtWarningMsg:
             if (LOG_LEVEL >= 2) {
                 if (isFromQML) {
-                    std::clog << "\033[1;33m"
-                        << "Warning:\t" << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;33m" << "Warning:\t" << stdString << "\033[0m" << std::endl;
                 } else {
-                    std::clog << "\033[1;33m"
-                        << "Warning:\t"
-                        << "[" << context.category << "] " << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;33m" << "Warning:\t" << "[" << context.category << "] " << stdString
+                              << "\033[0m" << std::endl;
                 }
             }
             fileLine =
                 formattedDateTime +
-                (!isFromQML
-                     ? ("[" + QString(context.category) + "] " + "Warning: " + msg)
-                     : ("Warning: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
+                (!isFromQML ? ("[" + QString(context.category) + "] " + "Warning: " + msg)
+                            : ("Warning: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
                 "\n";
             break;
         case QtCriticalMsg:
             if (LOG_LEVEL >= 1) {
                 if (isFromQML) {
-                    std::clog << "\033[1;31m"
-                        << "Critical:\t" << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;31m" << "Critical:\t" << stdString << "\033[0m" << std::endl;
                 } else {
-                    std::clog << "\033[1;31m"
-                        << "Critical:\t"
-                        << "[" << context.category << "] " << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;31m" << "Critical:\t" << "[" << context.category << "] " << stdString
+                              << "\033[0m" << std::endl;
                 }
             }
             fileLine =
                 formattedDateTime +
-                (!isFromQML
-                     ? ("[" + QString(context.category) + "] " + "Critical: " + msg)
-                     : ("Critical: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
+                (!isFromQML ? ("[" + QString(context.category) + "] " + "Critical: " + msg)
+                            : ("Critical: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
                 "\n";
             break;
         case QtFatalMsg:
             if (LOG_LEVEL >= 0) {
                 if (isFromQML) {
-                    std::clog << "\033[1;35m"
-                        << "Fatal:\t\t" << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;35m" << "Fatal:\t\t" << stdString << "\033[0m" << std::endl;
                 } else {
-                    std::clog << "\033[1;35m"
-                        << "Fatal:\t\t"
-                        << "[" << context.category << "] " << stdString << "\033[0m" << std::endl;
+                    std::clog << "\033[1;35m" << "Fatal:\t\t" << "[" << context.category << "] " << stdString
+                              << "\033[0m" << std::endl;
                 }
             }
             fileLine =
                 formattedDateTime +
-                (!isFromQML
-                     ? ("[" + QString(context.category) + "] " + "Fatal: " + msg)
-                     : ("Fatal: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
+                (!isFromQML ? ("[" + QString(context.category) + "] " + "Fatal: " + msg)
+                            : ("Fatal: " + msg + " (" + context.file + ":" + QString::number(context.line) + ")")) +
                 "\n";
             if (logFile.isOpen()) {
                 logFile.write(fileLine.toLocal8Bit());

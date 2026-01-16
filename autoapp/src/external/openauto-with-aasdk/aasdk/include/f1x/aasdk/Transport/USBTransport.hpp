@@ -35,15 +35,13 @@ private:
     void enqueueReceive(common::DataBuffer buffer) override;
     void enqueueSend(SendQueue::iterator queueElement) override;
     void doSend(SendQueue::iterator queueElement, common::Data::size_type offset);
-    void sendHandler(SendQueue::iterator queueElement,
-                     common::Data::size_type offset,
-                     size_t bytesTransferred);
+    void sendHandler(SendQueue::iterator queueElement, common::Data::size_type offset, size_t bytesTransferred);
 
     usb::IAOAPDevice::Pointer aoapDevice_;
 
     static constexpr uint32_t cSendTimeoutMs = 10000;
     static constexpr uint32_t cReceiveTimeoutMs = 0;
 };
-} // namespace transport
-} // namespace aasdk
-} // namespace f1x
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

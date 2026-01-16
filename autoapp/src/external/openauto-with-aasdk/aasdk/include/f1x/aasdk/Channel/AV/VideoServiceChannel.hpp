@@ -29,8 +29,7 @@ class VideoServiceChannel : public IVideoServiceChannel,
                             public ServiceChannel,
                             public std::enable_shared_from_this<VideoServiceChannel> {
 public:
-    VideoServiceChannel(boost::asio::io_service::strand &strand,
-                        messenger::IMessenger::Pointer messenger);
+    VideoServiceChannel(boost::asio::io_service::strand &strand, messenger::IMessenger::Pointer messenger);
 
     void receive(IVideoServiceChannelEventHandler::Pointer eventHandler) override;
     void sendChannelOpenResponse(const proto::messages::ChannelOpenResponse &response,
@@ -45,8 +44,7 @@ public:
 
 private:
     using std::enable_shared_from_this<VideoServiceChannel>::shared_from_this;
-    void messageHandler(messenger::Message::Pointer message,
-                        IVideoServiceChannelEventHandler::Pointer eventHandler);
+    void messageHandler(messenger::Message::Pointer message, IVideoServiceChannelEventHandler::Pointer eventHandler);
     void handleAVChannelSetupRequest(const common::DataConstBuffer &payload,
                                      IVideoServiceChannelEventHandler::Pointer eventHandler);
     void handleStartIndication(const common::DataConstBuffer &payload,
@@ -60,7 +58,7 @@ private:
     void handleAVMediaWithTimestampIndication(const common::DataConstBuffer &payload,
                                               IVideoServiceChannelEventHandler::Pointer eventHandler);
 };
-} // namespace av
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace av
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

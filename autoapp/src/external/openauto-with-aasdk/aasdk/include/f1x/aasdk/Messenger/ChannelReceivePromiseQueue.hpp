@@ -38,6 +38,6 @@ public:
 private:
     std::unordered_map<ChannelId, std::queue<ReceivePromise::Pointer>> queue_;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

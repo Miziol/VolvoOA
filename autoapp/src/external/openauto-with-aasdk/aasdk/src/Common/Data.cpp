@@ -53,9 +53,7 @@ DataConstBuffer::DataConstBuffer() : cdata(nullptr), size(0) {}
 
 DataConstBuffer::DataConstBuffer(const DataBuffer &other) : cdata(other.data), size(other.size) {}
 
-DataConstBuffer::DataConstBuffer(const Data::value_type *_data,
-                                 Data::size_type _size,
-                                 Data::size_type offset) {
+DataConstBuffer::DataConstBuffer(const Data::value_type *_data, Data::size_type _size, Data::size_type offset) {
     if (offset > _size || _data == nullptr || _size == 0) {
         cdata = nullptr;
         size = 0;
@@ -98,6 +96,6 @@ std::string dump(const DataConstBuffer &buffer) {
         return hexDump;
     }
 }
-} // namespace common
-} // namespace aasdk
-} // namespace f1x
+}  // namespace common
+}  // namespace aasdk
+}  // namespace f1x

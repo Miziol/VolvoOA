@@ -25,7 +25,7 @@ void AndroidAutoService::removeDevice(libusb_device *device) {
 }
 
 void AndroidAutoService::addNetworkDevice() {
-    ; // TODO
+    ;  // TODO
 }
 
 void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioService,
@@ -41,8 +41,7 @@ void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioServic
 void AndroidAutoService::createFactories(QObject *qmlRootObject) {
     serviceFactory = new f1x::openauto::autoapp::service::ServiceFactory(ioService, settingsManager, qmlRootObject);
     androidAutoEntityFactory = new f1x::openauto::autoapp::service::AndroidAutoEntityFactory(
-        this, ioService, settingsManager,
-        *serviceFactory);
+        this, ioService, settingsManager, *serviceFactory);
 }
 
 void AndroidAutoService::onAndroidAutoQuit() {

@@ -30,10 +30,7 @@ namespace messenger {
 class FrameHeader {
 public:
     FrameHeader(const common::DataConstBuffer &buffer);
-    FrameHeader(ChannelId channelId,
-                FrameType frameType,
-                EncryptionType encryptionType,
-                MessageType messageType);
+    FrameHeader(ChannelId channelId, FrameType frameType, EncryptionType encryptionType, MessageType messageType);
 
     ChannelId getChannelId() const;
     FrameType getType() const;
@@ -49,6 +46,6 @@ private:
     EncryptionType encryptionType_;
     MessageType messageType_;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

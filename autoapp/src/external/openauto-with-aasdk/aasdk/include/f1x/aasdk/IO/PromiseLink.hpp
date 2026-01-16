@@ -28,25 +28,20 @@ namespace aasdk {
 namespace io {
 template <typename SourceResolveArgumentType = void, typename DestinationResolveArgumentType = void>
 class PromiseLink
-    : public std::enable_shared_from_this<PromiseLink<
-        SourceResolveArgumentType, DestinationResolveArgumentType>> {
+    : public std::enable_shared_from_this<PromiseLink<SourceResolveArgumentType, DestinationResolveArgumentType>> {
 public:
     typedef std::shared_ptr<PromiseLink<SourceResolveArgumentType, DestinationResolveArgumentType>> Pointer;
     typedef std::function<DestinationResolveArgumentType(SourceResolveArgumentType)> TransformFunctor;
 
-    PromiseLink(typename Promise<DestinationResolveArgumentType>::Pointer promise,
-                TransformFunctor transformFunctor)
+    PromiseLink(typename Promise<DestinationResolveArgumentType>::Pointer promise, TransformFunctor transformFunctor)
         : promise_(std::move(promise)),
           transformFunctor_(std::make_shared<TransformFunctor>(std::move(transformFunctor))) {}
 
     static void forward(
         Promise<SourceResolveArgumentType> &source,
         typename Promise<DestinationResolveArgumentType>::Pointer destination,
-        TransformFunctor transformFunctor = [](SourceResolveArgumentType &&argument) {
-            return std::move(argument);
-        }) {
-        auto link = std::make_shared<PromiseLink<
-            SourceResolveArgumentType, DestinationResolveArgumentType>>(
+        TransformFunctor transformFunctor = [](SourceResolveArgumentType &&argument) { return std::move(argument); }) {
+        auto link = std::make_shared<PromiseLink<SourceResolveArgumentType, DestinationResolveArgumentType>>(
             std::forward<typename Promise<DestinationResolveArgumentType>::Pointer>(destination),
             std::forward<TransformFunctor>(transformFunctor));
         source.then(link->getResolveHandler(), link->getRejectHandler());
@@ -86,8 +81,7 @@ public:
 
     static void forward(Promise<void> &source, typename Promise<void>::Pointer destination) {
         auto link =
-            std::make_shared<PromiseLink<void, void>>(
-                std::forward<typename Promise<void>::Pointer>(destination));
+            std::make_shared<PromiseLink<void, void>>(std::forward<typename Promise<void>::Pointer>(destination));
         source.then(link->getResolveHandler(), link->getRejectHandler());
     }
 
@@ -108,6 +102,6 @@ private:
 
     typename Promise<void>::Pointer promise_;
 };
-} // namespace io
-} // namespace aasdk
-} // namespace f1x
+}  // namespace io
+}  // namespace aasdk
+}  // namespace f1x

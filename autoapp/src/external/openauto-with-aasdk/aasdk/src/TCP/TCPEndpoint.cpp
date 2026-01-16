@@ -52,6 +52,6 @@ void TCPEndpoint::asyncOperationHandler(const boost::system::error_code &ec,
         promise->reject(error);
     }
 }
-} // namespace tcp
-} // namespace aasdk
-} // namespace f1x
+}  // namespace tcp
+}  // namespace aasdk
+}  // namespace f1x

@@ -33,8 +33,7 @@ class QtAudioOutput : public QObject, public IAudioOutput {
 public:
     QtAudioOutput(uint32_t channelCount, QAudioFormat::SampleFormat sampleFormat, uint32_t sampleRate);
     bool open() override;
-    void write(aasdk::messenger::Timestamp::ValueType,
-               const aasdk::common::DataConstBuffer &buffer) override;
+    void write(aasdk::messenger::Timestamp::ValueType, const aasdk::common::DataConstBuffer &buffer) override;
     void start() override;
     void stop() override;
     void suspend() override;
@@ -58,7 +57,7 @@ private:
     std::unique_ptr<QAudioSink> audioOutput_;
     bool playbackStarted_;
 };
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

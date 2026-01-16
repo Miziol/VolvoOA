@@ -29,6 +29,6 @@ public:
 
     virtual bool start(const QBluetoothAddress &address, uint16_t portNumber) = 0;
 };
-} // namespace btservice
-} // namespace openauto
-} // namespace f1x
+}  // namespace btservice
+}  // namespace openauto
+}  // namespace f1x

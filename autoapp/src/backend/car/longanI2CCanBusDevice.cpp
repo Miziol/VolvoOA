@@ -95,7 +95,7 @@ bool LonganI2CCanBusDevice::writeFrame(const QCanBusFrame &frame) {
 }
 
 QString LonganI2CCanBusDevice::interpretErrorFrame(const QCanBusFrame &frame) {
-    return QString(); // TODO
+    return QString();  // TODO
 }
 
 void LonganI2CCanBusDevice::readLoop() {
@@ -132,8 +132,8 @@ int LonganI2CCanBusDevice::mapSpeedToDefine(const QVariant &speed) {
             return CAN_20KBPS;
         case 25000:
             return CAN_25KBPS;
-        case 31200: // from docs
-        case 31250: // from #define name
+        case 31200:  // from docs
+        case 31250:  // from #define name
             return CAN_31K25BPS;
         case 33000:
             return CAN_33KBPS;

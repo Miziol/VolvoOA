@@ -114,17 +114,13 @@ void USBHub::handleDevice(libusb_device *device) {
         auto queueElementIter = std::prev(queryChainQueue_.end());
         auto queryChainPromise = IAccessoryModeQueryChain::Promise::defer(strand_);
         queryChainPromise->then([this, self = this->shared_from_this(), queueElementIter](
-                                libusb_device_handle *handle) mutable {
-                                    queryChainQueue_.erase(queueElementIter);
-                                },
+                                    libusb_device_handle *handle) mutable { queryChainQueue_.erase(queueElementIter); },
                                 [this, self = this->shared_from_this(), queueElementIter](
-                                const error::Error &e) mutable {
-                                    queryChainQueue_.erase(queueElementIter);
-                                });
+                                    const error::Error &e) mutable { queryChainQueue_.erase(queueElementIter); });
 
         queryChainQueue_.back()->start(std::move(handle), std::move(queryChainPromise));
     }
 }
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

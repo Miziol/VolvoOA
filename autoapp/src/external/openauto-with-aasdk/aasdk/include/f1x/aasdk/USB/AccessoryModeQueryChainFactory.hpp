@@ -36,6 +36,6 @@ private:
     boost::asio::io_service &ioService_;
     IAccessoryModeQueryFactory &queryFactory_;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

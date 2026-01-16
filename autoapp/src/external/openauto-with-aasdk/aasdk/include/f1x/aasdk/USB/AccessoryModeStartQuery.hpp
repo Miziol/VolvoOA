@@ -36,6 +36,6 @@ private:
 
     static constexpr uint32_t ACC_REQ_START = 53;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

@@ -47,7 +47,7 @@ public:
     virtual void sendSensorStartResponse(const proto::messages::SensorStartResponseMessage &response,
                                          SendPromise::Pointer promise) = 0;
 };
-} // namespace sensor
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace sensor
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

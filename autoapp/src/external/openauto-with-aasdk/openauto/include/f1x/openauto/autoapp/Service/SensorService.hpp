@@ -35,8 +35,7 @@ public:
     void stop() override;
     void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse &response) override;
     void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) override;
-    void onSensorStartRequest(
-        const aasdk::proto::messages::SensorStartRequestMessage &request) override;
+    void onSensorStartRequest(const aasdk::proto::messages::SensorStartRequestMessage &request) override;
     void onChannelError(const aasdk::error::Error &e) override;
 
 private:
@@ -47,7 +46,7 @@ private:
     boost::asio::io_service::strand strand_;
     aasdk::channel::sensor::SensorServiceChannel::Pointer channel_;
 };
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

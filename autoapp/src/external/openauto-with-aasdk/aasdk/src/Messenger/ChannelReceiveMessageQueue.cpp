@@ -51,6 +51,6 @@ bool ChannelReceiveMessageQueue::empty(ChannelId channelId) const {
 void ChannelReceiveMessageQueue::clear() {
     queue_.clear();
 }
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

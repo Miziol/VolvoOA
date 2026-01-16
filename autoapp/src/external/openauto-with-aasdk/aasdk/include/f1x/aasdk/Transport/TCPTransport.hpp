@@ -37,6 +37,6 @@ private:
 
     tcp::ITCPEndpoint::Pointer tcpEndpoint_;
 };
-} // namespace transport
-} // namespace aasdk
-} // namespace f1x
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

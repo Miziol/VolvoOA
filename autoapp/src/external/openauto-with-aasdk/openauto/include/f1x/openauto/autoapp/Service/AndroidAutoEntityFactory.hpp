@@ -47,7 +47,7 @@ private:
     SettingsManager &configuration_;
     IServiceFactory &serviceFactory_;
 };
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

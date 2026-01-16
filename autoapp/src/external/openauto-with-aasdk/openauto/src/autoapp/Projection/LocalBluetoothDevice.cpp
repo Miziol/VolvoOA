@@ -41,8 +41,7 @@ LocalBluetoothDevice::LocalBluetoothDevice() {
     // &LocalBluetoothDevice::onPairingDisplayPinCode); // TODO functionality deleted in Qt6
     connect(localDevice_.get(), &QBluetoothLocalDevice::pairingFinished, this,
             &LocalBluetoothDevice::onPairingFinished);
-    connect(localDevice_.get(), &QBluetoothLocalDevice::errorOccurred, this,
-            &LocalBluetoothDevice::onError);
+    connect(localDevice_.get(), &QBluetoothLocalDevice::errorOccurred, this, &LocalBluetoothDevice::onError);
     connect(localDevice_.get(), &QBluetoothLocalDevice::hostModeStateChanged, this,
             &LocalBluetoothDevice::onHostModeStateChanged);
     localDevice_->setHostMode(QBluetoothLocalDevice::HostDiscoverable);
@@ -99,24 +98,22 @@ void LocalBluetoothDevice::onStartPairing(const QString &address, PairingPromise
 
 void LocalBluetoothDevice::onPairingDisplayConfirmation(const QBluetoothAddress &address, QString pin) {
     qDebug() << "[LocalBluetoothDevice] onPairingDisplayConfirmation, address: " << address.toString()
-        << ", pin: " << pin;
+             << ", pin: " << pin;
 
     std::lock_guard<decltype(mutex_)> lock(mutex_);
     // localDevice_->pairingConfirmation(address == pairingAddress_); // TODO functionality deleted in Qt6
 }
 
 void LocalBluetoothDevice::onPairingDisplayPinCode(const QBluetoothAddress &address, QString pin) {
-    qDebug() << "[LocalBluetoothDevice] onPairingDisplayPinCode, address: " << address.toString() <<
-        ", pin: " << pin;
+    qDebug() << "[LocalBluetoothDevice] onPairingDisplayPinCode, address: " << address.toString() << ", pin: " << pin;
 
     std::lock_guard<decltype(mutex_)> lock(mutex_);
     // localDevice_->pairingConfirmation(address == pairingAddress_); // TODO functionality deleted in Qt6
 }
 
-void LocalBluetoothDevice::onPairingFinished(const QBluetoothAddress &address,
-                                             QBluetoothLocalDevice::Pairing pairing) {
+void LocalBluetoothDevice::onPairingFinished(const QBluetoothAddress &address, QBluetoothLocalDevice::Pairing pairing) {
     qDebug() << "[LocalBluetoothDevice] onPairingDisplayPinCode, address: " << address.toString()
-        << ", pin: " << pairing;
+             << ", pin: " << pairing;
 
     std::lock_guard<decltype(mutex_)> lock(mutex_);
 
@@ -153,7 +150,7 @@ void LocalBluetoothDevice::onHostModeStateChanged(QBluetoothLocalDevice::HostMod
         pairingAddress_ = QBluetoothAddress();
     }
 }
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

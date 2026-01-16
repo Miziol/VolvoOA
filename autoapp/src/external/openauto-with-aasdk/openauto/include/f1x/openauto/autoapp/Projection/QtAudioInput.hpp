@@ -60,7 +60,7 @@ private:
 
     static constexpr size_t cSampleSize = 2056;
 };
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

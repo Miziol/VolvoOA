@@ -61,8 +61,7 @@ void MessageInStream::receiveFrameHeaderHandler(const common::DataConstBuffer &b
             messageBig_ = nullptr;
             // AASDK_LOG(debug) << "[chos] " << (int) message_->getChannelId();
         } else {
-            message_ = std::make_shared<Message>(frameHeader.getChannelId(),
-                                                 frameHeader.getEncryptionType(),
+            message_ = std::make_shared<Message>(frameHeader.getChannelId(), frameHeader.getEncryptionType(),
                                                  frameHeader.getMessageType());
         }
     } else if (message_->getChannelId() != frameHeader.getChannelId()) {
@@ -78,9 +77,8 @@ void MessageInStream::receiveFrameHeaderHandler(const common::DataConstBuffer &b
     }
 
     recentFrameType_ = frameHeader.getType();
-    const size_t frameSize = FrameSize::getSizeOf(frameHeader.getType() == FrameType::FIRST
-                                                      ? FrameSizeType::EXTENDED
-                                                      : FrameSizeType::SHORT);
+    const size_t frameSize = FrameSize::getSizeOf(frameHeader.getType() == FrameType::FIRST ? FrameSizeType::EXTENDED
+                                                                                            : FrameSizeType::SHORT);
 
     auto transportPromise = transport::ITransport::ReceivePromise::defer(strand_);
     transportPromise->then(
@@ -144,6 +142,6 @@ void MessageInStream::receiveFramePayloadHandler(const common::DataConstBuffer &
         transport_->receive(FrameHeader::getSizeOf(), std::move(transportPromise));
     }
 }
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

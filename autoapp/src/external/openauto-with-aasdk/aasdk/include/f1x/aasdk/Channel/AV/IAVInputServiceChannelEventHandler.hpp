@@ -42,7 +42,7 @@ public:
     virtual void onAVMediaAckIndication(const proto::messages::AVMediaAckIndication &indication) = 0;
     virtual void onChannelError(const error::Error &e) = 0;
 };
-} // namespace av
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace av
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

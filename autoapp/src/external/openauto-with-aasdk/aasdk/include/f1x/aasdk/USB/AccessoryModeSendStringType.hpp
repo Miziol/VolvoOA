@@ -26,5 +26,5 @@ namespace aasdk {
 namespace usb {
 enum class AccessoryModeSendStringType { MANUFACTURER, MODEL, DESCRIPTION, VERSION, URI, SERIAL };
 }
-} // namespace aasdk
-} // namespace f1x
+}  // namespace aasdk
+}  // namespace f1x

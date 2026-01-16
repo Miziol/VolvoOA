@@ -54,6 +54,6 @@ protected:
     boost::asio::io_service::strand sendStrand_;
     SendQueue sendQueue_;
 };
-} // namespace transport
-} // namespace aasdk
-} // namespace f1x
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

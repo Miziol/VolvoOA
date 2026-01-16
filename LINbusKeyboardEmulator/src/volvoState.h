@@ -9,9 +9,9 @@
 #define SWM_ID 0x20
 #define LSM_ID 0x10
 
-#define SCREEN_POWER_PIN 0 // TODO
-#define PHONE_POWER_PIN 0 // TODO
-#define PI_POWER_ON_PIN 0 // TODO
+#define SCREEN_POWER_PIN 0  // TODO
+#define PHONE_POWER_PIN 0   // TODO
+#define PI_POWER_ON_PIN 0   // TODO
 
 #define BACK_BUTTON KEY_HOME
 #define ENTER_BUTTON KEY_RETURN
@@ -47,4 +47,4 @@ private:
     void sendPreviousItem();
 };
 
-#endif // VOLVO_STATE_H
+#endif  // VOLVO_STATE_H

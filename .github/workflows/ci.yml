@@ -1,0 +1,52 @@
+name: AutoApp
+
+on: [push]
+
+jobs:
+  qmllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install qmllint
+        run: sudo apt install -y qt6-qmllint-plugins
+      - name: Run QML Check
+        run: find autoapp/src/frontend -type f -name "*.qml" -exec qmllint {} \;
+
+  clang:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+      - name: Run Clang check for autoapp
+        run: find autoapp/src -type f \( -name "*.cpp" -o -name "*.h" \) -print0 | xargs -0 clang-format --dry-run --Werror
+      - name: Run Clang check for LINbusKeyboardEmulator
+        run: find LINbusKeyboardEmulator -name "*.cpp" -o -name "*.h" -name "*.ino" | xargs clang-format --dry-run --Werror
+
+  build-autoapp:
+    needs: [clang, qmllint]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup environment
+        run: sudo ./install_requirements.sh
+      - name: Build with CMake
+        run: |
+          cmake -S autoapp -B autoapp/build
+          cmake --build autoapp/build
+
+  build-arduino:
+    needs: clang
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+      - name: Install Arduino Core
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install arduino:avr
+          arduino-cli lib install Streaming Vector Keyboard
+      - name: Compile Sketch
+        run: |
+          arduino-cli compile --fqbn arduino:avr:leonardo LINbusKeyboardEmulator/LINbusKeyboardEmulator.ino

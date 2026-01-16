@@ -39,7 +39,7 @@ std::string DummyBluetoothDevice::getLocalAddress() const {
 bool DummyBluetoothDevice::isAvailable() const {
     return false;
 }
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

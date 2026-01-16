@@ -36,6 +36,6 @@ public:
 private:
     ValueType stamp_;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

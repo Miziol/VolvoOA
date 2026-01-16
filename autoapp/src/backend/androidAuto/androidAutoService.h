@@ -24,7 +24,7 @@ public:
 public slots:
     void addUSBDevice(libusb_context *context, libusb_device *device);
     void removeDevice(libusb_device *device);
-    void addNetworkDevice(); // TCP
+    void addNetworkDevice();  // TCP
 
     void startIOServiceWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
     void createFactories(QObject *qmlRootObject);

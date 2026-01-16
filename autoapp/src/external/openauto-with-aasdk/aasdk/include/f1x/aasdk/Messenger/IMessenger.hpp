@@ -38,6 +38,6 @@ public:
     virtual void enqueueSend(Message::Pointer message, SendPromise::Pointer promise) = 0;
     virtual void stop() = 0;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

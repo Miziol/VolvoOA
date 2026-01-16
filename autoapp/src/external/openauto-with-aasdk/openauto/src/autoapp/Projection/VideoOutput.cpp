@@ -41,7 +41,7 @@ size_t VideoOutput::getScreenDPI() const {
 QRect VideoOutput::getVideoMargins() const {
     return configuration_.getVideoMargins();
 }
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

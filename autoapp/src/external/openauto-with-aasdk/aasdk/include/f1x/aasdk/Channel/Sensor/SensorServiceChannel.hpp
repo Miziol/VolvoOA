@@ -29,8 +29,7 @@ class SensorServiceChannel : public ISensorServiceChannel,
                              public ServiceChannel,
                              public std::enable_shared_from_this<SensorServiceChannel> {
 public:
-    SensorServiceChannel(boost::asio::io_service::strand &strand,
-                         messenger::IMessenger::Pointer messenger);
+    SensorServiceChannel(boost::asio::io_service::strand &strand, messenger::IMessenger::Pointer messenger);
 
     void receive(ISensorServiceChannelEventHandler::Pointer eventHandler) override;
     messenger::ChannelId getId() const override;
@@ -43,14 +42,13 @@ public:
 
 private:
     using std::enable_shared_from_this<SensorServiceChannel>::shared_from_this;
-    void messageHandler(messenger::Message::Pointer message,
-                        ISensorServiceChannelEventHandler::Pointer eventHandler);
+    void messageHandler(messenger::Message::Pointer message, ISensorServiceChannelEventHandler::Pointer eventHandler);
     void handleSensorStartRequest(const common::DataConstBuffer &payload,
                                   ISensorServiceChannelEventHandler::Pointer eventHandler);
     void handleChannelOpenRequest(const common::DataConstBuffer &payload,
                                   ISensorServiceChannelEventHandler::Pointer eventHandler);
 };
-} // namespace sensor
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace sensor
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

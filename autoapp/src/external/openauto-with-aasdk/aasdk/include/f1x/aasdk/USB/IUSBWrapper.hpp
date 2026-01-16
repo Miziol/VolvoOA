@@ -95,6 +95,6 @@ public:
                                                           void *user_data) = 0;
     virtual libusb_transfer *allocTransfer(int iso_packets) = 0;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

@@ -56,6 +56,6 @@ private:
     MessageType type_;
     common::Data payload_;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

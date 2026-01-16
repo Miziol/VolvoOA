@@ -44,7 +44,7 @@ private:
     static const std::string cRecentEntiresCount;
     static const std::string cRecentEntryPrefix;
 };
-} // namespace configuration
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace configuration
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

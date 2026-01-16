@@ -35,10 +35,8 @@ InputServiceChannel::InputServiceChannel(boost::asio::io_service::strand &strand
 void InputServiceChannel::receive(IInputServiceChannelEventHandler::Pointer eventHandler) {
     auto receivePromise = messenger::ReceivePromise::defer(strand_);
     receivePromise->then(
-        std::bind(&InputServiceChannel::messageHandler, this->shared_from_this(), std::placeholders::_1,
-                  eventHandler),
-        std::bind(&IInputServiceChannelEventHandler::onChannelError, eventHandler,
-                  std::placeholders::_1));
+        std::bind(&InputServiceChannel::messageHandler, this->shared_from_this(), std::placeholders::_1, eventHandler),
+        std::bind(&IInputServiceChannelEventHandler::onChannelError, eventHandler, std::placeholders::_1));
 
     messenger_->enqueueReceive(channelId_, std::move(receivePromise));
 }
@@ -47,13 +45,11 @@ messenger::ChannelId InputServiceChannel::getId() const {
     return channelId_;
 }
 
-void InputServiceChannel::sendInputEventIndication(
-    const proto::messages::InputEventIndication &indication,
-    SendPromise::Pointer promise) {
+void InputServiceChannel::sendInputEventIndication(const proto::messages::InputEventIndication &indication,
+                                                   SendPromise::Pointer promise) {
     auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                       messenger::MessageType::SPECIFIC));
-    message->insertPayload(
-        messenger::MessageId(proto::ids::InputChannelMessage::INPUT_EVENT_INDICATION).getData());
+    message->insertPayload(messenger::MessageId(proto::ids::InputChannelMessage::INPUT_EVENT_INDICATION).getData());
     message->insertPayload(indication);
 
     this->send(std::move(message), std::move(promise));
@@ -63,8 +59,7 @@ void InputServiceChannel::sendBindingResponse(const proto::messages::BindingResp
                                               SendPromise::Pointer promise) {
     auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                       messenger::MessageType::SPECIFIC));
-    message->insertPayload(
-        messenger::MessageId(proto::ids::InputChannelMessage::BINDING_RESPONSE).getData());
+    message->insertPayload(messenger::MessageId(proto::ids::InputChannelMessage::BINDING_RESPONSE).getData());
     message->insertPayload(response);
 
     this->send(std::move(message), std::move(promise));
@@ -74,8 +69,7 @@ void InputServiceChannel::sendChannelOpenResponse(const proto::messages::Channel
                                                   SendPromise::Pointer promise) {
     auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                       messenger::MessageType::CONTROL));
-    message->insertPayload(
-        messenger::MessageId(proto::ids::ControlMessage::CHANNEL_OPEN_RESPONSE).getData());
+    message->insertPayload(messenger::MessageId(proto::ids::ControlMessage::CHANNEL_OPEN_RESPONSE).getData());
     message->insertPayload(response);
 
     this->send(std::move(message), std::move(promise));
@@ -111,8 +105,7 @@ void InputServiceChannel::handleBindingRequest(const common::DataConstBuffer &pa
 }
 
 void InputServiceChannel::handleChannelOpenRequest(const common::DataConstBuffer &payload,
-                                                   IInputServiceChannelEventHandler::Pointer
-                                                   eventHandler) {
+                                                   IInputServiceChannelEventHandler::Pointer eventHandler) {
     proto::messages::ChannelOpenRequest request;
     if (request.ParseFromArray(payload.cdata, payload.size)) {
         eventHandler->onChannelOpenRequest(request);
@@ -120,7 +113,7 @@ void InputServiceChannel::handleChannelOpenRequest(const common::DataConstBuffer
         eventHandler->onChannelError(error::Error(error::ErrorCode::PARSE_PAYLOAD));
     }
 }
-} // namespace input
-} // namespace channel
-} // namespace aasdk
-} // namespace f1x
+}  // namespace input
+}  // namespace channel
+}  // namespace aasdk
+}  // namespace f1x

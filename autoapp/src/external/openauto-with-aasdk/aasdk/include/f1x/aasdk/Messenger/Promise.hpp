@@ -26,6 +26,6 @@ namespace aasdk {
 namespace messenger {
 typedef io::Promise<Message::Pointer> ReceivePromise;
 typedef io::Promise<void> SendPromise;
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

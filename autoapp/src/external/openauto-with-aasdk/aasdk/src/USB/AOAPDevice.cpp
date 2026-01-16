@@ -29,8 +29,7 @@ AOAPDevice::AOAPDevice(IUSBWrapper &usbWrapper,
                        libusb_device_handle *handle,
                        const libusb_interface_descriptor *interfaceDescriptor)
     : usbWrapper_(usbWrapper), handle_(std::move(handle)), interfaceDescriptor_(interfaceDescriptor) {
-    if ((interfaceDescriptor->endpoint[0].bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK) ==
-        LIBUSB_ENDPOINT_IN) {
+    if ((interfaceDescriptor->endpoint[0].bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK) == LIBUSB_ENDPOINT_IN) {
         inEndpoint_ = std::make_shared<USBEndpoint>(usbWrapper_, ioService, handle_,
                                                     interfaceDescriptor_->endpoint[0].bEndpointAddress);
         outEndpoint_ = std::make_shared<USBEndpoint>(usbWrapper_, ioService, handle_,
@@ -46,7 +45,8 @@ AOAPDevice::AOAPDevice(IUSBWrapper &usbWrapper,
 AOAPDevice::~AOAPDevice() {
     inEndpoint_->cancelTransfers();
     outEndpoint_->cancelTransfers();
-    //usbWrapper_.releaseInterface(handle_, interfaceDescriptor_->bInterfaceNumber); // TODO check why this causes the bug
+    // usbWrapper_.releaseInterface(handle_, interfaceDescriptor_->bInterfaceNumber); // TODO check why this causes the
+    // bug
 }
 
 IUSBEndpoint &AOAPDevice::getInEndpoint() {
@@ -77,8 +77,7 @@ IAOAPDevice::Pointer AOAPDevice::create(IUSBWrapper &usbWrapper,
     return std::make_unique<AOAPDevice>(usbWrapper, ioService, std::move(handle), interfaceDescriptor);
 }
 
-ConfigDescriptorHandle AOAPDevice::getConfigDescriptor(IUSBWrapper &usbWrapper,
-                                                       libusb_device_handle *handle) {
+ConfigDescriptorHandle AOAPDevice::getConfigDescriptor(IUSBWrapper &usbWrapper, libusb_device_handle *handle) {
     ConfigDescriptorHandle configDescriptorHandle;
     libusb_device *device = usbWrapper.getDevice(handle);
 
@@ -109,6 +108,6 @@ const libusb_interface_descriptor *AOAPDevice::getInterfaceDescriptor(const libu
 
     return &interface->altsetting[0];
 }
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x

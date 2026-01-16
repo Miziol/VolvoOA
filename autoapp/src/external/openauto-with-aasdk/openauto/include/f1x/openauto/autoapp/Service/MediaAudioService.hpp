@@ -31,7 +31,7 @@ public:
                       aasdk::messenger::IMessenger::Pointer messenger,
                       projection::IAudioOutput::Pointer audioOutput);
 };
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

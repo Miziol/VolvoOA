@@ -38,6 +38,6 @@ public:
     virtual void send(common::Data data, SendPromise::Pointer promise) = 0;
     virtual void stop() = 0;
 };
-} // namespace transport
-} // namespace aasdk
-} // namespace f1x
+}  // namespace transport
+}  // namespace aasdk
+}  // namespace f1x

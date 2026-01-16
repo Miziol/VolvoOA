@@ -1,11 +1,11 @@
-#include <QCursor>
-#include <QIcon>
-#include <QtGui/QGuiApplication>
-#include <QSocketNotifier>
-#include <csignal>
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <QCursor>
+#include <QIcon>
+#include <QSocketNotifier>
+#include <QtGui/QGuiApplication>
+#include <csignal>
 
 #include "core.h"
 #include "logging/logger.h"
@@ -55,9 +55,7 @@ int main(int argc, char *argv[]) {
 
     // Connect to close signal
     QSocketNotifier closingSocket(sigTermFd[1], QSocketNotifier::Read);
-    QObject::connect(&closingSocket, &QSocketNotifier::activated, [&app]() {
-        app.quit();
-    });
+    QObject::connect(&closingSocket, &QSocketNotifier::activated, [&app]() { app.quit(); });
 
     // Create modules
     AppCore appCore(settings);

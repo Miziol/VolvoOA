@@ -38,6 +38,6 @@ common::Data Timestamp::getData() const {
 Timestamp::ValueType Timestamp::getValue() const {
     return stamp_;
 }
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

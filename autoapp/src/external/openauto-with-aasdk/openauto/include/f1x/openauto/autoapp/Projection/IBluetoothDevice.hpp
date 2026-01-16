@@ -35,7 +35,7 @@ public:
     virtual std::string getLocalAddress() const = 0;
     virtual bool isAvailable() const = 0;
 };
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

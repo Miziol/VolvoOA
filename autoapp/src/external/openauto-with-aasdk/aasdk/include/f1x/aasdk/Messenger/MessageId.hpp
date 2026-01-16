@@ -44,6 +44,6 @@ private:
 };
 
 std::ostream &operator<<(std::ostream &stream, const f1x::aasdk::messenger::MessageId &messageId);
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

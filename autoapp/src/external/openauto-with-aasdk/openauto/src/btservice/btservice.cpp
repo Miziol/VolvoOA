@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     }
 
     qInfo() << "[btservice] Listening for connections, address: " << address.toString().toStdString()
-        << ", port: " << portNumber;
+            << ", port: " << portNumber;
 
     btservice::AndroidBluetoothService androidBluetoothService(portNumber);
     if (!androidBluetoothService.registerService(address)) {

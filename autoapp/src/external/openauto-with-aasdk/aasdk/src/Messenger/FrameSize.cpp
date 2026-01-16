@@ -25,8 +25,7 @@ namespace messenger {
 FrameSize::FrameSize(size_t frameSize, size_t totalSize)
     : frameSizeType_(FrameSizeType::EXTENDED), frameSize_(frameSize), totalSize_(totalSize) {}
 
-FrameSize::FrameSize(size_t frameSize) : frameSizeType_(FrameSizeType::SHORT), frameSize_(frameSize),
-                                         totalSize_(0) {}
+FrameSize::FrameSize(size_t frameSize) : frameSizeType_(FrameSizeType::SHORT), frameSize_(frameSize), totalSize_(0) {}
 
 FrameSize::FrameSize(const common::DataConstBuffer &buffer) {
     if (buffer.size >= 2) {
@@ -63,6 +62,6 @@ size_t FrameSize::getSize() const {
 size_t FrameSize::getSizeOf(FrameSizeType type) {
     return type == FrameSizeType::EXTENDED ? 6 : 2;
 }
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

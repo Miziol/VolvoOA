@@ -56,6 +56,6 @@ private:
     const static std::string cPrivateKey;
     mutable std::mutex mutex_;
 };
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

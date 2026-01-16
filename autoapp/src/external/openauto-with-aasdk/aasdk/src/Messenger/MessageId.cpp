@@ -68,6 +68,6 @@ std::ostream &operator<<(std::ostream &stream, const f1x::aasdk::messenger::Mess
     stream << "0x" << std::hex << messageId.getId() << std::dec;
     return stream;
 }
-} // namespace messenger
-} // namespace aasdk
-} // namespace f1x
+}  // namespace messenger
+}  // namespace aasdk
+}  // namespace f1x

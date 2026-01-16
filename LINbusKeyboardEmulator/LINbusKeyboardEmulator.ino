@@ -39,9 +39,8 @@ void loop() {
                 break;
             default:
                 if (DEBUG) {
-                    Serial << "Header: " << _HEX((uint8_t)frame.getHeader())
-                        << " ID: " << _HEX(frame.getID())
-                        << " response: ";
+                    Serial << "Header: " << _HEX((uint8_t)frame.getHeader()) << " ID: " << _HEX(frame.getID())
+                           << " response: ";
                     frame.printResponse();
                     Serial << endl;
                 }
@@ -52,7 +51,8 @@ void loop() {
         String message = Serial.readStringUntil('\n');
         if (message == "STARTED") {
             systemState = ACTIVE;
-            if (DEBUG) Serial << "State changed to: " << "ACTIVE" << endl;
+            if (DEBUG)
+                Serial << "State changed to: " << "ACTIVE" << endl;
         }
     }
 
@@ -68,13 +68,15 @@ void updateState() {
 
             case STARTING:
                 systemState = STOPPING;
-                if (DEBUG) Serial << "State changed to: " << "STOPPING" << endl;
+                if (DEBUG)
+                    Serial << "State changed to: " << "STOPPING" << endl;
                 stoppingStartTime = millis();
                 break;
 
             case ACTIVE:
                 systemState = STOPPING;
-                if (DEBUG) Serial << "State changed to: " << "STOPPING" << endl;
+                if (DEBUG)
+                    Serial << "State changed to: " << "STOPPING" << endl;
                 stoppingStartTime = millis();
                 break;
 
@@ -82,7 +84,8 @@ void updateState() {
                 Serial << "SHUTDOWN" << endl;
                 if (millis() - stoppingStartTime > STOPPING_TIMEOUT) {
                     systemState = STOPPED;
-                    if (DEBUG) Serial << "State changed to: " << "STOPPED" << endl;
+                    if (DEBUG)
+                        Serial << "State changed to: " << "STOPPED" << endl;
                     state.setPhonePower(false);
                     state.setScreenPower(false);
                 }
@@ -92,7 +95,8 @@ void updateState() {
         switch (systemState) {
             case STOPPED:
                 systemState = STARTING;
-                if (DEBUG) Serial << "State changed to: " << "STARTING" << endl;
+                if (DEBUG)
+                    Serial << "State changed to: " << "STARTING" << endl;
                 state.setPhonePower(true);
                 state.setScreenPower(true);
                 state.sendStartPISignal();

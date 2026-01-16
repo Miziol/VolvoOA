@@ -45,7 +45,7 @@ public:
     virtual size_t getScreenDPI() const = 0;
     virtual QRect getVideoMargins() const = 0;
 };
-} // namespace projection
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace projection
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

@@ -42,8 +42,7 @@ public:
     void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) override;
     void onAVChannelSetupRequest(const aasdk::proto::messages::AVChannelSetupRequest &request) override;
     void onAVInputOpenRequest(const aasdk::proto::messages::AVInputOpenRequest &request) override;
-    void onAVMediaAckIndication(
-        const aasdk::proto::messages::AVMediaAckIndication &indication) override;
+    void onAVMediaAckIndication(const aasdk::proto::messages::AVMediaAckIndication &indication) override;
     void onChannelError(const aasdk::error::Error &e) override;
 
 private:
@@ -57,7 +56,7 @@ private:
     projection::IAudioInput::Pointer audioInput_;
     int32_t session_;
 };
-} // namespace service
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace service
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

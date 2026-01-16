@@ -34,6 +34,6 @@ public:
 private:
     QBluetoothServiceInfo serviceInfo_;
 };
-} // namespace btservice
-} // namespace openauto
-} // namespace f1x
+}  // namespace btservice
+}  // namespace openauto
+}  // namespace f1x

@@ -24,6 +24,6 @@ namespace autoapp {
 namespace configuration {
 enum class BluetoothAdapterType { NONE, LOCAL, REMOTE };
 }
-} // namespace autoapp
-} // namespace openauto
-} // namespace f1x
+}  // namespace autoapp
+}  // namespace openauto
+}  // namespace f1x

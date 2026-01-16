@@ -34,6 +34,6 @@ public:
     virtual IAccessoryModeQuery::Pointer createQuery(AccessoryModeQueryType queryType,
                                                      IUSBEndpoint::Pointer usbEndpoint) = 0;
 };
-} // namespace usb
-} // namespace aasdk
-} // namespace f1x
+}  // namespace usb
+}  // namespace aasdk
+}  // namespace f1x
