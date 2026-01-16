@@ -24,7 +24,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 class IMessageInStream {
 public:
     typedef std::shared_ptr<IMessageInStream> Pointer;
@@ -34,7 +33,6 @@ public:
 
     virtual void startReceive(ReceivePromise::Pointer promise) = 0;
 };
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

@@ -24,7 +24,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 class Pinger : public IPinger, public std::enable_shared_from_this<Pinger> {
 public:
     Pinger(boost::asio::io_service &ioService, time_t duration);
@@ -46,8 +45,7 @@ private:
     int64_t pingsCount_;
     int64_t pongsCount_;
 };
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

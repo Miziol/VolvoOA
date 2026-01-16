@@ -33,7 +33,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 class AndroidAutoEntity : public IAndroidAutoEntity,
                           public aasdk::channel::control::IControlServiceChannelEventHandler,
                           public std::enable_shared_from_this<AndroidAutoEntity> {
@@ -53,11 +52,13 @@ public:
                            uint16_t minorCode,
                            aasdk::proto::enums::VersionResponseStatus::Enum status) override;
     void onHandshake(const aasdk::common::DataConstBuffer &payload) override;
-    void onServiceDiscoveryRequest(const aasdk::proto::messages::ServiceDiscoveryRequest &request) override;
+    void onServiceDiscoveryRequest(
+        const aasdk::proto::messages::ServiceDiscoveryRequest &request) override;
     void onAudioFocusRequest(const aasdk::proto::messages::AudioFocusRequest &request) override;
     void onShutdownRequest(const aasdk::proto::messages::ShutdownRequest &request) override;
     void onShutdownResponse(const aasdk::proto::messages::ShutdownResponse &response) override;
-    void onNavigationFocusRequest(const aasdk::proto::messages::NavigationFocusRequest &request) override;
+    void onNavigationFocusRequest(
+        const aasdk::proto::messages::NavigationFocusRequest &request) override;
     void onPingRequest(const aasdk::proto::messages::PingRequest &request) override;
     void onPingResponse(const aasdk::proto::messages::PingResponse &response) override;
     void onChannelError(const aasdk::error::Error &e) override;
@@ -78,8 +79,7 @@ private:
     IPinger::Pointer pinger_;
     IAndroidAutoEntityEventHandler *eventHandler_;
 };
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 class Timestamp {
 public:
     typedef uint64_t ValueType;
@@ -37,7 +36,6 @@ public:
 private:
     ValueType stamp_;
 };
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

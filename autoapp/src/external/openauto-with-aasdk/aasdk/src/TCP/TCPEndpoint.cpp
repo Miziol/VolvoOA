@@ -21,7 +21,6 @@
 namespace f1x {
 namespace aasdk {
 namespace tcp {
-
 TCPEndpoint::TCPEndpoint(ITCPWrapper &tcpWrapper, SocketPointer socket)
     : tcpWrapper_(tcpWrapper), socket_(std::move(socket)) {}
 
@@ -53,7 +52,6 @@ void TCPEndpoint::asyncOperationHandler(const boost::system::error_code &ec,
         promise->reject(error);
     }
 }
-
-}  // namespace tcp
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace tcp
+} // namespace aasdk
+} // namespace f1x

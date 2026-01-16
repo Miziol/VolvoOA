@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 class MessageId {
 public:
     MessageId(uint16_t id);
@@ -45,7 +44,6 @@ private:
 };
 
 std::ostream &operator<<(std::ostream &stream, const f1x::aasdk::messenger::MessageId &messageId);
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

@@ -26,7 +26,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class VideoOutput : public IVideoOutput {
 public:
     VideoOutput(SettingsManager &configuration);
@@ -39,8 +38,7 @@ public:
 protected:
     SettingsManager &configuration_;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

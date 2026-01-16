@@ -1,6 +1,7 @@
 # Openauto with aasdk
 
-Openauto with aasdk is a clone on imchos openauto-dhu repository with removed submodules references. Original README is below.
+Openauto with aasdk is a clone on imchos openauto-dhu repository with removed submodules references. Original README is
+below.
 
 # OpenAuto Desktop Head Unit
 
@@ -26,7 +27,7 @@ Openauto with aasdk is a clone on imchos openauto-dhu repository with removed su
        cd opt/vc/src/hello_pi/libs/ilclient
        make
        )
-   
+
 3. build
 
        # clone this repository

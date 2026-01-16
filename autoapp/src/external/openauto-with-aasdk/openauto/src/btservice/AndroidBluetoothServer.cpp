@@ -22,10 +22,10 @@
 namespace f1x {
 namespace openauto {
 namespace btservice {
-
 AndroidBluetoothServer::AndroidBluetoothServer()
     : rfcommServer_(std::make_unique<QBluetoothServer>(QBluetoothServiceInfo::RfcommProtocol, this)) {
-    connect(rfcommServer_.get(), &QBluetoothServer::newConnection, this, &AndroidBluetoothServer::onClientConnected);
+    connect(rfcommServer_.get(), &QBluetoothServer::newConnection, this,
+            &AndroidBluetoothServer::onClientConnected);
 }
 
 bool AndroidBluetoothServer::start(const QBluetoothAddress &address, uint16_t portNumber) {
@@ -36,12 +36,12 @@ void AndroidBluetoothServer::onClientConnected() {
     auto socket = rfcommServer_->nextPendingConnection();
 
     if (socket != nullptr) {
-        qInfo() << "[AndroidBluetoothServer] rfcomm client connected, peer name: " << socket->peerName().toStdString();
+        qInfo() << "[AndroidBluetoothServer] rfcomm client connected, peer name: " << socket->peerName().
+            toStdString();
     } else {
         qCritical() << "[AndroidBluetoothServer] received null socket during client connection.";
     }
 }
-
-}  // namespace btservice
-}  // namespace openauto
-}  // namespace f1x
+} // namespace btservice
+} // namespace openauto
+} // namespace f1x

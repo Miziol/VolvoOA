@@ -25,7 +25,6 @@
 namespace f1x {
 namespace aasdk {
 namespace error {
-
 class Error : public std::exception {
 public:
     Error();
@@ -45,7 +44,6 @@ private:
     uint32_t nativeCode_;
     std::string message_;
 };
-
-}  // namespace error
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace error
+} // namespace aasdk
+} // namespace f1x

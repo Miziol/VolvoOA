@@ -23,9 +23,9 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class AccessoryModeProtocolVersionQuery : public AccessoryModeQuery,
-                                          public std::enable_shared_from_this<AccessoryModeProtocolVersionQuery> {
+                                          public std::enable_shared_from_this<
+                                              AccessoryModeProtocolVersionQuery> {
 public:
     AccessoryModeProtocolVersionQuery(boost::asio::io_service &ioService,
                                       IUSBWrapper &usbWrapper,
@@ -39,7 +39,6 @@ private:
     typedef uint16_t ProtocolVersion;
     static constexpr uint32_t ACC_REQ_GET_PROTOCOL = 51;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

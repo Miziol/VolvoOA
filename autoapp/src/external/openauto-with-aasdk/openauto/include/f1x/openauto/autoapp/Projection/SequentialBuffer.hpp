@@ -27,7 +27,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class SequentialBuffer : public QIODevice {
 public:
     SequentialBuffer();
@@ -49,8 +48,7 @@ private:
     boost::circular_buffer<aasdk::common::Data::value_type> data_;
     mutable std::mutex mutex_;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

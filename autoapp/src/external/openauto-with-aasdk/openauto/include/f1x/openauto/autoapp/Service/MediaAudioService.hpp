@@ -25,15 +25,13 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 class MediaAudioService : public AudioService {
 public:
     MediaAudioService(boost::asio::io_service &ioService,
                       aasdk::messenger::IMessenger::Pointer messenger,
                       projection::IAudioOutput::Pointer audioOutput);
 };
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

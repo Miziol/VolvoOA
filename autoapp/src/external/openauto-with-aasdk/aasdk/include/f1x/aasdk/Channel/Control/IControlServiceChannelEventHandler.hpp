@@ -33,7 +33,6 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace control {
-
 class IControlServiceChannelEventHandler {
 public:
     typedef std::shared_ptr<IControlServiceChannelEventHandler> Pointer;
@@ -54,8 +53,7 @@ public:
     virtual void onPingResponse(const proto::messages::PingResponse &response) = 0;
     virtual void onChannelError(const error::Error &e) = 0;
 };
-
-}  // namespace control
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace control
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

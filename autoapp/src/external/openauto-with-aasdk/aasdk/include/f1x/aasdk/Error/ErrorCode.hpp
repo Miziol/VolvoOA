@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace error {
-
 enum class ErrorCode {
     NONE = 0,
     USB_CLAIM_INTERFACE = 1,
@@ -60,7 +59,6 @@ enum class ErrorCode {
     PARSE_PAYLOAD = 32,
     TCP_TRANSFER = 33
 };
-
 }
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace aasdk
+} // namespace f1x

@@ -26,7 +26,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class IUSBWrapper;
 
 class USBHub : public IUSBHub, public std::enable_shared_from_this<USBHub>, boost::noncopyable {
@@ -60,7 +59,6 @@ private:
     static constexpr uint16_t cAOAPId = 0x2D00;
     static constexpr uint16_t cAOAPWithAdbId = 0x2D01;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

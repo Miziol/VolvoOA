@@ -23,8 +23,8 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 MessageId::MessageId(uint16_t id) : id_(id) {}
+
 MessageId::MessageId(const common::Data &data) {
     id_ = boost::endian::big_to_native(reinterpret_cast<const uint16_t &>(data[0]));
 }
@@ -68,7 +68,6 @@ std::ostream &operator<<(std::ostream &stream, const f1x::aasdk::messenger::Mess
     stream << "0x" << std::hex << messageId.getId() << std::dec;
     return stream;
 }
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

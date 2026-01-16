@@ -30,7 +30,6 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace bluetooth {
-
 class IBluetoothServiceChannel {
 public:
     typedef std::shared_ptr<IBluetoothServiceChannel> Pointer;
@@ -45,8 +44,7 @@ public:
                                               SendPromise::Pointer promise) = 0;
     virtual messenger::ChannelId getId() const = 0;
 };
-
-}  // namespace bluetooth
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace bluetooth
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

@@ -27,9 +27,9 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class QtAudioInput : public QObject, public IAudioInput {
     Q_OBJECT
+
 public:
     QtAudioInput(uint32_t channelCount, QAudioFormat::SampleFormat sampleFormat, uint32_t sampleRate);
 
@@ -42,11 +42,12 @@ public:
     uint32_t getChannelCount() const override;
     uint32_t getSampleRate() const override;
 
-signals:
+signals :
     void startRecording(StartPromise::Pointer promise);
     void stopRecording();
 
-private slots:
+private
+slots :
     void onStartRecording(StartPromise::Pointer promise);
     void onStopRecording();
     void onReadyRead();
@@ -60,8 +61,7 @@ private:
 
     static constexpr size_t cSampleSize = 2056;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

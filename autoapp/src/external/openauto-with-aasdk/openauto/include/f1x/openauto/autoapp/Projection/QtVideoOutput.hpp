@@ -27,7 +27,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class QtVideoOutput : public QObject, public VideoOutput, boost::noncopyable {
     Q_OBJECT
 
@@ -38,11 +37,12 @@ public:
     void write(uint64_t timestamp, const aasdk::common::DataConstBuffer &buffer) override;
     void stop() override;
 
-signals:
+signals :
     void startPlayback();
     void stopPlayback();
 
-protected slots:
+protected
+slots :
     void onStartPlayback();
     void onStopPlayback();
 
@@ -51,8 +51,7 @@ private:
     QObject *qmlRootObject;
     QMediaPlayer mediaPlayer;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

@@ -24,7 +24,6 @@
 namespace f1x {
 namespace aasdk {
 namespace transport {
-
 class TCPTransport : public Transport {
 public:
     TCPTransport(boost::asio::io_service &ioService, tcp::ITCPEndpoint::Pointer tcpEndpoint);
@@ -38,7 +37,6 @@ private:
 
     tcp::ITCPEndpoint::Pointer tcpEndpoint_;
 };
-
-}  // namespace transport
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace transport
+} // namespace aasdk
+} // namespace f1x

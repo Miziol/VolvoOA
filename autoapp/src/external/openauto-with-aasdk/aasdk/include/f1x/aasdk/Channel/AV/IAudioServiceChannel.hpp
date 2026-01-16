@@ -31,7 +31,6 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace av {
-
 class IAudioServiceChannel {
 public:
     typedef std::shared_ptr<IAudioServiceChannel> Pointer;
@@ -48,8 +47,7 @@ public:
                                           SendPromise::Pointer promise) = 0;
     virtual messenger::ChannelId getId() const = 0;
 };
-
-}  // namespace av
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace av
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

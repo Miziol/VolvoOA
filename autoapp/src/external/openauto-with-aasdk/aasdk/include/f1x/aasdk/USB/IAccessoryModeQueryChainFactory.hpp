@@ -23,14 +23,12 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class IAccessoryModeQueryChainFactory {
 public:
     virtual ~IAccessoryModeQueryChainFactory() = default;
 
     virtual IAccessoryModeQueryChain::Pointer create() = 0;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

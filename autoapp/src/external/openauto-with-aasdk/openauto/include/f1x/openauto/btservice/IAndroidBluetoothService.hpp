@@ -23,7 +23,6 @@
 namespace f1x {
 namespace openauto {
 namespace btservice {
-
 class IAndroidBluetoothService {
 public:
     virtual ~IAndroidBluetoothService() = default;
@@ -31,7 +30,6 @@ public:
     virtual bool registerService(const QBluetoothAddress &bluetoothAddress) = 0;
     virtual bool unregisterService() = 0;
 };
-
-}  // namespace btservice
-}  // namespace openauto
-}  // namespace f1x
+} // namespace btservice
+} // namespace openauto
+} // namespace f1x

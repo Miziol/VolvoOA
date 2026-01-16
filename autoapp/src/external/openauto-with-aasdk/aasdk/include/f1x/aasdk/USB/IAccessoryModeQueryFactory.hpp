@@ -26,7 +26,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class IAccessoryModeQueryFactory {
 public:
     IAccessoryModeQueryFactory() = default;
@@ -35,7 +34,6 @@ public:
     virtual IAccessoryModeQuery::Pointer createQuery(AccessoryModeQueryType queryType,
                                                      IUSBEndpoint::Pointer usbEndpoint) = 0;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

@@ -21,7 +21,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 void ChannelReceiveMessageQueue::push(Message::Pointer message) {
     const auto channelId = message->getChannelId();
 
@@ -52,7 +51,6 @@ bool ChannelReceiveMessageQueue::empty(ChannelId channelId) const {
 void ChannelReceiveMessageQueue::clear() {
     queue_.clear();
 }
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

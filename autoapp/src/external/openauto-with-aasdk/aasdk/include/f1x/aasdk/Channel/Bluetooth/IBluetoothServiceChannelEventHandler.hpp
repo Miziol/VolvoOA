@@ -27,7 +27,6 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace bluetooth {
-
 class IBluetoothServiceChannelEventHandler {
 public:
     typedef std::shared_ptr<IBluetoothServiceChannelEventHandler> Pointer;
@@ -39,8 +38,7 @@ public:
     virtual void onBluetoothPairingRequest(const proto::messages::BluetoothPairingRequest &request) = 0;
     virtual void onChannelError(const error::Error &e) = 0;
 };
-
-}  // namespace bluetooth
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace bluetooth
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

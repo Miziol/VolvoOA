@@ -24,7 +24,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 class IPinger {
 public:
     typedef std::shared_ptr<IPinger> Pointer;
@@ -35,8 +34,7 @@ public:
     virtual void pong() = 0;
     virtual void cancel() = 0;
 };
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

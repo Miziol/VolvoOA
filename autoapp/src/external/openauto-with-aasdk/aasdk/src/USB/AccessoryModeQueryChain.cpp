@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 AccessoryModeQueryChain::AccessoryModeQueryChain(IUSBWrapper &usbWrapper,
                                                  boost::asio::io_service &ioService,
                                                  IAccessoryModeQueryFactory &queryFactory)
@@ -31,31 +30,33 @@ AccessoryModeQueryChain::AccessoryModeQueryChain(IUSBWrapper &usbWrapper,
 
 void AccessoryModeQueryChain::start(libusb_device_handle *handle, Promise::Pointer promise) {
     strand_.dispatch([this, self = this->shared_from_this(), handle = std::move(handle),
-                      promise = std::move(promise)]() mutable {
-        if (promise_ != nullptr) {
-            promise->reject(error::Error(error::ErrorCode::OPERATION_IN_PROGRESS));
-        } else {
-            promise_ = std::move(promise);
+            promise = std::move(promise)]() mutable {
+            if (promise_ != nullptr) {
+                promise->reject(error::Error(error::ErrorCode::OPERATION_IN_PROGRESS));
+            } else {
+                promise_ = std::move(promise);
 
-            auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
-            queryPromise->then(
-                [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
-                    this->protocolVersionQueryHandler(std::move(usbEndpoint));
-                },
-                [this, self = this->shared_from_this()](const error::Error &e) mutable {
-                    promise_->reject(e);
-                    promise_.reset();
-                });
+                auto queryPromise = IAccessoryModeQuery::Promise::defer(strand_);
+                queryPromise->then(
+                    [this, self = this->shared_from_this()](IUSBEndpoint::Pointer usbEndpoint) mutable {
+                        this->protocolVersionQueryHandler(std::move(usbEndpoint));
+                    },
+                    [this, self = this->shared_from_this()](const error::Error &e) mutable {
+                        promise_->reject(e);
+                        promise_.reset();
+                    });
 
-            this->startQuery(AccessoryModeQueryType::PROTOCOL_VERSION,
+                this->startQuery(AccessoryModeQueryType::PROTOCOL_VERSION,
 #if BOOST_VERSION < 106600
-                             std::make_shared<USBEndpoint>(usbWrapper_, strand_.get_io_service(), std::move(handle)),
+                                 std::make_shared<USBEndpoint>(
+                                     usbWrapper_, strand_.get_io_service(), std::move(handle)),
 #else
-                             std::make_shared<USBEndpoint>(usbWrapper_, strand_.context(), std::move(handle)),
+                                 std::make_shared<USBEndpoint>(
+                                     usbWrapper_, strand_.context(), std::move(handle)),
 #endif
-                             std::move(queryPromise));
-        }
-    });
+                                 std::move(queryPromise));
+            }
+        });
 }
 
 void AccessoryModeQueryChain::cancel() {
@@ -85,7 +86,8 @@ void AccessoryModeQueryChain::protocolVersionQueryHandler(IUSBEndpoint::Pointer 
             promise_.reset();
         });
 
-    this->startQuery(AccessoryModeQueryType::SEND_MANUFACTURER, std::move(usbEndpoint), std::move(queryPromise));
+    this->startQuery(AccessoryModeQueryType::SEND_MANUFACTURER, std::move(usbEndpoint),
+                     std::move(queryPromise));
 }
 
 void AccessoryModeQueryChain::manufacturerQueryHandler(IUSBEndpoint::Pointer usbEndpoint) {
@@ -113,7 +115,8 @@ void AccessoryModeQueryChain::modelQueryHandler(IUSBEndpoint::Pointer usbEndpoin
             promise_.reset();
         });
 
-    this->startQuery(AccessoryModeQueryType::SEND_DESCRIPTION, std::move(usbEndpoint), std::move(queryPromise));
+    this->startQuery(AccessoryModeQueryType::SEND_DESCRIPTION, std::move(usbEndpoint),
+                     std::move(queryPromise));
 }
 
 void AccessoryModeQueryChain::descriptionQueryHandler(IUSBEndpoint::Pointer usbEndpoint) {
@@ -177,7 +180,6 @@ void AccessoryModeQueryChain::startQueryHandler(IUSBEndpoint::Pointer usbEndpoin
     promise_->resolve(usbEndpoint->getDeviceHandle());
     promise_.reset();
 }
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

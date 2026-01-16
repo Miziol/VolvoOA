@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class AccessoryModeQueryFactory : public IAccessoryModeQueryFactory {
 public:
     AccessoryModeQueryFactory(usb::IUSBWrapper &usbWrapper, boost::asio::io_service &ioService);
@@ -34,7 +33,6 @@ private:
     usb::IUSBWrapper &usbWrapper_;
     boost::asio::io_service &ioService_;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

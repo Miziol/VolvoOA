@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace transport {
-
 DataSink::DataSink() : data_(common::cStaticDataSize) {}
 
 common::DataBuffer DataSink::fill() {
@@ -57,7 +56,6 @@ common::Data DataSink::consume(common::Data::size_type size) {
 
     return data;
 }
-
-}  // namespace transport
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace transport
+} // namespace aasdk
+} // namespace f1x

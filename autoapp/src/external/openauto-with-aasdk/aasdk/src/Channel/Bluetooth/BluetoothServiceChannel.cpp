@@ -28,7 +28,6 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace bluetooth {
-
 BluetoothServiceChannel::BluetoothServiceChannel(boost::asio::io_service::strand &strand,
                                                  messenger::IMessenger::Pointer messenger)
     : ServiceChannel(strand, std::move(messenger), messenger::ChannelId::BLUETOOTH) {}
@@ -36,9 +35,11 @@ BluetoothServiceChannel::BluetoothServiceChannel(boost::asio::io_service::strand
 void BluetoothServiceChannel::receive(IBluetoothServiceChannelEventHandler::Pointer eventHandler) {
     auto receivePromise = messenger::ReceivePromise::defer(strand_);
     receivePromise->then(
-        std::bind(&BluetoothServiceChannel::messageHandler, this->shared_from_this(), std::placeholders::_1,
+        std::bind(&BluetoothServiceChannel::messageHandler, this->shared_from_this(),
+                  std::placeholders::_1,
                   eventHandler),
-        std::bind(&IBluetoothServiceChannelEventHandler::onChannelError, eventHandler, std::placeholders::_1));
+        std::bind(&IBluetoothServiceChannelEventHandler::onChannelError, eventHandler,
+                  std::placeholders::_1));
 
     messenger_->enqueueReceive(channelId_, std::move(receivePromise));
 }
@@ -47,21 +48,25 @@ messenger::ChannelId BluetoothServiceChannel::getId() const {
     return channelId_;
 }
 
-void BluetoothServiceChannel::sendChannelOpenResponse(const proto::messages::ChannelOpenResponse &response,
-                                                      SendPromise::Pointer promise) {
+void BluetoothServiceChannel::sendChannelOpenResponse(
+    const proto::messages::ChannelOpenResponse &response,
+    SendPromise::Pointer promise) {
     auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                       messenger::MessageType::CONTROL));
-    message->insertPayload(messenger::MessageId(proto::ids::ControlMessage::CHANNEL_OPEN_RESPONSE).getData());
+    message->insertPayload(
+        messenger::MessageId(proto::ids::ControlMessage::CHANNEL_OPEN_RESPONSE).getData());
     message->insertPayload(response);
 
     this->send(std::move(message), std::move(promise));
 }
 
-void BluetoothServiceChannel::sendBluetoothPairingResponse(const proto::messages::BluetoothPairingResponse &response,
-                                                           SendPromise::Pointer promise) {
+void BluetoothServiceChannel::sendBluetoothPairingResponse(
+    const proto::messages::BluetoothPairingResponse &response,
+    SendPromise::Pointer promise) {
     auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                       messenger::MessageType::SPECIFIC));
-    message->insertPayload(messenger::MessageId(proto::ids::BluetoothChannelMessage::PAIRING_RESPONSE).getData());
+    message->insertPayload(
+        messenger::MessageId(proto::ids::BluetoothChannelMessage::PAIRING_RESPONSE).getData());
     message->insertPayload(response);
 
     this->send(std::move(message), std::move(promise));
@@ -87,7 +92,8 @@ void BluetoothServiceChannel::messageHandler(messenger::Message::Pointer message
 }
 
 void BluetoothServiceChannel::handleChannelOpenRequest(const common::DataConstBuffer &payload,
-                                                       IBluetoothServiceChannelEventHandler::Pointer eventHandler) {
+                                                       IBluetoothServiceChannelEventHandler::Pointer
+                                                       eventHandler) {
     proto::messages::ChannelOpenRequest request;
     if (request.ParseFromArray(payload.cdata, payload.size)) {
         eventHandler->onChannelOpenRequest(request);
@@ -106,8 +112,7 @@ void BluetoothServiceChannel::handleBluetoothPairingRequest(
         eventHandler->onChannelError(error::Error(error::ErrorCode::PARSE_PAYLOAD));
     }
 }
-
-}  // namespace bluetooth
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace bluetooth
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

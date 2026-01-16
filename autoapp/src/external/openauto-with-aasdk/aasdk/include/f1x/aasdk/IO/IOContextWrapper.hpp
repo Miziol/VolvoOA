@@ -24,7 +24,6 @@
 namespace f1x {
 namespace aasdk {
 namespace io {
-
 class IOContextWrapper {
 public:
     IOContextWrapper();
@@ -56,7 +55,6 @@ private:
     boost::asio::io_service *ioService_;
     boost::asio::io_service::strand *strand_;
 };
-
-}  // namespace io
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace io
+} // namespace aasdk
+} // namespace f1x

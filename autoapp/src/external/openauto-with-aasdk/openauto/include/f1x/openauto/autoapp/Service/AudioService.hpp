@@ -27,7 +27,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 class AudioService : public aasdk::channel::av::IAudioServiceChannelEventHandler,
                      public IService,
                      public std::enable_shared_from_this<AudioService> {
@@ -43,8 +42,10 @@ public:
     void fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse &response) override;
     void onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) override;
     void onAVChannelSetupRequest(const aasdk::proto::messages::AVChannelSetupRequest &request) override;
-    void onAVChannelStartIndication(const aasdk::proto::messages::AVChannelStartIndication &indication) override;
-    void onAVChannelStopIndication(const aasdk::proto::messages::AVChannelStopIndication &indication) override;
+    void onAVChannelStartIndication(
+        const aasdk::proto::messages::AVChannelStartIndication &indication) override;
+    void onAVChannelStopIndication(
+        const aasdk::proto::messages::AVChannelStopIndication &indication) override;
     void onAVMediaWithTimestampIndication(aasdk::messenger::Timestamp::ValueType timestamp,
                                           const aasdk::common::DataConstBuffer &buffer) override;
     void onAVMediaIndication(const aasdk::common::DataConstBuffer &buffer) override;
@@ -58,8 +59,7 @@ protected:
     projection::IAudioOutput::Pointer audioOutput_;
     int32_t session_;
 };
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

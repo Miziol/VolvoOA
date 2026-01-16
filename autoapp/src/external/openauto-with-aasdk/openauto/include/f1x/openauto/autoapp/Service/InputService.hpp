@@ -29,7 +29,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 class InputService : public aasdk::channel::input::IInputServiceChannelEventHandler,
                      public IService,
                      public projection::IInputDeviceEventHandler,
@@ -55,8 +54,7 @@ private:
     aasdk::channel::input::InputServiceChannel::Pointer channel_;
     projection::IInputDevice::Pointer inputDevice_;
 };
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

@@ -25,8 +25,9 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
-QtAudioOutput::QtAudioOutput(uint32_t channelCount, QAudioFormat::SampleFormat sampleFormat, uint32_t sampleRate)
+QtAudioOutput::QtAudioOutput(uint32_t channelCount,
+                             QAudioFormat::SampleFormat sampleFormat,
+                             uint32_t sampleRate)
     : playbackStarted_(false) {
     audioFormat_.setChannelCount(channelCount);
     audioFormat_.setSampleRate(sampleRate);
@@ -45,7 +46,8 @@ bool QtAudioOutput::open() {
     return audioBuffer_.open(QIODevice::ReadWrite);
 }
 
-void QtAudioOutput::write(aasdk::messenger::Timestamp::ValueType, const aasdk::common::DataConstBuffer &buffer) {
+void QtAudioOutput::write(aasdk::messenger::Timestamp::ValueType,
+                          const aasdk::common::DataConstBuffer &buffer) {
     audioBuffer_.write(reinterpret_cast<const char *>(buffer.cdata), buffer.size);
 }
 
@@ -104,8 +106,7 @@ void QtAudioOutput::onStopPlayback() {
         playbackStarted_ = false;
     }
 }
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

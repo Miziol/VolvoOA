@@ -21,7 +21,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 Message::Message(ChannelId channelId, EncryptionType encryptionType, MessageType type)
     : channelId_(channelId), encryptionType_(encryptionType), type_(type) {}
 
@@ -79,7 +78,6 @@ void Message::insertPayload(const common::DataConstBuffer &buffer) {
 void Message::insertPayload(common::DataBuffer &buffer) {
     common::copy(payload_, buffer);
 }
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

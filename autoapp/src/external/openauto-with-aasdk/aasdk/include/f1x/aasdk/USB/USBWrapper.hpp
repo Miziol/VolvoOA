@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class USBWrapper : public IUSBWrapper {
 public:
     USBWrapper(libusb_context *usbContext);
@@ -87,7 +86,6 @@ public:
 private:
     libusb_context *usbContext_;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

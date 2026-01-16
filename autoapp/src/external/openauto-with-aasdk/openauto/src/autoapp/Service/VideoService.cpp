@@ -23,14 +23,14 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 VideoService::VideoService(IAndroidAutoEntityEventHandler *handler,
                            boost::asio::io_service &ioService,
                            aasdk::messenger::IMessenger::Pointer messenger,
                            projection::IVideoOutput::Pointer videoOutput)
     : eventHandler_(handler),
       strand_(ioService),
-      channel_(std::make_shared<aasdk::channel::av::VideoServiceChannel>(strand_, std::move(messenger))),
+      channel_(std::make_shared<aasdk::channel::av::VideoServiceChannel>(
+          strand_, std::move(messenger))),
       videoOutput_(std::move(videoOutput)),
       session_(-1) {}
 
@@ -67,8 +67,9 @@ void VideoService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpe
 void VideoService::onAVChannelSetupRequest(const aasdk::proto::messages::AVChannelSetupRequest &request) {
     qInfo() << "[VideoService] setup request, config index: " << request.config_index();
     const aasdk::proto::enums::AVChannelSetupStatus::Enum status =
-        videoOutput_->init() ? aasdk::proto::enums::AVChannelSetupStatus::OK
-                             : aasdk::proto::enums::AVChannelSetupStatus::FAIL;
+        videoOutput_->init()
+            ? aasdk::proto::enums::AVChannelSetupStatus::OK
+            : aasdk::proto::enums::AVChannelSetupStatus::FAIL;
     qInfo() << "[VideoService] setup status: " << status;
 
     aasdk::proto::messages::AVChannelSetupResponse response;
@@ -78,19 +79,22 @@ void VideoService::onAVChannelSetupRequest(const aasdk::proto::messages::AVChann
 
     auto promise = aasdk::channel::SendPromise::defer(strand_);
     promise->then(std::bind(&VideoService::sendVideoFocusIndication, this->shared_from_this()),
-                  std::bind(&VideoService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+                  std::bind(&VideoService::onChannelError, this->shared_from_this(),
+                            std::placeholders::_1));
     channel_->sendAVChannelSetupResponse(response, std::move(promise));
     channel_->receive(this->shared_from_this());
 }
 
-void VideoService::onAVChannelStartIndication(const aasdk::proto::messages::AVChannelStartIndication &indication) {
+void VideoService::onAVChannelStartIndication(
+    const aasdk::proto::messages::AVChannelStartIndication &indication) {
     qInfo() << "[VideoService] start indication, session: " << indication.session();
     session_ = indication.session();
 
     channel_->receive(this->shared_from_this());
 }
 
-void VideoService::onAVChannelStopIndication(const aasdk::proto::messages::AVChannelStopIndication &indication) {
+void VideoService::onAVChannelStopIndication(
+    const aasdk::proto::messages::AVChannelStopIndication &indication) {
     qInfo() << "[VideoService] stop indication";
 
     channel_->receive(this->shared_from_this());
@@ -151,9 +155,10 @@ void VideoService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse
 
 void VideoService::onVideoFocusRequest(const aasdk::proto::messages::VideoFocusRequest &request) {
     qInfo() << "[VideoService] video focus request, display index: " << request.disp_index()
-            << ", focus mode: " << request.focus_mode() << ", focus reason: " << request.focus_reason();
+        << ", focus mode: " << request.focus_mode() << ", focus reason: " << request.focus_reason();
 
-    eventHandler_->setFocusOnAA(request.focus_mode() == aasdk::proto::enums::VideoFocusMode_Enum_FOCUSED);
+    eventHandler_->setFocusOnAA(
+        request.focus_mode() == aasdk::proto::enums::VideoFocusMode_Enum_FOCUSED);
 
     this->sendVideoFocusIndication();
     channel_->receive(this->shared_from_this());
@@ -170,8 +175,7 @@ void VideoService::sendVideoFocusIndication() {
     promise->then([]() {}, std::bind(&VideoService::onChannelError, this->shared_from_this(), std::placeholders::_1));
     channel_->sendVideoFocusIndication(videoFocusIndication, std::move(promise));
 }
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

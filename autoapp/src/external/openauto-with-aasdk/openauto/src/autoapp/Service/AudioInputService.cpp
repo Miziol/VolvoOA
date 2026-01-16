@@ -25,12 +25,12 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 AudioInputService::AudioInputService(boost::asio::io_service &ioService,
                                      aasdk::messenger::IMessenger::Pointer messenger,
                                      projection::IAudioInput::Pointer audioInput)
     : strand_(ioService),
-      channel_(std::make_shared<aasdk::channel::av::AVInputServiceChannel>(strand_, std::move(messenger))),
+      channel_(std::make_shared<aasdk::channel::av::AVInputServiceChannel>(
+          strand_, std::move(messenger))),
       audioInput_(std::move(audioInput)),
       session_(0) {}
 
@@ -74,15 +74,18 @@ void AudioInputService::onChannelOpenRequest(const aasdk::proto::messages::Chann
 
     auto promise = aasdk::channel::SendPromise::defer(strand_);
     promise->then([]() {},
-                  std::bind(&AudioInputService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+                  std::bind(&AudioInputService::onChannelError, this->shared_from_this(),
+                            std::placeholders::_1));
     channel_->sendChannelOpenResponse(response, std::move(promise));
 
     channel_->receive(this->shared_from_this());
 }
 
-void AudioInputService::onAVChannelSetupRequest(const aasdk::proto::messages::AVChannelSetupRequest &request) {
+void AudioInputService::onAVChannelSetupRequest(
+    const aasdk::proto::messages::AVChannelSetupRequest &request) {
     qInfo() << "[AudioInputService] setup request, config index: " << request.config_index();
-    const aasdk::proto::enums::AVChannelSetupStatus::Enum status = aasdk::proto::enums::AVChannelSetupStatus::OK;
+    const aasdk::proto::enums::AVChannelSetupStatus::Enum status =
+        aasdk::proto::enums::AVChannelSetupStatus::OK;
     qInfo() << "[AudioInputService] setup status: " << status;
 
     aasdk::proto::messages::AVChannelSetupResponse response;
@@ -92,31 +95,34 @@ void AudioInputService::onAVChannelSetupRequest(const aasdk::proto::messages::AV
 
     auto promise = aasdk::channel::SendPromise::defer(strand_);
     promise->then([]() {},
-                  std::bind(&AudioInputService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+                  std::bind(&AudioInputService::onChannelError, this->shared_from_this(),
+                            std::placeholders::_1));
     channel_->sendAVChannelSetupResponse(response, std::move(promise));
 
     channel_->receive(this->shared_from_this());
 }
 
 void AudioInputService::onAVInputOpenRequest(const aasdk::proto::messages::AVInputOpenRequest &request) {
-    qInfo() << "[AudioInputService] input open request, open: " << request.open() << ", anc: " << request.anc()
-            << ", ec: " << request.ec() << ", max unacked: " << request.max_unacked();
+    qInfo() << "[AudioInputService] input open request, open: " << request.open() << ", anc: " <<
+        request.anc()
+        << ", ec: " << request.ec() << ", max unacked: " << request.max_unacked();
 
     if (request.open()) {
         auto startPromise = projection::IAudioInput::StartPromise::defer(strand_);
-        startPromise->then(std::bind(&AudioInputService::onAudioInputOpenSucceed, this->shared_from_this()),
-                           [this, self = this->shared_from_this()]() {
-                               qCritical() << "[AudioInputService] audio input open failed.";
+        startPromise->then(
+            std::bind(&AudioInputService::onAudioInputOpenSucceed, this->shared_from_this()),
+            [this, self = this->shared_from_this()]() {
+                qCritical() << "[AudioInputService] audio input open failed.";
 
-                               aasdk::proto::messages::AVInputOpenResponse response;
-                               response.set_session(session_);
-                               response.set_value(1);
+                aasdk::proto::messages::AVInputOpenResponse response;
+                response.set_session(session_);
+                response.set_value(1);
 
-                               auto sendPromise = aasdk::channel::SendPromise::defer(strand_);
-                               sendPromise->then([]() {}, std::bind(&AudioInputService::onChannelError,
-                                                                    this->shared_from_this(), std::placeholders::_1));
-                               channel_->sendAVInputOpenResponse(response, std::move(sendPromise));
-                           });
+                auto sendPromise = aasdk::channel::SendPromise::defer(strand_);
+                sendPromise->then([]() {}, std::bind(&AudioInputService::onChannelError,
+                                                     this->shared_from_this(), std::placeholders::_1));
+                channel_->sendAVInputOpenResponse(response, std::move(sendPromise));
+            });
 
         audioInput_->start(std::move(startPromise));
     } else {
@@ -128,7 +134,8 @@ void AudioInputService::onAVInputOpenRequest(const aasdk::proto::messages::AVInp
 
         auto sendPromise = aasdk::channel::SendPromise::defer(strand_);
         sendPromise->then(
-            []() {}, std::bind(&AudioInputService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+            []() {}, std::bind(&AudioInputService::onChannelError, this->shared_from_this(),
+                               std::placeholders::_1));
         channel_->sendAVInputOpenResponse(response, std::move(sendPromise));
     }
 
@@ -152,7 +159,8 @@ void AudioInputService::onAudioInputOpenSucceed() {
 
     auto sendPromise = aasdk::channel::SendPromise::defer(strand_);
     sendPromise->then([]() {},
-                      std::bind(&AudioInputService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+                      std::bind(&AudioInputService::onChannelError, this->shared_from_this(),
+                                std::placeholders::_1));
     channel_->sendAVInputOpenResponse(response, std::move(sendPromise));
 
     this->readAudioInput();
@@ -161,25 +169,29 @@ void AudioInputService::onAudioInputOpenSucceed() {
 void AudioInputService::onAudioInputDataReady(aasdk::common::Data data) {
     auto sendPromise = aasdk::channel::SendPromise::defer(strand_);
     sendPromise->then(std::bind(&AudioInputService::readAudioInput, this->shared_from_this()),
-                      std::bind(&AudioInputService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+                      std::bind(&AudioInputService::onChannelError, this->shared_from_this(),
+                                std::placeholders::_1));
 
     auto timestamp = std::chrono::duration_cast<std::chrono::microseconds>(
         std::chrono::high_resolution_clock::now().time_since_epoch());
-    channel_->sendAVMediaWithTimestampIndication(timestamp.count(), std::move(data), std::move(sendPromise));
+    channel_->sendAVMediaWithTimestampIndication(timestamp.count(), std::move(data),
+                                                 std::move(sendPromise));
 }
 
 void AudioInputService::readAudioInput() {
     if (audioInput_->isActive()) {
         auto readPromise = projection::IAudioInput::ReadPromise::defer(strand_);
         readPromise->then(
-            std::bind(&AudioInputService::onAudioInputDataReady, this->shared_from_this(), std::placeholders::_1),
-            [this, self = this->shared_from_this()]() { qInfo() << "[AudioInputService] audio input read rejected."; });
+            std::bind(&AudioInputService::onAudioInputDataReady, this->shared_from_this(),
+                      std::placeholders::_1),
+            [this, self = this->shared_from_this()]() {
+                qInfo() << "[AudioInputService] audio input read rejected.";
+            });
 
         audioInput_->read(std::move(readPromise));
     }
 }
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

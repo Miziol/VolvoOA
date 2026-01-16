@@ -29,7 +29,6 @@
 namespace f1x {
 namespace openauto {
 namespace autoapp {
-
 class App : public service::IAndroidAutoEntityEventHandler, public std::enable_shared_from_this<App> {
 public:
     typedef std::shared_ptr<App> Pointer;
@@ -63,7 +62,6 @@ private:
     service::IAndroidAutoEntity::Pointer androidAutoEntity_;
     bool isStopped_;
 };
-
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

@@ -29,8 +29,8 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
-class USBEndpoint : public IUSBEndpoint, public std::enable_shared_from_this<USBEndpoint>, boost::noncopyable {
+class USBEndpoint : public IUSBEndpoint, public std::enable_shared_from_this<USBEndpoint>,
+                    boost::noncopyable {
 public:
     USBEndpoint(IUSBWrapper &usbWrapper,
                 boost::asio::io_service &ioService,
@@ -58,7 +58,6 @@ private:
     Transfers transfers_;
     std::shared_ptr<USBEndpoint> self_;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

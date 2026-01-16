@@ -24,7 +24,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 AccessoryModeProtocolVersionQuery::AccessoryModeProtocolVersionQuery(boost::asio::io_service &ioService,
                                                                      IUSBWrapper &usbWrapper,
                                                                      IUSBEndpoint::Pointer usbEndpoint)
@@ -50,7 +49,8 @@ void AccessoryModeProtocolVersionQuery::start(Promise::Pointer promise) {
                     promise_->reject(e);
                     promise_.reset();
                 });
-            usbEndpoint_->controlTransfer(common::DataBuffer(data_), cTransferTimeoutMs, std::move(usbEndpointPromise));
+            usbEndpoint_->controlTransfer(common::DataBuffer(data_), cTransferTimeoutMs,
+                                          std::move(usbEndpointPromise));
         }
     });
 }
@@ -66,7 +66,6 @@ void AccessoryModeProtocolVersionQuery::protocolVersionHandler(size_t bytesTrans
         promise_.reset();
     }
 }
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

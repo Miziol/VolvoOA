@@ -25,12 +25,12 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace bluetooth {
-
 class BluetoothServiceChannel : public IBluetoothServiceChannel,
                                 public ServiceChannel,
                                 public std::enable_shared_from_this<BluetoothServiceChannel> {
 public:
-    BluetoothServiceChannel(boost::asio::io_service::strand &strand, messenger::IMessenger::Pointer messenger);
+    BluetoothServiceChannel(boost::asio::io_service::strand &strand,
+                            messenger::IMessenger::Pointer messenger);
 
     void receive(IBluetoothServiceChannelEventHandler::Pointer eventHandler) override;
     messenger::ChannelId getId() const override;
@@ -48,8 +48,7 @@ private:
     void handleBluetoothPairingRequest(const common::DataConstBuffer &payload,
                                        IBluetoothServiceChannelEventHandler::Pointer eventHandler);
 };
-
-}  // namespace bluetooth
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace bluetooth
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

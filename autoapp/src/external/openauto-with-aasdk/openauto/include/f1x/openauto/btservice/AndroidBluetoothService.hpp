@@ -24,7 +24,6 @@
 namespace f1x {
 namespace openauto {
 namespace btservice {
-
 class AndroidBluetoothService : public IAndroidBluetoothService {
 public:
     AndroidBluetoothService(uint16_t portNumber);
@@ -35,7 +34,6 @@ public:
 private:
     QBluetoothServiceInfo serviceInfo_;
 };
-
-}  // namespace btservice
-}  // namespace openauto
-}  // namespace f1x
+} // namespace btservice
+} // namespace openauto
+} // namespace f1x

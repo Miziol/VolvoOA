@@ -17,53 +17,53 @@
 #
 
 if (RTAUDIO_LIBRARIES AND RTAUDIO_INCLUDE_DIRS)
-  # in cache already
-  set(RTAUDIO_FOUND TRUE)
+    # in cache already
+    set(RTAUDIO_FOUND TRUE)
 else (RTAUDIO_LIBRARIES AND RTAUDIO_INCLUDE_DIRS)
-  find_path(RTAUDIO_INCLUDE_DIR
-    NAMES
-        RtAudio.h
-    PATHS
-      /usr/include
-      /usr/local/include
-      /opt/local/include
-      /sw/include
-	PATH_SUFFIXES
-          rtaudio
-  )
+    find_path(RTAUDIO_INCLUDE_DIR
+            NAMES
+            RtAudio.h
+            PATHS
+            /usr/include
+            /usr/local/include
+            /opt/local/include
+            /sw/include
+            PATH_SUFFIXES
+            rtaudio
+    )
 
-  find_library(RTAUDIO_LIBRARY
-    NAMES
-      rtaudio
-    PATHS
-      /usr/lib
-      /usr/local/lib
-      /opt/local/lib
-      /sw/lib
-  )
+    find_library(RTAUDIO_LIBRARY
+            NAMES
+            rtaudio
+            PATHS
+            /usr/lib
+            /usr/local/lib
+            /opt/local/lib
+            /sw/lib
+    )
 
-  set(RTAUDIO_INCLUDE_DIRS
-    ${RTAUDIO_INCLUDE_DIR}
-  )
-  set(RTAUDIO_LIBRARIES
-    ${RTAUDIO_LIBRARY}
-)
+    set(RTAUDIO_INCLUDE_DIRS
+            ${RTAUDIO_INCLUDE_DIR}
+    )
+    set(RTAUDIO_LIBRARIES
+            ${RTAUDIO_LIBRARY}
+    )
 
-  if (RTAUDIO_INCLUDE_DIRS AND RTAUDIO_LIBRARIES)
-     set(RTAUDIO_FOUND TRUE)
-  endif (RTAUDIO_INCLUDE_DIRS AND RTAUDIO_LIBRARIES)
+    if (RTAUDIO_INCLUDE_DIRS AND RTAUDIO_LIBRARIES)
+        set(RTAUDIO_FOUND TRUE)
+    endif (RTAUDIO_INCLUDE_DIRS AND RTAUDIO_LIBRARIES)
 
-  if (RTAUDIO_FOUND)
-    if (NOT rtaudio_FIND_QUIETLY)
-      message(STATUS "Found rtaudio:")
-          message(STATUS " - Includes: ${RTAUDIO_INCLUDE_DIRS}")
-          message(STATUS " - Libraries: ${RTAUDIO_LIBRARIES}")
-    endif (NOT rtaudio_FIND_QUIETLY)
-  else (RTAUDIO_FOUND)
-    if (rtaudio_FIND_REQUIRED)
-      message(FATAL_ERROR "Could not find rtaudio")
-    endif (rtaudio_FIND_REQUIRED)
-  endif (RTAUDIO_FOUND)
+    if (RTAUDIO_FOUND)
+        if (NOT rtaudio_FIND_QUIETLY)
+            message(STATUS "Found rtaudio:")
+            message(STATUS " - Includes: ${RTAUDIO_INCLUDE_DIRS}")
+            message(STATUS " - Libraries: ${RTAUDIO_LIBRARIES}")
+        endif (NOT rtaudio_FIND_QUIETLY)
+    else (RTAUDIO_FOUND)
+        if (rtaudio_FIND_REQUIRED)
+            message(FATAL_ERROR "Could not find rtaudio")
+        endif (rtaudio_FIND_REQUIRED)
+    endif (RTAUDIO_FOUND)
 
     mark_as_advanced(RTAUDIO_INCLUDE_DIRS RTAUDIO_LIBRARIES)
 

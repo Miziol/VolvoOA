@@ -27,7 +27,6 @@
 namespace f1x {
 namespace openauto {
 namespace btservice {
-
 class AndroidBluetoothServer : public QObject, public IAndroidBluetoothServer {
     Q_OBJECT
 
@@ -36,13 +35,13 @@ public:
 
     bool start(const QBluetoothAddress &address, uint16_t portNumber) override;
 
-private slots:
+private
+slots :
     void onClientConnected();
 
 private:
     std::unique_ptr<QBluetoothServer> rfcommServer_;
 };
-
-}  // namespace btservice
-}  // namespace openauto
-}  // namespace f1x
+} // namespace btservice
+} // namespace openauto
+} // namespace f1x

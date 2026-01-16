@@ -29,7 +29,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 class Messenger : public IMessenger, public std::enable_shared_from_this<Messenger>, boost::noncopyable {
 public:
     Messenger(boost::asio::io_service &ioService,
@@ -57,7 +56,6 @@ private:
     ChannelReceiveMessageQueue channelReceiveMessageQueue_;
     ChannelSendQueue channelSendPromiseQueue_;
 };
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

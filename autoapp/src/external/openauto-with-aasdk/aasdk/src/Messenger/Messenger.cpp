@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 Messenger::Messenger(boost::asio::io_service &ioService,
                      IMessageInStream::Pointer messageInStream,
                      IMessageOutStream::Pointer messageOutStream)
@@ -33,26 +32,30 @@ Messenger::Messenger(boost::asio::io_service &ioService,
       messageOutStream_(std::move(messageOutStream)) {}
 
 void Messenger::enqueueReceive(ChannelId channelId, ReceivePromise::Pointer promise) {
-    receiveStrand_.dispatch([this, self = this->shared_from_this(), channelId, promise = std::move(promise)]() mutable {
-        if (!channelReceiveMessageQueue_.empty(channelId)) {
-            promise->resolve(std::move(channelReceiveMessageQueue_.pop(channelId)));
-        } else {
-            channelReceivePromiseQueue_.push(channelId, std::move(promise));
+    receiveStrand_.dispatch(
+        [this, self = this->shared_from_this(), channelId, promise = std::move(promise)]() mutable {
+            if (!channelReceiveMessageQueue_.empty(channelId)) {
+                promise->resolve(std::move(channelReceiveMessageQueue_.pop(channelId)));
+            } else {
+                channelReceivePromiseQueue_.push(channelId, std::move(promise));
 
-            if (channelReceivePromiseQueue_.size() == 1) {
-                auto inStreamPromise = ReceivePromise::defer(receiveStrand_);
-                inStreamPromise->then(
-                    std::bind(&Messenger::inStreamMessageHandler, this->shared_from_this(), std::placeholders::_1),
-                    std::bind(&Messenger::rejectReceivePromiseQueue, this->shared_from_this(), std::placeholders::_1));
-                messageInStream_->startReceive(std::move(inStreamPromise));
+                if (channelReceivePromiseQueue_.size() == 1) {
+                    auto inStreamPromise = ReceivePromise::defer(receiveStrand_);
+                    inStreamPromise->then(
+                        std::bind(&Messenger::inStreamMessageHandler, this->shared_from_this(),
+                                  std::placeholders::_1),
+                        std::bind(&Messenger::rejectReceivePromiseQueue, this->shared_from_this(),
+                                  std::placeholders::_1));
+                    messageInStream_->startReceive(std::move(inStreamPromise));
+                }
             }
-        }
-    });
+        });
 }
 
 void Messenger::enqueueSend(Message::Pointer message, SendPromise::Pointer promise) {
     sendStrand_.dispatch(
-        [this, self = this->shared_from_this(), message = std::move(message), promise = std::move(promise)]() mutable {
+        [this, self = this->shared_from_this(), message = std::move(message), promise = std::move(promise)
+        ]() mutable {
             channelSendPromiseQueue_.emplace_back(std::make_pair(std::move(message), std::move(promise)));
 
             if (channelSendPromiseQueue_.size() == 1) {
@@ -74,7 +77,8 @@ void Messenger::inStreamMessageHandler(Message::Pointer message) {
         auto inStreamPromise = ReceivePromise::defer(receiveStrand_);
         inStreamPromise->then(
             std::bind(&Messenger::inStreamMessageHandler, this->shared_from_this(), std::placeholders::_1),
-            std::bind(&Messenger::rejectReceivePromiseQueue, this->shared_from_this(), std::placeholders::_1));
+            std::bind(&Messenger::rejectReceivePromiseQueue, this->shared_from_this(),
+                      std::placeholders::_1));
         messageInStream_->startReceive(std::move(inStreamPromise));
     }
 }
@@ -113,9 +117,10 @@ void Messenger::rejectSendPromiseQueue(const error::Error &e) {
 }
 
 void Messenger::stop() {
-    receiveStrand_.dispatch([this, self = this->shared_from_this()]() { channelReceiveMessageQueue_.clear(); });
+    receiveStrand_.dispatch([this, self = this->shared_from_this()]() {
+        channelReceiveMessageQueue_.clear();
+    });
 }
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

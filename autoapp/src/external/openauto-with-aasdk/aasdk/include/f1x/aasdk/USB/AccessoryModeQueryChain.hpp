@@ -25,7 +25,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class IAccessoryModeQueryFactory;
 
 class AccessoryModeQueryChain : public IAccessoryModeQueryChain,
@@ -62,7 +61,6 @@ private:
     Promise::Pointer promise_;
     IAccessoryModeQuery::Pointer activeQuery_;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

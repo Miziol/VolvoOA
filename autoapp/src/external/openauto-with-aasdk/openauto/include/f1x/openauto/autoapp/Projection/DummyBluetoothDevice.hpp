@@ -24,7 +24,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class DummyBluetoothDevice : public IBluetoothDevice {
 public:
     void stop() override;
@@ -33,8 +32,7 @@ public:
     std::string getLocalAddress() const override;
     bool isAvailable() const override;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

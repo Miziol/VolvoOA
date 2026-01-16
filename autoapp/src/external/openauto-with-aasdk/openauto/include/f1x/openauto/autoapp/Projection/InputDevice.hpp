@@ -28,7 +28,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class InputDevice : public QObject, public IInputDevice, boost::noncopyable {
     Q_OBJECT
 
@@ -44,20 +43,20 @@ public:
     bool hasTouchscreen() const override;
     QRect getTouchscreenGeometry() const override;
 
-public slots:
+public
+slots :
     bool handleKeyEvent(int key, bool pressed);
-    bool handleTouchEvent(qreal mouseX, qreal mouseY, QString type);  // TODO change `type` to enum
+    bool handleTouchEvent(qreal mouseX, qreal mouseY, QString type); // TODO change `type` to enum
 
 private:
-    QObject* videoOutput;
+    QObject *videoOutput;
     SettingsManager &configuration_;
     QRect touchscreenGeometry_;
     QRect displayGeometry_;
     IInputDeviceEventHandler *eventHandler_;
     std::mutex mutex_;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

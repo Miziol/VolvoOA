@@ -29,7 +29,6 @@
 namespace f1x {
 namespace aasdk {
 namespace io {
-
 template <typename ResolveArgumentType, typename ErrorArgumentType = error::Error>
 class Promise : boost::noncopyable {
 public:
@@ -39,9 +38,13 @@ public:
     typedef std::function<void(ErrorArgumentType)> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service &ioService) { return std::make_shared<Promise>(ioService); }
+    static Pointer defer(boost::asio::io_service &ioService) {
+        return std::make_shared<Promise>(ioService);
+    }
 
-    static Pointer defer(boost::asio::io_service::strand &strand) { return std::make_shared<Promise>(strand); }
+    static Pointer defer(boost::asio::io_service::strand &strand) {
+        return std::make_shared<Promise>(strand);
+    }
 
     Promise(boost::asio::io_service &ioService) : ioContextWrapper_(ioService) {}
 
@@ -72,9 +75,10 @@ public:
         std::lock_guard<decltype(mutex_)> lock(mutex_);
 
         if (rejectHandler_ != nullptr && this->isPending()) {
-            ioContextWrapper_.post([error = std::move(error), rejectHandler = std::move(rejectHandler_)]() mutable {
-                rejectHandler(std::move(error));
-            });
+            ioContextWrapper_.post(
+                [error = std::move(error), rejectHandler = std::move(rejectHandler_)]() mutable {
+                    rejectHandler(std::move(error));
+                });
         }
 
         ioContextWrapper_.reset();
@@ -98,9 +102,13 @@ public:
     typedef std::function<void(ErrorArgumentType)> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service &ioService) { return std::make_shared<Promise>(ioService); }
+    static Pointer defer(boost::asio::io_service &ioService) {
+        return std::make_shared<Promise>(ioService);
+    }
 
-    static Pointer defer(boost::asio::io_service::strand &strand) { return std::make_shared<Promise>(strand); }
+    static Pointer defer(boost::asio::io_service::strand &strand) {
+        return std::make_shared<Promise>(strand);
+    }
 
     Promise(boost::asio::io_service &ioService) : ioContextWrapper_(ioService) {}
 
@@ -117,7 +125,9 @@ public:
         std::lock_guard<decltype(mutex_)> lock(mutex_);
 
         if (resolveHandler_ != nullptr && this->isPending()) {
-            ioContextWrapper_.post([resolveHandler = std::move(resolveHandler_)]() mutable { resolveHandler(); });
+            ioContextWrapper_.post([resolveHandler = std::move(resolveHandler_)]() mutable {
+                resolveHandler();
+            });
         }
 
         ioContextWrapper_.reset();
@@ -128,9 +138,10 @@ public:
         std::lock_guard<decltype(mutex_)> lock(mutex_);
 
         if (rejectHandler_ != nullptr && this->isPending()) {
-            ioContextWrapper_.post([error = std::move(error), rejectHandler = std::move(rejectHandler_)]() mutable {
-                rejectHandler(std::move(error));
-            });
+            ioContextWrapper_.post(
+                [error = std::move(error), rejectHandler = std::move(rejectHandler_)]() mutable {
+                    rejectHandler(std::move(error));
+                });
         }
 
         ioContextWrapper_.reset();
@@ -153,9 +164,13 @@ public:
     typedef std::function<void()> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service &ioService) { return std::make_shared<Promise>(ioService); }
+    static Pointer defer(boost::asio::io_service &ioService) {
+        return std::make_shared<Promise>(ioService);
+    }
 
-    static Pointer defer(boost::asio::io_service::strand &strand) { return std::make_shared<Promise>(strand); }
+    static Pointer defer(boost::asio::io_service::strand &strand) {
+        return std::make_shared<Promise>(strand);
+    }
 
     Promise(boost::asio::io_service &ioService) : ioContextWrapper_(ioService) {}
 
@@ -172,7 +187,9 @@ public:
         std::lock_guard<decltype(mutex_)> lock(mutex_);
 
         if (resolveHandler_ != nullptr && this->isPending()) {
-            ioContextWrapper_.post([resolveHandler = std::move(resolveHandler_)]() mutable { resolveHandler(); });
+            ioContextWrapper_.post([resolveHandler = std::move(resolveHandler_)]() mutable {
+                resolveHandler();
+            });
         }
 
         ioContextWrapper_.reset();
@@ -183,7 +200,9 @@ public:
         std::lock_guard<decltype(mutex_)> lock(mutex_);
 
         if (rejectHandler_ != nullptr && this->isPending()) {
-            ioContextWrapper_.post([rejectHandler = std::move(rejectHandler_)]() mutable { rejectHandler(); });
+            ioContextWrapper_.post([rejectHandler = std::move(rejectHandler_)]() mutable {
+                rejectHandler();
+            });
         }
 
         ioContextWrapper_.reset();
@@ -207,9 +226,13 @@ public:
     typedef std::function<void(void)> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service &ioService) { return std::make_shared<Promise>(ioService); }
+    static Pointer defer(boost::asio::io_service &ioService) {
+        return std::make_shared<Promise>(ioService);
+    }
 
-    static Pointer defer(boost::asio::io_service::strand &strand) { return std::make_shared<Promise>(strand); }
+    static Pointer defer(boost::asio::io_service::strand &strand) {
+        return std::make_shared<Promise>(strand);
+    }
 
     Promise(boost::asio::io_service &ioService) : ioContextWrapper_(ioService) {}
 
@@ -240,7 +263,9 @@ public:
         std::lock_guard<decltype(mutex_)> lock(mutex_);
 
         if (rejectHandler_ != nullptr && this->isPending()) {
-            ioContextWrapper_.post([rejectHandler = std::move(rejectHandler_)]() mutable { rejectHandler(); });
+            ioContextWrapper_.post([rejectHandler = std::move(rejectHandler_)]() mutable {
+                rejectHandler();
+            });
         }
 
         ioContextWrapper_.reset();
@@ -255,7 +280,6 @@ private:
     IOContextWrapper ioContextWrapper_;
     std::mutex mutex_;
 };
-
-}  // namespace io
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace io
+} // namespace aasdk
+} // namespace f1x

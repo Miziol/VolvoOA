@@ -24,7 +24,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 enum class AccessoryModeQueryType {
     PROTOCOL_VERSION,
     SEND_MANUFACTURER,
@@ -35,7 +34,6 @@ enum class AccessoryModeQueryType {
     SEND_SERIAL,
     START
 };
-
 }
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace aasdk
+} // namespace f1x

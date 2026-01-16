@@ -28,7 +28,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class AccessoryModeQuery : public IAccessoryModeQuery, boost::noncopyable {
 public:
     AccessoryModeQuery(boost::asio::io_service &ioService, IUSBEndpoint::Pointer usbEndpoint);
@@ -43,7 +42,6 @@ protected:
     static constexpr uint32_t cTransferTimeoutMs = 1000;
     static constexpr uint32_t USB_TYPE_VENDOR = 0x40;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

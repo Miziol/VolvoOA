@@ -25,7 +25,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class LocalBluetoothDevice : public QObject, public IBluetoothDevice {
     Q_OBJECT
 
@@ -38,10 +37,11 @@ public:
     std::string getLocalAddress() const override;
     bool isAvailable() const override;
 
-signals:
+signals :
     void startPairing(const QString &address, PairingPromise::Pointer promise);
 
-private slots:
+private
+slots :
     void onStartPairing(const QString &address, PairingPromise::Pointer promise);
     void onPairingDisplayConfirmation(const QBluetoothAddress &address, QString pin);
     void onPairingDisplayPinCode(const QBluetoothAddress &address, QString pin);
@@ -55,8 +55,7 @@ private:
     PairingPromise::Pointer pairingPromise_;
     QBluetoothAddress pairingAddress_;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x
