@@ -23,15 +23,14 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 SpeechAudioService::SpeechAudioService(boost::asio::io_service &ioService,
                                        aasdk::messenger::IMessenger::Pointer messenger,
                                        projection::IAudioOutput::Pointer audioOutput)
     : AudioService(ioService,
-                   std::make_shared<aasdk::channel::av::SpeechAudioServiceChannel>(strand_, std::move(messenger)),
+                   std::make_shared<aasdk::channel::av::SpeechAudioServiceChannel>(
+                       strand_, std::move(messenger)),
                    std::move(audioOutput)) {}
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

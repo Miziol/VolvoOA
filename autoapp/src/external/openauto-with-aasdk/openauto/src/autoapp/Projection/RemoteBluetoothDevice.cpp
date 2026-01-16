@@ -22,7 +22,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 RemoteBluetoothDevice::RemoteBluetoothDevice(const std::string &address) : address_(address) {}
 
 void RemoteBluetoothDevice::stop() {}
@@ -42,8 +41,7 @@ std::string RemoteBluetoothDevice::getLocalAddress() const {
 bool RemoteBluetoothDevice::isAvailable() const {
     return true;
 }
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

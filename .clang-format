@@ -9,6 +9,7 @@ BraceWrapping:
   AfterCaseLabel: true
   AfterEnum: true
   AfterFunction: false
+  AfterNamespace: false
   AfterStruct: false
   BeforeLambdaBody: false
   SplitEmptyFunction: false
@@ -17,3 +18,6 @@ KeepEmptyLinesAtEOF: true
 IndentAccessModifiers: false
 EmptyLineBeforeAccessModifier: Always
 AllowShortBlocksOnASingleLine: Always
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 1

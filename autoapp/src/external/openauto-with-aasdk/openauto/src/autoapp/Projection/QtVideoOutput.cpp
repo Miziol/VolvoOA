@@ -26,12 +26,13 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 QtVideoOutput::QtVideoOutput(SettingsManager &configuration, QObject *new_qmlRootObject)
     : VideoOutput(configuration), qmlRootObject(new_qmlRootObject) {
     this->moveToThread(QGuiApplication::instance()->thread());
-    connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
-    connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
+    connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback,
+            Qt::QueuedConnection);
+    connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback,
+            Qt::QueuedConnection);
 
     qDebug() << "[QtVideoOutput] create.";
     mediaPlayer.setVideoOutput(qmlRootObject->findChild<QObject *>("aaVideoOutput"));
@@ -62,8 +63,7 @@ void QtVideoOutput::onStartPlayback() {
 void QtVideoOutput::onStopPlayback() {
     mediaPlayer.stop();
 }
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

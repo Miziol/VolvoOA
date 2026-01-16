@@ -27,7 +27,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 class IService {
 public:
     typedef std::shared_ptr<IService> Pointer;
@@ -40,8 +39,7 @@ public:
 };
 
 typedef std::vector<IService::Pointer> ServiceList;
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

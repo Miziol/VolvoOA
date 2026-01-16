@@ -28,7 +28,6 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace input {
-
 class IInputServiceChannelEventHandler {
 public:
     typedef std::shared_ptr<IInputServiceChannelEventHandler> Pointer;
@@ -40,8 +39,7 @@ public:
     virtual void onBindingRequest(const proto::messages::BindingRequest &request) = 0;
     virtual void onChannelError(const f1x::aasdk::error::Error &e) = 0;
 };
-
-}  // namespace input
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace input
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

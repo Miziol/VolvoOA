@@ -5,6 +5,7 @@
 
 class LonganI2CCanBusDevice : public QCanBusDevice {
     Q_OBJECT
+
 signals:
 
 public:

@@ -25,9 +25,7 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 enum class MessageType { SPECIFIC = 0, CONTROL = 1 << 2 };
-
 }
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace aasdk
+} // namespace f1x

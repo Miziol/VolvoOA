@@ -25,7 +25,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 InputDevice::InputDevice(SettingsManager &configuration,
                          QObject *new_videoOutput,
                          const QRect &touchscreenGeometry,
@@ -174,8 +173,9 @@ bool InputDevice::handleKeyEvent(int key, bool pressed) {
         case Qt::Key_X:
         case Qt::Key_Y:
         case Qt::Key_Z:
-            buttonCode = static_cast<aasdk::proto::enums::ButtonCode::Enum>(aasdk::proto::enums::ButtonCode::A +
-                                                                            (key - Qt::Key_A));
+            buttonCode = static_cast<aasdk::proto::enums::ButtonCode::Enum>(
+                aasdk::proto::enums::ButtonCode::A +
+                (key - Qt::Key_A));
             break;
 
         case Qt::Key_0:
@@ -188,8 +188,9 @@ bool InputDevice::handleKeyEvent(int key, bool pressed) {
         case Qt::Key_7:
         case Qt::Key_8:
         case Qt::Key_9:
-            buttonCode = static_cast<aasdk::proto::enums::ButtonCode::Enum>(aasdk::proto::enums::ButtonCode::NUMBER_0 +
-                                                                            (key - Qt::Key_0));
+            buttonCode = static_cast<aasdk::proto::enums::ButtonCode::Enum>(
+                aasdk::proto::enums::ButtonCode::NUMBER_0 +
+                (key - Qt::Key_0));
             break;
 
         default:
@@ -234,10 +235,9 @@ QRect InputDevice::getTouchscreenGeometry() const {
 }
 
 QList<f1x::aasdk::proto::enums::ButtonCode::Enum> InputDevice::getSupportedButtonCodes() const {
-    return QList<aasdk::proto::enums::ButtonCode::Enum>();  // TODO create map and base on map
+    return QList<aasdk::proto::enums::ButtonCode::Enum>(); // TODO create map and base on map
 }
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

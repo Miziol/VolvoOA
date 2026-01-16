@@ -24,8 +24,7 @@ public:
     AppCore(SettingsManager &new_settings);
     ~AppCore();
 
-public
-slots :
+public slots:
     bool eventFilter(QObject *obj, QEvent *event);
 
     void shutdownSystem();

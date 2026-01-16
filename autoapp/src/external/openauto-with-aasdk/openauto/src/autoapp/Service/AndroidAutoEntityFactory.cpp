@@ -32,24 +32,28 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 AndroidAutoEntityFactory::AndroidAutoEntityFactory(IAndroidAutoEntityEventHandler *handler,
                                                    boost::asio::io_service &ioService,
                                                    SettingsManager &configuration,
                                                    IServiceFactory &serviceFactory)
-    : eventHandler_(handler), ioService_(ioService), configuration_(configuration), serviceFactory_(serviceFactory) {}
+    : eventHandler_(handler), ioService_(ioService), configuration_(configuration),
+      serviceFactory_(serviceFactory) {}
 
-IAndroidAutoEntity::Pointer AndroidAutoEntityFactory::create(aasdk::usb::IAOAPDevice::Pointer aoapDevice) {
+IAndroidAutoEntity::Pointer AndroidAutoEntityFactory::create(
+    aasdk::usb::IAOAPDevice::Pointer aoapDevice) {
     auto transport(std::make_shared<aasdk::transport::USBTransport>(ioService_, std::move(aoapDevice)));
     return create(std::move(transport));
 }
 
-IAndroidAutoEntity::Pointer AndroidAutoEntityFactory::create(aasdk::tcp::ITCPEndpoint::Pointer tcpEndpoint) {
-    auto transport(std::make_shared<aasdk::transport::TCPTransport>(ioService_, std::move(tcpEndpoint)));
+IAndroidAutoEntity::Pointer AndroidAutoEntityFactory::create(
+    aasdk::tcp::ITCPEndpoint::Pointer tcpEndpoint) {
+    auto transport(
+        std::make_shared<aasdk::transport::TCPTransport>(ioService_, std::move(tcpEndpoint)));
     return create(std::move(transport));
 }
 
-IAndroidAutoEntity::Pointer AndroidAutoEntityFactory::create(aasdk::transport::ITransport::Pointer transport) {
+IAndroidAutoEntity::Pointer AndroidAutoEntityFactory::create(
+    aasdk::transport::ITransport::Pointer transport) {
     auto sslWrapper(std::make_shared<aasdk::transport::SSLWrapper>());
     auto cryptor(std::make_shared<aasdk::messenger::Cryptor>(std::move(sslWrapper)));
     cryptor->init();
@@ -61,11 +65,11 @@ IAndroidAutoEntity::Pointer AndroidAutoEntityFactory::create(aasdk::transport::I
     auto serviceList = serviceFactory_.create(eventHandler_, messenger);
     auto pinger(std::make_shared<Pinger>(ioService_, 5000));
     return std::make_shared<AndroidAutoEntity>(ioService_, std::move(cryptor), std::move(transport),
-                                               std::move(messenger), configuration_, std::move(serviceList),
+                                               std::move(messenger), configuration_,
+                                               std::move(serviceList),
                                                std::move(pinger));
 }
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

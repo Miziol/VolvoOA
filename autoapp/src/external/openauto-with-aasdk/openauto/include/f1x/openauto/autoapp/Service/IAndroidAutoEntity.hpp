@@ -25,7 +25,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 class IAndroidAutoEntity {
 public:
     typedef std::shared_ptr<IAndroidAutoEntity> Pointer;
@@ -35,8 +34,7 @@ public:
     virtual void start(IAndroidAutoEntityEventHandler &eventHandler) = 0;
     virtual void stop() = 0;
 };
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

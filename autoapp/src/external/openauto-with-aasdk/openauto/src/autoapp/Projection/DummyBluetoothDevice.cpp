@@ -22,7 +22,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 void DummyBluetoothDevice::stop() {}
 
 bool DummyBluetoothDevice::isPaired(const std::string &) const {
@@ -40,8 +39,7 @@ std::string DummyBluetoothDevice::getLocalAddress() const {
 bool DummyBluetoothDevice::isAvailable() const {
     return false;
 }
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

@@ -26,7 +26,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class IInputDeviceEventHandler;
 
 class IInputDevice {
@@ -40,8 +39,7 @@ public:
     virtual bool hasTouchscreen() const = 0;
     virtual QRect getTouchscreenGeometry() const = 0;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

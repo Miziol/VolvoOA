@@ -25,13 +25,13 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 
 add_definitions(-DBOOST_ALL_DYN_LINK)
 
-if(WIN32)
+if (WIN32)
     set(WINSOCK2_LIBRARIES "ws2_32")
-endif(WIN32)
+endif (WIN32)
 
-if(AASDK_TEST)
+if (AASDK_TEST)
     include(ExternalGtest)
-endif(AASDK_TEST)
+endif (AASDK_TEST)
 
 add_subdirectory(aasdk_proto)
 
@@ -43,14 +43,14 @@ find_package(OpenSSL REQUIRED)
 set(AASDK_PROTO_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories(${AASDK_PROTO_INCLUDE_DIRS}
-                        ${Boost_INCLUDE_DIRS}
-                        ${LIBUSB_1_INCLUDE_DIRS}
-                        ${PROTOBUF_INCLUDE_DIR}
-                        ${OPENSSL_INCLUDE_DIR}
-                        ${GTEST_INCLUDE_DIRS}
-                        ${GMOCK_INCLUDE_DIRS}
-                        ${include_directory}
-                        ${include_ut_directory})
+        ${Boost_INCLUDE_DIRS}
+        ${LIBUSB_1_INCLUDE_DIRS}
+        ${PROTOBUF_INCLUDE_DIR}
+        ${OPENSSL_INCLUDE_DIR}
+        ${GTEST_INCLUDE_DIRS}
+        ${GMOCK_INCLUDE_DIRS}
+        ${include_directory}
+        ${include_ut_directory})
 
 file(GLOB_RECURSE source_files ${sources_directory}/*.cpp)
 file(GLOB_RECURSE include_files ${include_directory}/*.hpp)
@@ -60,32 +60,32 @@ file(GLOB_RECURSE tests_include_files ${include_ut_directory}/*.hpp)
 list(REMOVE_ITEM source_files ${tests_source_files})
 
 add_library(aasdk SHARED
-                ${source_files}
-                ${include_files})
+        ${source_files}
+        ${include_files})
 
 add_dependencies(aasdk aasdk_proto)
 target_link_libraries(aasdk
-                        aasdk_proto
-                        ${Boost_LIBRARIES}
-                        ${LIBUSB_1_LIBRARIES}
-                        ${PROTOBUF_LIBRARIES}
-                        ${OPENSSL_LIBRARIES}
-                        ${WINSOCK2_LIBRARIES})
+        aasdk_proto
+        ${Boost_LIBRARIES}
+        ${LIBUSB_1_LIBRARIES}
+        ${PROTOBUF_LIBRARIES}
+        ${OPENSSL_LIBRARIES}
+        ${WINSOCK2_LIBRARIES})
 
-if(AASDK_TEST)
+if (AASDK_TEST)
     add_executable(aasdk_ut
-                    ${tests_source_files}
-                    ${tests_include_files})
+            ${tests_source_files}
+            ${tests_include_files})
 
     add_dependencies(aasdk_ut aasdk)
     target_link_libraries(aasdk_ut
-                            aasdk
-                            ${GMOCK_LIBRARY_PATH}
-                            ${GTEST_LIBRARY_PATH})
+            aasdk
+            ${GMOCK_LIBRARY_PATH}
+            ${GTEST_LIBRARY_PATH})
 
-    if(AASDK_CODE_COVERAGE)
+    if (AASDK_CODE_COVERAGE)
         include(CodeCoverage)
         append_coverage_compiler_flags()
         setup_target_for_coverage(NAME aasdk_coverage EXECUTABLE aasdk_ut DEPENDENCIES aasdk_ut)
-    endif(AASDK_CODE_COVERAGE)
-endif(AASDK_TEST)
+    endif (AASDK_CODE_COVERAGE)
+endif (AASDK_TEST)

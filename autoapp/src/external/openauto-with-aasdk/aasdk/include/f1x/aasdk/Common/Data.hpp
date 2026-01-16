@@ -27,7 +27,6 @@
 namespace f1x {
 namespace aasdk {
 namespace common {
-
 typedef std::vector<uint8_t> Data;
 
 static constexpr size_t cStaticDataSize = 30 * 1024 * 1024;
@@ -75,7 +74,6 @@ common::Data createData(const DataConstBuffer &buffer);
 
 std::string dump(const Data &data);
 std::string dump(const DataConstBuffer &buffer);
-
-}  // namespace common
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace common
+} // namespace aasdk
+} // namespace f1x

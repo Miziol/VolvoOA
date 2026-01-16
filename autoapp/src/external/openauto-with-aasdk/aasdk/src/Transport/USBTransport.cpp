@@ -21,14 +21,15 @@
 namespace f1x {
 namespace aasdk {
 namespace transport {
-
 USBTransport::USBTransport(boost::asio::io_service &ioService, usb::IAOAPDevice::Pointer aoapDevice)
     : Transport(ioService), aoapDevice_(std::move(aoapDevice)) {}
 
 void USBTransport::enqueueReceive(common::DataBuffer buffer) {
     auto usbEndpointPromise = usb::IUSBEndpoint::Promise::defer(receiveStrand_);
     usbEndpointPromise->then(
-        [this, self = this->shared_from_this()](auto bytesTransferred) { this->receiveHandler(bytesTransferred); },
+        [this, self = this->shared_from_this()](auto bytesTransferred) {
+            this->receiveHandler(bytesTransferred);
+        },
         [this, self = this->shared_from_this()](auto e) { this->rejectReceivePromises(e); });
 
     aoapDevice_->getInEndpoint().bulkTransfer(buffer, cReceiveTimeoutMs, std::move(usbEndpointPromise));
@@ -53,7 +54,8 @@ void USBTransport::doSend(SendQueue::iterator queueElement, common::Data::size_t
             }
         });
 
-    aoapDevice_->getOutEndpoint().bulkTransfer(common::DataBuffer(queueElement->first, offset), cSendTimeoutMs,
+    aoapDevice_->getOutEndpoint().bulkTransfer(common::DataBuffer(queueElement->first, offset),
+                                               cSendTimeoutMs,
                                                std::move(usbEndpointPromise));
 }
 
@@ -76,7 +78,6 @@ void USBTransport::stop() {
     aoapDevice_->getInEndpoint().cancelTransfers();
     aoapDevice_->getOutEndpoint().cancelTransfers();
 }
-
-}  // namespace transport
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace transport
+} // namespace aasdk
+} // namespace f1x

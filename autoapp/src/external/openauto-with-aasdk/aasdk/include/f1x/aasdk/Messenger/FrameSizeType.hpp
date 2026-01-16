@@ -21,9 +21,7 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 enum class FrameSizeType { SHORT, EXTENDED };
-
 }
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace aasdk
+} // namespace f1x

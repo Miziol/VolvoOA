@@ -25,7 +25,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class LocalBluetoothDevice : public QObject, public IBluetoothDevice {
     Q_OBJECT
 
@@ -55,8 +54,7 @@ private:
     PairingPromise::Pointer pairingPromise_;
     QBluetoothAddress pairingAddress_;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

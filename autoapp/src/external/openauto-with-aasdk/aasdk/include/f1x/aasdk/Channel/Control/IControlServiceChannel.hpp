@@ -35,7 +35,6 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace control {
-
 class IControlServiceChannel {
 public:
     typedef std::shared_ptr<IControlServiceChannel> Pointer;
@@ -53,16 +52,18 @@ public:
                                               SendPromise::Pointer promise) = 0;
     virtual void sendAudioFocusResponse(const proto::messages::AudioFocusResponse &response,
                                         SendPromise::Pointer promise) = 0;
-    virtual void sendShutdownRequest(const proto::messages::ShutdownRequest &request, SendPromise::Pointer promise) = 0;
+    virtual void sendShutdownRequest(const proto::messages::ShutdownRequest &request,
+                                     SendPromise::Pointer promise) = 0;
     virtual void sendShutdownResponse(const proto::messages::ShutdownResponse &response,
                                       SendPromise::Pointer promise) = 0;
     virtual void sendNavigationFocusResponse(const proto::messages::NavigationFocusResponse &response,
                                              SendPromise::Pointer promise) = 0;
-    virtual void sendPingRequest(const proto::messages::PingRequest &request, SendPromise::Pointer promise) = 0;
-    virtual void sendPingResponse(const proto::messages::PingResponse &request, SendPromise::Pointer promise) = 0;
+    virtual void sendPingRequest(const proto::messages::PingRequest &request,
+                                 SendPromise::Pointer promise) = 0;
+    virtual void sendPingResponse(const proto::messages::PingResponse &request,
+                                  SendPromise::Pointer promise) = 0;
 };
-
-}  // namespace control
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace control
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

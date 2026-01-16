@@ -24,7 +24,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class IBluetoothDevice {
 public:
     typedef aasdk::io::Promise<void, void> PairingPromise;
@@ -36,8 +35,7 @@ public:
     virtual std::string getLocalAddress() const = 0;
     virtual bool isAvailable() const = 0;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

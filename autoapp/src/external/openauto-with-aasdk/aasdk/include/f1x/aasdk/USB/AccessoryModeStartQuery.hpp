@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class AccessoryModeStartQuery : public AccessoryModeQuery,
                                 public std::enable_shared_from_this<AccessoryModeStartQuery> {
 public:
@@ -37,7 +36,6 @@ private:
 
     static constexpr uint32_t ACC_REQ_START = 53;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

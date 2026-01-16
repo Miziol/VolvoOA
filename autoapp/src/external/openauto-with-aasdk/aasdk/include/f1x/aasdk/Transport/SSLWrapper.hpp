@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace transport {
-
 class SSLWrapper : public ISSLWrapper {
 public:
     SSLWrapper();
@@ -56,7 +55,6 @@ public:
     int sslRead(SSL *ssl, void *buf, int num) override;
     int sslWrite(SSL *ssl, const void *buf, int num) override;
 };
-
-}  // namespace transport
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace transport
+} // namespace aasdk
+} // namespace f1x

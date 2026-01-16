@@ -24,7 +24,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 VideoOutput::VideoOutput(SettingsManager &configuration) : configuration_(configuration) {}
 
 aasdk::proto::enums::VideoFPS::Enum VideoOutput::getVideoFPS() const {
@@ -42,8 +41,7 @@ size_t VideoOutput::getScreenDPI() const {
 QRect VideoOutput::getVideoMargins() const {
     return configuration_.getVideoMargins();
 }
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

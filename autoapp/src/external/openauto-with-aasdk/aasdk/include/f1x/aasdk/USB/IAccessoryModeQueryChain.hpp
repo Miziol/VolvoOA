@@ -26,7 +26,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class IAccessoryModeQueryChain {
 public:
     typedef std::shared_ptr<IAccessoryModeQueryChain> Pointer;
@@ -37,7 +36,6 @@ public:
     virtual void start(libusb_device_handle *handle, Promise::Pointer promise) = 0;
     virtual void cancel() = 0;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

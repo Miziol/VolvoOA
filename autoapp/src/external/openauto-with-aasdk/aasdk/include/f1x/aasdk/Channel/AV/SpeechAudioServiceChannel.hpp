@@ -24,13 +24,12 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace av {
-
 class SpeechAudioServiceChannel : public AudioServiceChannel {
 public:
-    SpeechAudioServiceChannel(boost::asio::io_service::strand &strand, messenger::IMessenger::Pointer messenger);
+    SpeechAudioServiceChannel(boost::asio::io_service::strand &strand,
+                              messenger::IMessenger::Pointer messenger);
 };
-
-}  // namespace av
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace av
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

@@ -21,7 +21,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 std::string channelIdToString(ChannelId channelId) {
     switch (channelId) {
         case ChannelId::CONTROL:
@@ -48,7 +47,6 @@ std::string channelIdToString(ChannelId channelId) {
             return "(null)";
     }
 }
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

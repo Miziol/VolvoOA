@@ -27,14 +27,14 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class QtAudioOutput : public QObject, public IAudioOutput {
     Q_OBJECT
 
 public:
     QtAudioOutput(uint32_t channelCount, QAudioFormat::SampleFormat sampleFormat, uint32_t sampleRate);
     bool open() override;
-    void write(aasdk::messenger::Timestamp::ValueType, const aasdk::common::DataConstBuffer &buffer) override;
+    void write(aasdk::messenger::Timestamp::ValueType,
+               const aasdk::common::DataConstBuffer &buffer) override;
     void start() override;
     void stop() override;
     void suspend() override;
@@ -58,8 +58,7 @@ private:
     std::unique_ptr<QAudioSink> audioOutput_;
     bool playbackStarted_;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

@@ -24,7 +24,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class IConnectedAccessoriesEnumerator {
 public:
     typedef std::shared_ptr<IConnectedAccessoriesEnumerator> Pointer;
@@ -34,7 +33,6 @@ public:
     virtual void enumerate(Promise::Pointer promise) = 0;
     virtual void cancel() = 0;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

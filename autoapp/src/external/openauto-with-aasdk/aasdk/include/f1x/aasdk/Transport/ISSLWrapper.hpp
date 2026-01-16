@@ -25,7 +25,6 @@
 namespace f1x {
 namespace aasdk {
 namespace transport {
-
 class ISSLWrapper {
 public:
     typedef std::pair<BIO *, BIO *> BIOs;
@@ -61,7 +60,6 @@ public:
     virtual int sslWrite(SSL *ssl, const void *buf, int num) = 0;
     virtual int getError(SSL *ssl, int returnCode) = 0;
 };
-
-}  // namespace transport
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace transport
+} // namespace aasdk
+} // namespace f1x

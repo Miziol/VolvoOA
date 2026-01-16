@@ -27,7 +27,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 class MessageInStream : public IMessageInStream,
                         public std::enable_shared_from_this<MessageInStream>,
                         boost::noncopyable {
@@ -53,7 +52,6 @@ private:
     Message::Pointer message_;
     Message::Pointer messageBig_;
 };
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

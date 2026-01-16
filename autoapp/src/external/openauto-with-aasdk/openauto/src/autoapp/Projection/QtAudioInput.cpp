@@ -25,8 +25,9 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
-QtAudioInput::QtAudioInput(uint32_t channelCount, QAudioFormat::SampleFormat sampleFormat, uint32_t sampleRate)
+QtAudioInput::QtAudioInput(uint32_t channelCount,
+                           QAudioFormat::SampleFormat sampleFormat,
+                           uint32_t sampleRate)
     : ioDevice_(nullptr) {
     qRegisterMetaType<IAudioInput::StartPromise::Pointer>("StartPromise::Pointer");
 
@@ -35,8 +36,10 @@ QtAudioInput::QtAudioInput(uint32_t channelCount, QAudioFormat::SampleFormat sam
     audioFormat_.setSampleFormat(sampleFormat);
 
     this->moveToThread(QGuiApplication::instance()->thread());
-    connect(this, &QtAudioInput::startRecording, this, &QtAudioInput::onStartRecording, Qt::QueuedConnection);
-    connect(this, &QtAudioInput::stopRecording, this, &QtAudioInput::onStopRecording, Qt::QueuedConnection);
+    connect(this, &QtAudioInput::startRecording, this, &QtAudioInput::onStartRecording,
+            Qt::QueuedConnection);
+    connect(this, &QtAudioInput::stopRecording, this, &QtAudioInput::onStopRecording,
+            Qt::QueuedConnection);
 
     qDebug() << "[AudioInput] create.";
     audioInput_ = (std::make_unique<QAudioSource>(QMediaDevices::defaultAudioInput(), audioFormat_));
@@ -104,7 +107,8 @@ void QtAudioInput::onStartRecording(StartPromise::Pointer promise) {
     ioDevice_ = audioInput_->start();
 
     if (ioDevice_ != nullptr) {
-        connect(ioDevice_, &QIODevice::readyRead, this, &QtAudioInput::onReadyRead, Qt::QueuedConnection);
+        connect(ioDevice_, &QIODevice::readyRead, this, &QtAudioInput::onReadyRead,
+                Qt::QueuedConnection);
         promise->resolve();
     } else {
         promise->reject();
@@ -148,8 +152,7 @@ void QtAudioInput::onReadyRead() {
         readPromise_.reset();
     }
 }
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

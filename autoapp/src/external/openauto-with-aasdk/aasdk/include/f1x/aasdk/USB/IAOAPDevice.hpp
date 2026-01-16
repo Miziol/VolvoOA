@@ -23,7 +23,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class IAOAPDevice {
 public:
     typedef std::shared_ptr<IAOAPDevice> Pointer;
@@ -34,7 +33,6 @@ public:
     virtual IUSBEndpoint &getInEndpoint() = 0;
     virtual IUSBEndpoint &getOutEndpoint() = 0;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

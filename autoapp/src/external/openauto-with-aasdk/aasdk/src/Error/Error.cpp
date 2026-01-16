@@ -21,7 +21,6 @@
 namespace f1x {
 namespace aasdk {
 namespace error {
-
 Error::Error() : code_(ErrorCode::NONE), nativeCode_(0) {}
 
 Error::Error(ErrorCode code, uint32_t nativeCode) : code_(code), nativeCode_(nativeCode) {
@@ -56,7 +55,6 @@ bool Error::operator==(const ErrorCode &code) const {
 bool Error::operator!=(const ErrorCode &code) const {
     return !operator==(code);
 }
-
-}  // namespace error
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace error
+} // namespace aasdk
+} // namespace f1x

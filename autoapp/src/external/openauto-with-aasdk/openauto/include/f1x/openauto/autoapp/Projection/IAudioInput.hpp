@@ -26,7 +26,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace projection {
-
 class IAudioInput {
 public:
     typedef aasdk::io::Promise<void, void> StartPromise;
@@ -44,8 +43,7 @@ public:
     virtual uint32_t getChannelCount() const = 0;
     virtual uint32_t getSampleRate() const = 0;
 };
-
-}  // namespace projection
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace projection
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

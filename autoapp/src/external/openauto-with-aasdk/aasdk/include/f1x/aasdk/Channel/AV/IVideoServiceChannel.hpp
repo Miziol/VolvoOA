@@ -32,7 +32,6 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace av {
-
 class IVideoServiceChannel {
 public:
     typedef std::shared_ptr<IVideoServiceChannel> Pointer;
@@ -51,8 +50,7 @@ public:
                                           SendPromise::Pointer promise) = 0;
     virtual messenger::ChannelId getId() const = 0;
 };
-
-}  // namespace av
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace av
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

@@ -22,8 +22,9 @@
 namespace f1x {
 namespace aasdk {
 namespace tcp {
-
-void TCPWrapper::asyncWrite(boost::asio::ip::tcp::socket &socket, common::DataConstBuffer buffer, Handler handler) {
+void TCPWrapper::asyncWrite(boost::asio::ip::tcp::socket &socket,
+                            common::DataConstBuffer buffer,
+                            Handler handler) {
     boost::asio::async_write(socket, boost::asio::buffer(buffer.cdata, buffer.size), std::move(handler));
 }
 
@@ -41,8 +42,9 @@ void TCPWrapper::asyncConnect(boost::asio::ip::tcp::socket &socket,
                               const std::string &hostname,
                               uint16_t port,
                               ConnectHandler handler) {
-    socket.async_connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(hostname), port),
-                         std::move(handler));
+    socket.async_connect(
+        boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(hostname), port),
+        std::move(handler));
 }
 
 boost::system::error_code TCPWrapper::connect(boost::asio::ip::tcp::socket &socket,
@@ -50,10 +52,10 @@ boost::system::error_code TCPWrapper::connect(boost::asio::ip::tcp::socket &sock
                                               uint16_t port) {
     boost::system::error_code ec;
     socket.set_option(boost::asio::ip::tcp::no_delay(true), ec);
-    socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(hostname), port), ec);
+    socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(hostname), port),
+                   ec);
     return ec;
 }
-
-}  // namespace tcp
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace tcp
+} // namespace aasdk
+} // namespace f1x

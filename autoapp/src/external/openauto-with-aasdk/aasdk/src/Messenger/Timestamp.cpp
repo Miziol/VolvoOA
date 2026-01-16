@@ -22,7 +22,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 Timestamp::Timestamp(ValueType stamp) : stamp_(stamp) {}
 
 Timestamp::Timestamp(const common::DataConstBuffer &buffer) {
@@ -39,7 +38,6 @@ common::Data Timestamp::getData() const {
 Timestamp::ValueType Timestamp::getValue() const {
     return stamp_;
 }
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

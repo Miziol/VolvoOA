@@ -28,7 +28,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 class MessageOutStream : public IMessageOutStream,
                          public std::enable_shared_from_this<MessageOutStream>,
                          boost::noncopyable {
@@ -59,7 +58,6 @@ private:
 
     static constexpr size_t cMaxFramePayloadSize = 0x4000;
 };
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

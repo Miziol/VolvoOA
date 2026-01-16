@@ -27,7 +27,6 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace sensor {
-
 SensorServiceChannel::SensorServiceChannel(boost::asio::io_service::strand &strand,
                                            messenger::IMessenger::Pointer messenger)
     : ServiceChannel(strand, std::move(messenger), messenger::ChannelId::SENSOR) {}
@@ -35,8 +34,10 @@ SensorServiceChannel::SensorServiceChannel(boost::asio::io_service::strand &stra
 void SensorServiceChannel::receive(ISensorServiceChannelEventHandler::Pointer eventHandler) {
     auto receivePromise = messenger::ReceivePromise::defer(strand_);
     receivePromise->then(
-        std::bind(&SensorServiceChannel::messageHandler, this->shared_from_this(), std::placeholders::_1, eventHandler),
-        std::bind(&ISensorServiceChannelEventHandler::onChannelError, eventHandler, std::placeholders::_1));
+        std::bind(&SensorServiceChannel::messageHandler, this->shared_from_this(),
+                  std::placeholders::_1, eventHandler),
+        std::bind(&ISensorServiceChannelEventHandler::onChannelError, eventHandler,
+                  std::placeholders::_1));
 
     messenger_->enqueueReceive(channelId_, std::move(receivePromise));
 }
@@ -49,7 +50,8 @@ void SensorServiceChannel::sendChannelOpenResponse(const proto::messages::Channe
                                                    SendPromise::Pointer promise) {
     auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                       messenger::MessageType::CONTROL));
-    message->insertPayload(messenger::MessageId(proto::ids::ControlMessage::CHANNEL_OPEN_RESPONSE).getData());
+    message->insertPayload(
+        messenger::MessageId(proto::ids::ControlMessage::CHANNEL_OPEN_RESPONSE).getData());
     message->insertPayload(response);
 
     this->send(std::move(message), std::move(promise));
@@ -74,28 +76,33 @@ void SensorServiceChannel::messageHandler(messenger::Message::Pointer message,
     }
 }
 
-void SensorServiceChannel::sendSensorEventIndication(const proto::messages::SensorEventIndication &indication,
-                                                     SendPromise::Pointer promise) {
+void SensorServiceChannel::sendSensorEventIndication(
+    const proto::messages::SensorEventIndication &indication,
+    SendPromise::Pointer promise) {
     auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                       messenger::MessageType::SPECIFIC));
-    message->insertPayload(messenger::MessageId(proto::ids::SensorChannelMessage::SENSOR_EVENT_INDICATION).getData());
+    message->insertPayload(
+        messenger::MessageId(proto::ids::SensorChannelMessage::SENSOR_EVENT_INDICATION).getData());
     message->insertPayload(indication);
 
     this->send(std::move(message), std::move(promise));
 }
 
-void SensorServiceChannel::sendSensorStartResponse(const proto::messages::SensorStartResponseMessage &response,
-                                                   SendPromise::Pointer promise) {
+void SensorServiceChannel::sendSensorStartResponse(
+    const proto::messages::SensorStartResponseMessage &response,
+    SendPromise::Pointer promise) {
     auto message(std::make_shared<messenger::Message>(channelId_, messenger::EncryptionType::ENCRYPTED,
                                                       messenger::MessageType::SPECIFIC));
-    message->insertPayload(messenger::MessageId(proto::ids::SensorChannelMessage::SENSOR_START_RESPONSE).getData());
+    message->insertPayload(
+        messenger::MessageId(proto::ids::SensorChannelMessage::SENSOR_START_RESPONSE).getData());
     message->insertPayload(response);
 
     this->send(std::move(message), std::move(promise));
 }
 
 void SensorServiceChannel::handleSensorStartRequest(const common::DataConstBuffer &payload,
-                                                    ISensorServiceChannelEventHandler::Pointer eventHandler) {
+                                                    ISensorServiceChannelEventHandler::Pointer
+                                                    eventHandler) {
     proto::messages::SensorStartRequestMessage request;
     if (request.ParseFromArray(payload.cdata, payload.size)) {
         eventHandler->onSensorStartRequest(request);
@@ -105,7 +112,8 @@ void SensorServiceChannel::handleSensorStartRequest(const common::DataConstBuffe
 }
 
 void SensorServiceChannel::handleChannelOpenRequest(const common::DataConstBuffer &payload,
-                                                    ISensorServiceChannelEventHandler::Pointer eventHandler) {
+                                                    ISensorServiceChannelEventHandler::Pointer
+                                                    eventHandler) {
     proto::messages::ChannelOpenRequest request;
     if (request.ParseFromArray(payload.cdata, payload.size)) {
         eventHandler->onChannelOpenRequest(request);
@@ -113,8 +121,7 @@ void SensorServiceChannel::handleChannelOpenRequest(const common::DataConstBuffe
         eventHandler->onChannelError(error::Error(error::ErrorCode::PARSE_PAYLOAD));
     }
 }
-
-}  // namespace sensor
-}  // namespace channel
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace sensor
+} // namespace channel
+} // namespace aasdk
+} // namespace f1x

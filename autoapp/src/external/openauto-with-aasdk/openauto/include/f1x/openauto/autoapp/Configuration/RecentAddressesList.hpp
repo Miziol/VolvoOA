@@ -25,7 +25,6 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace configuration {
-
 class RecentAddressesList : public IRecentAddressesList {
 public:
     RecentAddressesList(size_t maxListSize);
@@ -45,8 +44,7 @@ private:
     static const std::string cRecentEntiresCount;
     static const std::string cRecentEntryPrefix;
 };
-
-}  // namespace configuration
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace configuration
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

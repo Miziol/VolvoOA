@@ -27,7 +27,6 @@
 namespace f1x {
 namespace aasdk {
 namespace transport {
-
 class Transport : public ITransport, public std::enable_shared_from_this<Transport>, boost::noncopyable {
 public:
     Transport(boost::asio::io_service &ioService);
@@ -55,7 +54,6 @@ protected:
     boost::asio::io_service::strand sendStrand_;
     SendQueue sendQueue_;
 };
-
-}  // namespace transport
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace transport
+} // namespace aasdk
+} // namespace f1x

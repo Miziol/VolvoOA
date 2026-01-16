@@ -24,7 +24,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 class ICryptor {
 public:
     typedef std::shared_ptr<ICryptor> Pointer;
@@ -41,7 +40,6 @@ public:
     virtual void writeHandshakeBuffer(const common::DataConstBuffer &buffer) = 0;
     virtual bool isActive() const = 0;
 };
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

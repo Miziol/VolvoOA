@@ -26,12 +26,12 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 InputService::InputService(boost::asio::io_service &ioService,
                            aasdk::messenger::IMessenger::Pointer messenger,
                            projection::IInputDevice::Pointer inputDevice)
     : strand_(ioService),
-      channel_(std::make_shared<aasdk::channel::input::InputServiceChannel>(strand_, std::move(messenger))),
+      channel_(std::make_shared<aasdk::channel::input::InputServiceChannel>(
+          strand_, std::move(messenger))),
       inputDevice_(std::move(inputDevice)) {}
 
 void InputService::start() {
@@ -91,10 +91,11 @@ void InputService::onBindingRequest(const aasdk::proto::messages::BindingRequest
     const auto &supportedButtonCodes = inputDevice_->getSupportedButtonCodes();
 
     for (int i = 0; i < request.scan_codes_size(); ++i) {
-        if (std::find(supportedButtonCodes.begin(), supportedButtonCodes.end(), request.scan_codes(i)) ==
+        if (std::find(supportedButtonCodes.begin(), supportedButtonCodes.end(),
+                      request.scan_codes(i)) ==
             supportedButtonCodes.end()) {
             qCritical() << "[InputService] binding request, scan code: " << request.scan_codes(i)
-                        << " is not supported.";
+                << " is not supported.";
 
             status = aasdk::proto::enums::Status::FAIL;
             break;
@@ -125,13 +126,17 @@ void InputService::onButtonEvent(const projection::ButtonEvent &event) {
         std::chrono::high_resolution_clock::now().time_since_epoch());
 
     strand_.dispatch(
-        [this, self = this->shared_from_this(), event = std::move(event), timestamp = std::move(timestamp)]() {
+        [this, self = this->shared_from_this(), event = std::move(event), timestamp = std::move(
+            timestamp)]() {
             aasdk::proto::messages::InputEventIndication inputEventIndication;
             inputEventIndication.set_timestamp(timestamp.count());
 
             if (event.code == aasdk::proto::enums::ButtonCode::SCROLL_WHEEL) {
-                auto relativeEvent = inputEventIndication.mutable_relative_input_event()->add_relative_input_events();
-                relativeEvent->set_delta(event.wheelDirection == projection::WheelDirection::LEFT ? -1 : 1);
+                auto relativeEvent = inputEventIndication.mutable_relative_input_event()->
+                                                          add_relative_input_events();
+                relativeEvent->set_delta(event.wheelDirection == projection::WheelDirection::LEFT
+                                             ? -1
+                                             : 1);
                 relativeEvent->set_scan_code(event.code);
             } else {
                 auto buttonEvent = inputEventIndication.mutable_button_event()->add_button_events();
@@ -143,7 +148,8 @@ void InputService::onButtonEvent(const projection::ButtonEvent &event) {
 
             auto promise = aasdk::channel::SendPromise::defer(strand_);
             promise->then([]() {},
-                          std::bind(&InputService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+                          std::bind(&InputService::onChannelError, this->shared_from_this(),
+                                    std::placeholders::_1));
             channel_->sendInputEventIndication(inputEventIndication, std::move(promise));
         });
 }
@@ -154,7 +160,8 @@ void InputService::onTouchEvent(const projection::TouchEvent &event) {
         std::chrono::high_resolution_clock::now().time_since_epoch());
 
     strand_.dispatch(
-        [this, self = this->shared_from_this(), event = std::move(event), timestamp = std::move(timestamp)]() {
+        [this, self = this->shared_from_this(), event = std::move(event), timestamp = std::move(
+            timestamp)]() {
             aasdk::proto::messages::InputEventIndication inputEventIndication;
             inputEventIndication.set_timestamp(timestamp.count());
 
@@ -167,13 +174,13 @@ void InputService::onTouchEvent(const projection::TouchEvent &event) {
 
             auto promise = aasdk::channel::SendPromise::defer(strand_);
             promise->then([]() {},
-                          std::bind(&InputService::onChannelError, this->shared_from_this(), std::placeholders::_1));
+                          std::bind(&InputService::onChannelError, this->shared_from_this(),
+                                    std::placeholders::_1));
             channel_->sendInputEventIndication(inputEventIndication, std::move(promise));
             // qDebug() << "[InputService] sendInputEventIndication";
         });
 }
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

@@ -27,7 +27,6 @@
 namespace f1x {
 namespace aasdk {
 namespace transport {
-
 SSLWrapper::SSLWrapper() {
     SSL_library_init();
     SSL_load_error_strings();
@@ -166,7 +165,6 @@ int SSLWrapper::sslWrite(SSL *ssl, const void *buf, int num) {
 int SSLWrapper::getError(SSL *ssl, int returnCode) {
     return SSL_get_error(ssl, returnCode);
 }
-
-}  // namespace transport
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace transport
+} // namespace aasdk
+} // namespace f1x

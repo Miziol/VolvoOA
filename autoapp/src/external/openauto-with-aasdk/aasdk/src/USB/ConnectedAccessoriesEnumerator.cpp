@@ -21,10 +21,10 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 ConnectedAccessoriesEnumerator::ConnectedAccessoriesEnumerator(IUSBWrapper &usbWrapper,
                                                                boost::asio::io_service &ioService,
-                                                               IAccessoryModeQueryChainFactory &queryChainFactory)
+                                                               IAccessoryModeQueryChainFactory &
+                                                               queryChainFactory)
     : usbWrapper_(usbWrapper), strand_(ioService), queryChainFactory_(queryChainFactory) {}
 
 void ConnectedAccessoriesEnumerator::enumerate(Promise::Pointer promise) {
@@ -105,7 +105,6 @@ void ConnectedAccessoriesEnumerator::reset() {
     actualDeviceIter_ = DeviceList::iterator();
     promise_.reset();
 }
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

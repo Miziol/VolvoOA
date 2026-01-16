@@ -23,16 +23,16 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 AudioService::AudioService(boost::asio::io_service &ioService,
                            aasdk::channel::av::IAudioServiceChannel::Pointer channel,
                            projection::IAudioOutput::Pointer audioOutput)
-    : strand_(ioService), channel_(std::move(channel)), audioOutput_(std::move(audioOutput)), session_(-1) {}
+    : strand_(ioService), channel_(std::move(channel)), audioOutput_(std::move(audioOutput)),
+      session_(-1) {}
 
 void AudioService::start() {
     strand_.dispatch([this, self = this->shared_from_this()]() {
         qInfo() << "[AudioService] start, channel: "
-                << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()));
+            << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()));
         channel_->receive(this->shared_from_this());
     });
 }
@@ -40,14 +40,14 @@ void AudioService::start() {
 void AudioService::stop() {
     strand_.dispatch([this, self = this->shared_from_this()]() {
         qInfo() << "[AudioService] stop, channel: "
-                << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()));
+            << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()));
         audioOutput_->stop();
     });
 }
 
 void AudioService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse &response) {
     qInfo() << "[AudioService] fill features, channel: "
-            << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()));
+        << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()));
 
     auto *channelDescriptor = response.add_channels();
     channelDescriptor->set_channel_id(static_cast<uint32_t>(channel_->getId()));
@@ -81,19 +81,21 @@ void AudioService::fillFeatures(aasdk::proto::messages::ServiceDiscoveryResponse
 
 void AudioService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpenRequest &request) {
     qInfo() << "[AudioService] open request"
-            << ", channel: " << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()))
-            << ", priority: " << request.priority();
+        << ", channel: " << QString::fromStdString(
+            aasdk::messenger::channelIdToString(channel_->getId()))
+        << ", priority: " << request.priority();
 
     qDebug() << "[AudioService] channel: "
-             << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()))
-             << " audio output sample rate: " << audioOutput_->getSampleRate()
-             << ", sample size: " << audioOutput_->getSampleSize()
-             << ", channel count: " << audioOutput_->getChannelCount();
+        << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()))
+        << " audio output sample rate: " << audioOutput_->getSampleRate()
+        << ", sample size: " << audioOutput_->getSampleSize()
+        << ", channel count: " << audioOutput_->getChannelCount();
 
     const aasdk::proto::enums::Status::Enum status =
         audioOutput_->open() ? aasdk::proto::enums::Status::OK : aasdk::proto::enums::Status::FAIL;
     qInfo() << "[AudioService] open status: " << status
-            << ", channel: " << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()));
+        << ", channel: " << QString::fromStdString(
+            aasdk::messenger::channelIdToString(channel_->getId()));
 
     aasdk::proto::messages::ChannelOpenResponse response;
     response.set_status(status);
@@ -106,11 +108,14 @@ void AudioService::onChannelOpenRequest(const aasdk::proto::messages::ChannelOpe
 
 void AudioService::onAVChannelSetupRequest(const aasdk::proto::messages::AVChannelSetupRequest &request) {
     qInfo() << "[AudioService] setup request"
-            << ", channel: " << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()))
-            << ", config index: " << request.config_index();
-    const aasdk::proto::enums::AVChannelSetupStatus::Enum status = aasdk::proto::enums::AVChannelSetupStatus::OK;
+        << ", channel: " << QString::fromStdString(
+            aasdk::messenger::channelIdToString(channel_->getId()))
+        << ", config index: " << request.config_index();
+    const aasdk::proto::enums::AVChannelSetupStatus::Enum status =
+        aasdk::proto::enums::AVChannelSetupStatus::OK;
     qInfo() << "[AudioService] setup status: " << status
-            << ", channel: " << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()));
+        << ", channel: " << QString::fromStdString(
+            aasdk::messenger::channelIdToString(channel_->getId()));
 
     aasdk::proto::messages::AVChannelSetupResponse response;
     response.set_media_status(status);
@@ -123,19 +128,23 @@ void AudioService::onAVChannelSetupRequest(const aasdk::proto::messages::AVChann
     channel_->receive(this->shared_from_this());
 }
 
-void AudioService::onAVChannelStartIndication(const aasdk::proto::messages::AVChannelStartIndication &indication) {
+void AudioService::onAVChannelStartIndication(
+    const aasdk::proto::messages::AVChannelStartIndication &indication) {
     qInfo() << "[AudioService] start indication"
-            << ", channel: " << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()))
-            << ", session: " << indication.session();
+        << ", channel: " << QString::fromStdString(
+            aasdk::messenger::channelIdToString(channel_->getId()))
+        << ", session: " << indication.session();
     session_ = indication.session();
     audioOutput_->start();
     channel_->receive(this->shared_from_this());
 }
 
-void AudioService::onAVChannelStopIndication(const aasdk::proto::messages::AVChannelStopIndication &indication) {
+void AudioService::onAVChannelStopIndication(
+    const aasdk::proto::messages::AVChannelStopIndication &indication) {
     qInfo() << "[AudioService] stop indication"
-            << ", channel: " << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()))
-            << ", session: " << session_;
+        << ", channel: " << QString::fromStdString(
+            aasdk::messenger::channelIdToString(channel_->getId()))
+        << ", session: " << session_;
     session_ = -1;
     audioOutput_->suspend();
     channel_->receive(this->shared_from_this());
@@ -160,10 +169,10 @@ void AudioService::onAVMediaIndication(const aasdk::common::DataConstBuffer &buf
 
 void AudioService::onChannelError(const aasdk::error::Error &e) {
     qCritical() << "[AudioService] channel error: " << e.what()
-                << ", channel: " << QString::fromStdString(aasdk::messenger::channelIdToString(channel_->getId()));
+        << ", channel: " << QString::fromStdString(
+            aasdk::messenger::channelIdToString(channel_->getId()));
 }
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

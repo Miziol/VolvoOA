@@ -22,7 +22,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 AccessoryModeQueryChainFactory::AccessoryModeQueryChainFactory(IUSBWrapper &usbWrapper,
                                                                boost::asio::io_service &ioService,
                                                                IAccessoryModeQueryFactory &queryFactory)
@@ -31,7 +30,6 @@ AccessoryModeQueryChainFactory::AccessoryModeQueryChainFactory(IUSBWrapper &usbW
 IAccessoryModeQueryChain::Pointer AccessoryModeQueryChainFactory::create() {
     return std::make_shared<AccessoryModeQueryChain>(usbWrapper_, ioService_, queryFactory_);
 }
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

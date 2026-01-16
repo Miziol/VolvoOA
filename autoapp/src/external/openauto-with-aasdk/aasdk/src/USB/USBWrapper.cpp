@@ -21,7 +21,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 USBWrapper::USBWrapper(libusb_context *usbContext) : usbContext_(usbContext) {}
 
 int USBWrapper::releaseInterface(libusb_device_handle *dev_handle, int interface_number) {
@@ -71,7 +70,8 @@ void USBWrapper::fillInterruptTransfer(libusb_transfer *transfer,
                                        libusb_transfer_cb_fn callback,
                                        void *user_data,
                                        unsigned int timeout) {
-    libusb_fill_interrupt_transfer(transfer, dev_handle, endpoint, buffer, length, callback, user_data, timeout);
+    libusb_fill_interrupt_transfer(transfer, dev_handle, endpoint, buffer, length, callback, user_data,
+                                   timeout);
 }
 
 void USBWrapper::fillControlTransfer(libusb_transfer *transfer,
@@ -100,14 +100,15 @@ ssize_t USBWrapper::getDeviceList(DeviceListHandle &handle) {
     auto result = libusb_get_device_list(usbContext_, &raw_handle);
 
     if (result >= 0) {
-        handle = DeviceListHandle(new DeviceList(raw_handle, raw_handle + result), [raw_handle](auto in_device_list) {
-            if (!in_device_list->empty()) {
-                libusb_free_device_list(raw_handle, 1);
-            }
+        handle = DeviceListHandle(new DeviceList(raw_handle, raw_handle + result),
+                                  [raw_handle](auto in_device_list) {
+                                      if (!in_device_list->empty()) {
+                                          libusb_free_device_list(raw_handle, 1);
+                                      }
 
-            in_device_list->clear();
-            delete in_device_list;
-        });
+                                      in_device_list->clear();
+                                      delete in_device_list;
+                                  });
     } else {
         handle = DeviceListHandle();
     }
@@ -144,18 +145,20 @@ HotplugCallbackHandle USBWrapper::hotplugRegisterCallback(libusb_hotplug_event e
                                                           libusb_hotplug_callback_fn cb_fn,
                                                           void *user_data) {
     libusb_hotplug_callback_handle raw_handle;
-    libusb_hotplug_register_callback(usbContext_, events, flags, vendor_id, product_id, dev_class, cb_fn, user_data,
+    libusb_hotplug_register_callback(usbContext_, events, flags, vendor_id, product_id, dev_class, cb_fn,
+                                     user_data,
                                      &raw_handle);
 
     HotplugCallbackHandle handle(
-        &raw_handle, [this](auto raw_handle) { libusb_hotplug_deregister_callback(usbContext_, *raw_handle); });
+        &raw_handle, [this](auto raw_handle) {
+            libusb_hotplug_deregister_callback(usbContext_, *raw_handle);
+        });
     return handle;
 }
 
 libusb_transfer *USBWrapper::allocTransfer(int iso_packets) {
     return libusb_alloc_transfer(iso_packets);
 }
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

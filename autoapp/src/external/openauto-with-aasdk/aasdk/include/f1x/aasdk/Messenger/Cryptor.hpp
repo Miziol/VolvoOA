@@ -25,7 +25,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 class Cryptor : public ICryptor {
 public:
     Cryptor(transport::ISSLWrapper::Pointer sslWrapper);
@@ -57,7 +56,6 @@ private:
     const static std::string cPrivateKey;
     mutable std::mutex mutex_;
 };
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

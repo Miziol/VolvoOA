@@ -25,7 +25,6 @@
 namespace f1x {
 namespace aasdk {
 namespace tcp {
-
 class ITCPEndpoint {
 public:
     typedef std::shared_ptr<ITCPEndpoint> Pointer;
@@ -38,7 +37,6 @@ public:
     virtual void receive(common::DataBuffer buffer, Promise::Pointer promise) = 0;
     virtual void stop() = 0;
 };
-
-}  // namespace tcp
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace tcp
+} // namespace aasdk
+} // namespace f1x

@@ -29,7 +29,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class IUSBHub {
 public:
     typedef std::shared_ptr<IUSBHub> Pointer;
@@ -41,7 +40,6 @@ public:
     virtual void start(Promise::Pointer promise) = 0;
     virtual void cancel() = 0;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

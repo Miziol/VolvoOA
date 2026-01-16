@@ -22,11 +22,11 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 FrameHeader::FrameHeader(const common::DataConstBuffer &buffer) {
     channelId_ = static_cast<ChannelId>(buffer.cdata[0]);
     frameType_ = static_cast<FrameType>(buffer.cdata[1] & static_cast<uint32_t>(FrameType::BULK));
-    encryptionType_ = static_cast<EncryptionType>(buffer.cdata[1] & static_cast<uint8_t>(EncryptionType::ENCRYPTED));
+    encryptionType_ = static_cast<EncryptionType>(buffer.cdata[1] & static_cast<uint8_t>(
+                                                      EncryptionType::ENCRYPTED));
     messageType_ = static_cast<MessageType>(buffer.cdata[1] & static_cast<uint8_t>(MessageType::CONTROL));
 }
 
@@ -34,7 +34,8 @@ FrameHeader::FrameHeader(ChannelId channelId,
                          FrameType frameType,
                          EncryptionType encryptionType,
                          MessageType messageType)
-    : channelId_(channelId), frameType_(frameType), encryptionType_(encryptionType), messageType_(messageType) {}
+    : channelId_(channelId), frameType_(frameType), encryptionType_(encryptionType),
+      messageType_(messageType) {}
 
 ChannelId FrameHeader::getChannelId() const {
     return channelId_;
@@ -61,7 +62,6 @@ common::Data FrameHeader::getData() const {
 
     return data;
 }
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x

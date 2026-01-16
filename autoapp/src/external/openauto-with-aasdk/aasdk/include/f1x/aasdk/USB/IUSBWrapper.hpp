@@ -30,7 +30,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 typedef std::list<libusb_device *> DeviceList;
 typedef std::shared_ptr<DeviceList> DeviceListHandle;
 typedef std::shared_ptr<libusb_config_descriptor> ConfigDescriptorHandle;
@@ -96,7 +95,6 @@ public:
                                                           void *user_data) = 0;
     virtual libusb_transfer *allocTransfer(int iso_packets) = 0;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

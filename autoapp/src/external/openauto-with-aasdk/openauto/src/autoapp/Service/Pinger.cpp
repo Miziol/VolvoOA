@@ -22,9 +22,9 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-
 Pinger::Pinger(boost::asio::io_service &ioService, time_t duration)
-    : strand_(ioService), timer_(ioService), duration_(duration), cancelled_(false), pingsCount_(0), pongsCount_(0) {}
+    : strand_(ioService), timer_(ioService), duration_(duration), cancelled_(false), pingsCount_(0),
+      pongsCount_(0) {}
 
 void Pinger::ping(Promise::Pointer promise) {
     strand_.dispatch([this, self = this->shared_from_this(), promise = std::move(promise)]() mutable {
@@ -38,7 +38,8 @@ void Pinger::ping(Promise::Pointer promise) {
             promise_ = std::move(promise);
             timer_.expires_from_now(boost::posix_time::milliseconds(duration_));
             timer_.async_wait(
-                strand_.wrap(std::bind(&Pinger::onTimerExceeded, this->shared_from_this(), std::placeholders::_1)));
+                strand_.wrap(std::bind(&Pinger::onTimerExceeded, this->shared_from_this(),
+                                       std::placeholders::_1)));
         }
     });
 }
@@ -67,8 +68,7 @@ void Pinger::cancel() {
         timer_.cancel();
     });
 }
-
-}  // namespace service
-}  // namespace autoapp
-}  // namespace openauto
-}  // namespace f1x
+} // namespace service
+} // namespace autoapp
+} // namespace openauto
+} // namespace f1x

@@ -34,34 +34,34 @@ find_package(Protobuf REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(rtaudio REQUIRED)
 
-if(WIN32)
+if (WIN32)
     set(WINSOCK2_LIBRARIES "ws2_32")
-endif(WIN32)
+endif (WIN32)
 
-if(RPI3_BUILD)
+if (RPI3_BUILD)
     add_definitions(-DUSE_OMX -DOMX_SKIP64BIT -DRASPBERRYPI3)
     set(BCM_HOST_LIBRARIES "/opt/vc/lib/libbcm_host.so")
     set(BCM_HOST_INCLUDE_DIRS "/opt/vc/include")
     set(ILCLIENT_INCLUDE_DIRS "/opt/vc/src/hello_pi/libs/ilclient")
     set(ILCLIENT_LIBRARIES "/opt/vc/src/hello_pi/libs/ilclient/libilclient.a;/opt/vc/lib/libvcos.so;/opt/vc/lib/libvcilcs.a;/opt/vc/lib/libvchiq_arm.so")
-endif(RPI3_BUILD)
+endif (RPI3_BUILD)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}
-                    ${Qt6Multimedia_INCLUDE_DIRS}
-                    ${Qt6MultimediaWidgets_INCLUDE_DIRS}
-                    ${Qt6Widgets_INCLUDE_DIRS}
-                    ${Qt6Bluetooth_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS}
-                    ${LIBUSB_1_INCLUDE_DIRS}
-                    ${PROTOBUF_INCLUDE_DIR}
-                    ${OPENSSL_INCLUDE_DIR}
-                    ${RTAUDIO_INCLUDE_DIRS}
-                    ${AASDK_PROTO_INCLUDE_DIRS}
-                    ${AASDK_INCLUDE_DIRS}
-                    ${BCM_HOST_INCLUDE_DIRS}
-                    ${ILCLIENT_INCLUDE_DIRS}
-                    ${include_directory})
-								
+        ${Qt6Multimedia_INCLUDE_DIRS}
+        ${Qt6MultimediaWidgets_INCLUDE_DIRS}
+        ${Qt6Widgets_INCLUDE_DIRS}
+        ${Qt6Bluetooth_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        ${LIBUSB_1_INCLUDE_DIRS}
+        ${PROTOBUF_INCLUDE_DIR}
+        ${OPENSSL_INCLUDE_DIR}
+        ${RTAUDIO_INCLUDE_DIRS}
+        ${AASDK_PROTO_INCLUDE_DIRS}
+        ${AASDK_INCLUDE_DIRS}
+        ${BCM_HOST_INCLUDE_DIRS}
+        ${ILCLIENT_INCLUDE_DIRS}
+        ${include_directory})
+
 link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 set(common_include_directory ${include_directory}/f1x/openauto/Common)
@@ -73,18 +73,18 @@ file(GLOB_RECURSE autoapp_source_files ${autoapp_sources_directory}/*.ui ${autoa
 add_executable(autoapp ${autoapp_source_files})
 
 target_link_libraries(autoapp
-                        ${Boost_LIBRARIES}
-                        ${Qt6Multimedia_LIBRARIES}
-                        ${Qt6MultimediaWidgets_LIBRARIES}
-                        ${Qt6Bluetooth_LIBRARIES}
-                        ${LIBUSB_1_LIBRARIES}
-                        ${PROTOBUF_LIBRARIES}
-                        ${BCM_HOST_LIBRARIES}
-                        ${ILCLIENT_LIBRARIES}
-                        ${WINSOCK2_LIBRARIES}
-                        ${RTAUDIO_LIBRARIES}
-                        ${AASDK_PROTO_LIBRARIES}
-                        ${AASDK_LIBRARIES})
+        ${Boost_LIBRARIES}
+        ${Qt6Multimedia_LIBRARIES}
+        ${Qt6MultimediaWidgets_LIBRARIES}
+        ${Qt6Bluetooth_LIBRARIES}
+        ${LIBUSB_1_LIBRARIES}
+        ${PROTOBUF_LIBRARIES}
+        ${BCM_HOST_LIBRARIES}
+        ${ILCLIENT_LIBRARIES}
+        ${WINSOCK2_LIBRARIES}
+        ${RTAUDIO_LIBRARIES}
+        ${AASDK_PROTO_LIBRARIES}
+        ${AASDK_LIBRARIES})
 
 set(btservice_sources_directory ${sources_directory}/btservice)
 set(btservice_include_directory ${include_directory}/f1x/openauto/btservice)
@@ -93,8 +93,8 @@ file(GLOB_RECURSE btservice_source_files ${btservice_sources_directory}/*.cpp ${
 add_executable(btservice ${btservice_source_files})
 
 target_link_libraries(btservice
-                        ${Boost_LIBRARIES}
-                        ${Qt6Bluetooth_LIBRARIES}
-                        ${Qt6MultimediaWidgets_LIBRARIES}
-                        ${PROTOBUF_LIBRARIES}
-                        ${AASDK_PROTO_LIBRARIES})
+        ${Boost_LIBRARIES}
+        ${Qt6Bluetooth_LIBRARIES}
+        ${Qt6MultimediaWidgets_LIBRARIES}
+        ${PROTOBUF_LIBRARIES}
+        ${AASDK_PROTO_LIBRARIES})

@@ -28,7 +28,6 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-
 class ConnectedAccessoriesEnumerator : public IConnectedAccessoriesEnumerator,
                                        public std::enable_shared_from_this<ConnectedAccessoriesEnumerator> {
 public:
@@ -53,7 +52,6 @@ private:
     DeviceListHandle deviceListHandle_;
     DeviceList::iterator actualDeviceIter_;
 };
-
-}  // namespace usb
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace usb
+} // namespace aasdk
+} // namespace f1x

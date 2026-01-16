@@ -24,7 +24,6 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-
 class FrameSize {
 public:
     FrameSize(size_t frameSize, size_t totalSize);
@@ -41,7 +40,6 @@ private:
     size_t frameSize_;
     size_t totalSize_;
 };
-
-}  // namespace messenger
-}  // namespace aasdk
-}  // namespace f1x
+} // namespace messenger
+} // namespace aasdk
+} // namespace f1x
