@@ -37,12 +37,11 @@ public:
     void write(uint64_t timestamp, const aasdk::common::DataConstBuffer &buffer) override;
     void stop() override;
 
-signals :
+signals:
     void startPlayback();
     void stopPlayback();
 
-protected
-slots :
+protected slots:
     void onStartPlayback();
     void onStopPlayback();
 

@@ -43,8 +43,7 @@ public:
     bool hasTouchscreen() const override;
     QRect getTouchscreenGeometry() const override;
 
-public
-slots :
+public slots:
     bool handleKeyEvent(int key, bool pressed);
     bool handleTouchEvent(qreal mouseX, qreal mouseY, QString type); // TODO change `type` to enum
 

@@ -35,8 +35,7 @@ public:
 
     bool start(const QBluetoothAddress &address, uint16_t portNumber) override;
 
-private
-slots :
+private slots:
     void onClientConnected();
 
 private:

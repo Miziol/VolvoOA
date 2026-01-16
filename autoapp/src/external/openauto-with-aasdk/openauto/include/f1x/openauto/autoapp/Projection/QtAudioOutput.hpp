@@ -42,13 +42,12 @@ public:
     uint32_t getChannelCount() const override;
     uint32_t getSampleRate() const override;
 
-signals :
+signals:
     void startPlayback();
     void suspendPlayback();
     void stopPlayback();
 
-protected
-slots :
+protected slots:
     void onStartPlayback();
     void onSuspendPlayback();
     void onStopPlayback();

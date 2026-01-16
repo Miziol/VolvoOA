@@ -42,12 +42,11 @@ public:
     uint32_t getChannelCount() const override;
     uint32_t getSampleRate() const override;
 
-signals :
+signals:
     void startRecording(StartPromise::Pointer promise);
     void stopRecording();
 
-private
-slots :
+private slots:
     void onStartRecording(StartPromise::Pointer promise);
     void onStopRecording();
     void onReadyRead();

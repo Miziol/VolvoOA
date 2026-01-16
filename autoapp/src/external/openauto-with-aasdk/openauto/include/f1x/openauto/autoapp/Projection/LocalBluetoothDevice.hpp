@@ -37,11 +37,10 @@ public:
     std::string getLocalAddress() const override;
     bool isAvailable() const override;
 
-signals :
+signals:
     void startPairing(const QString &address, PairingPromise::Pointer promise);
 
-private
-slots :
+private slots:
     void onStartPairing(const QString &address, PairingPromise::Pointer promise);
     void onPairingDisplayConfirmation(const QBluetoothAddress &address, QString pin);
     void onPairingDisplayPinCode(const QBluetoothAddress &address, QString pin);
