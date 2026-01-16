@@ -3,14 +3,6 @@ name: AutoApp
 on: [push]
 
 jobs:
-  install_requierments:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup environment
-        run: sudo ./install_requirements.sh
-        
-
   qmllint:
     runs-on: ubuntu-latest
     steps:
@@ -32,7 +24,7 @@ jobs:
         run: find LINbusKeyboardEmulator -name "*.cpp" -o -name "*.h" -name "*.ino" | xargs clang-format --dry-run --Werror
 
   build-autoapp:
-    needs: [clang, qmllint, install_requierments]
+    needs: [clang, qmllint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +33,7 @@ jobs:
       - name: Build with CMake
         run: |
           cmake -S autoapp -B autoapp/build
-          cmake --build build
+          cmake --build autoapp/build
 
   build-arduino:
     needs: clang
