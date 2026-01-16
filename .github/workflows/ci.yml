@@ -1,8 +1,15 @@
-name: CI Pipeline
+name: AutoApp
 
 on: [push, pull_request]
 
 jobs:
+  qmllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: opengisch/qmlformat-lint-action@v1
+
+
   # Zadanie 1: Linting (zawsze na początku)
   linting:
     runs-on: ubuntu-latest
