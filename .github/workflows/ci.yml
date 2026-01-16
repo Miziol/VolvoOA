@@ -6,16 +6,15 @@ jobs:
   install_requierments:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Setup environment
-        run: |
-          ls -l
-          pwd
-          sudo ./install_requirements.sh
+        run: sudo ./install_requirements.sh
         
 
   qmllint:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Install qmllint
         run: sudo apt install -y qt6-qmllint-plugins
       - name: Run QML Check
@@ -24,6 +23,7 @@ jobs:
   clang:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Install clang
         run: sudo apt-get update && sudo apt-get install -y clang-format
       - name: Run Clang Check
@@ -33,6 +33,7 @@ jobs:
     needs: [clang, qmllint, install_requierments]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Build with CMake
         run: |
           cmake -S . -B build
@@ -42,6 +43,7 @@ jobs:
     needs: [clang, install_requierments]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Compile Sketch
         run: |
           arduino-cli core install arduino:avr # lub inna płytka
