@@ -13,7 +13,7 @@ jobs:
       - name: Run Clang Check
         run: find . -name "*.cpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
       - name: Run QML Check
-        run: find . -name "*.qml" | xargs qmllint
+        uses: opengisch/qmlformat-lint@v1
 
   # Zadanie 2: Budowanie aplikacji C++
   build-cpp:
