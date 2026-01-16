@@ -7,9 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup environment
-        run: |
-          chmod +x install_requirements.sh
-          sudo ./install_requirements.sh
+        run: sudo ./install_requirements.sh
         
 
   qmllint:
@@ -18,7 +16,7 @@ jobs:
       - name: Install qmllint
         run: sudo apt install -y qt6-qmllint-plugins
       - name: Run QML Check
-        run: find . -name "*.qml" | xargs qmllint
+        run: find src -type f -name "*.qml" -exec qmllint {} \;
 
   clang:
     runs-on: ubuntu-latest
