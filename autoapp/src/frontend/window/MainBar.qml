@@ -16,12 +16,9 @@ Item {
         onClicked: switchToSettings()
     }
 
-    Image {
+    Logo {
         anchors.fill: parent
         anchors.margins: 5
-        fillMode: Image.PreserveAspectFit
-
-        source: "qrc:/icons/logo.svg"
     }
 
     ToolButton {
