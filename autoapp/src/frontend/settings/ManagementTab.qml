@@ -33,11 +33,7 @@ GridLayout {
         model: arduinoService.arduinosList
         currentIndex: arduinoService.currentIndex
 
-        onModelChanged: console.error(model)
-
         onCurrentIndexChanged: arduinoService.currentIndex = currentIndex
-
-        Component.onCompleted: console.error(model)
     }
 
     Row {
