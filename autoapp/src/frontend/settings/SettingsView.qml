@@ -32,7 +32,7 @@ ScreenElement {
             anchors.top: bar.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottom: parent.bottom
+            //anchors.bottom: parent.bottom
             anchors.topMargin: margin
 
             clip: true
