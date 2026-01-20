@@ -2,110 +2,45 @@ import QtQuick
 import QtQuick.Shapes
 
 Item {
-    property int globalStrokeWidth: -1
-    property color globalStrokeColor: "transparent"
-
     Shape {
         id: shape
         width: 100
         height: 50
-
         anchors.centerIn: parent
 
+        layer.enabled: true
+        layer.samples: 8
+        smooth: true
+        antialiasing: true
+
         ShapePath {
-            strokeWidth: globalStrokeWidth
-            strokeColor: globalStrokeColor
-            fillGradient: logoGradient
+            strokeWidth: 0
+            strokeColor: "transparent"
+            fillColor: "white" // TODO
 
             startX: 0; startY: 50
-            PathLine {
-                x: 12.5; y: 50
-            }
-            PathLine {
-                x: 25; y: 0
-            }
-            PathLine {
-                x: 12.5; y: 0
-            }
-        }
+            PathLine { x: 12.5; y: 50 }
+            PathLine { x: 25; y: 0 }
+            PathLine { x: 37.5; y: 50 }
+            PathLine { x: 50; y: 50 }
+            PathLine { x: 37.5; y: 0 }
+            PathLine { x: 12.5; y: 0 }
 
-        ShapePath {
-            strokeWidth: globalStrokeWidth
-            strokeColor: globalStrokeColor
-            fillGradient: logoGradient
+            PathMove { x: 20; y: 30 }
+            PathLine { x: 30; y: 30 }
+            PathLine { x: 25; y: 10 }
 
-            startX: 37.5; startY: 50
-            PathLine {
-                x: 50; y: 50
-            }
-            PathLine {
-                x: 37.5; y: 0
-            }
-            PathLine {
-                x: 25; y: 0
-            }
-        }
+            PathMove { x: 50; y: 50 }
+            PathLine { x: 62.5; y: 50 }
+            PathLine { x: 75; y: 0 }
+            PathLine { x: 87.5; y: 50 }
+            PathLine { x: 100; y: 50 }
+            PathLine { x: 87.5; y: 0 }
+            PathLine { x: 62.5; y: 0 }
 
-        ShapePath {
-            strokeWidth: globalStrokeWidth
-            strokeColor: globalStrokeColor
-            fillGradient: logoGradient
-
-            startX: 50; startY: 50
-            PathLine {
-                x: 62.5; y: 50
-            }
-            PathLine {
-                x: 75; y: 0
-            }
-            PathLine {
-                x: 62.5; y: 0
-            }
-        }
-
-        ShapePath {
-            strokeWidth: globalStrokeWidth
-            strokeColor: globalStrokeColor
-            fillGradient: logoGradient
-
-            startX: 87.5; startY: 50
-            PathLine {
-                x: 100; y: 50
-            }
-            PathLine {
-                x: 87.5; y: 0
-            }
-            PathLine {
-                x: 75; y: 0
-            }
-        }
-
-        ShapePath {
-            strokeWidth: globalStrokeWidth
-            strokeColor: globalStrokeColor
-            fillGradient: logoGradient
-
-            startX: 20; startY: 30
-            PathLine {
-                x: 30; y: 30
-            }
-            PathLine {
-                x: 25; y: 10
-            }
-        }
-
-        ShapePath {
-            strokeWidth: globalStrokeWidth
-            strokeColor: globalStrokeColor
-            fillGradient: logoGradient
-
-            startX: 70; startY: 30
-            PathLine {
-                x: 80; y: 30
-            }
-            PathLine {
-                x: 75; y: 10
-            }
+            PathMove { x: 70; y: 30 }
+            PathLine { x: 80; y: 30 }
+            PathLine { x: 75; y: 10 }
         }
     }
 
