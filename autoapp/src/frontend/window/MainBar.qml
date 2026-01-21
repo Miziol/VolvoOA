@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Material
 
-Item {
+FocusScope {
     signal switchToSettings()
     signal switchToAndroidAuto()
 
@@ -11,6 +11,7 @@ Item {
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
 
+        focus: true
         text: qsTr("Settings")
 
         onClicked: switchToSettings()
@@ -24,6 +25,8 @@ Item {
     ToolButton {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
+
+        enabled: aaService.aaConnected
 
         text: qsTr("Android Auto")
 
