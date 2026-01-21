@@ -78,12 +78,14 @@ Window {
     }
 
     onActiveFocusItemChanged: {
-        focusIndicator.width = activeFocusItem.width
-        focusIndicator.height = activeFocusItem.height
+        if (activeFocusItem != null) {
+            focusIndicator.width = activeFocusItem.width
+            focusIndicator.height = activeFocusItem.height
 
-        const activeFocusItemLocation = activeFocusItem.mapToGlobal(0, 0)
-        focusIndicator.x = activeFocusItemLocation.x
-        focusIndicator.y = activeFocusItemLocation.y
+            const activeFocusItemLocation = activeFocusItem.mapToItem(null, 0, 0)
+            focusIndicator.x = activeFocusItemLocation.x
+            focusIndicator.y = activeFocusItemLocation.y
+        }
     }
 
     Connections {
