@@ -59,11 +59,11 @@ bool AppCore::eventFilter(QObject *obj, QEvent *event) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
         if (keyEvent->key() == Qt::Key_PageUp) {
-            QGuiApplication::sendEvent(QGuiApplication::focusObject(), new QKeyEvent(keyEvent->type(), Qt::Key_Backtab,
+            QGuiApplication::sendEvent((QObject *)QGuiApplication::focusWindow(), new QKeyEvent(keyEvent->type(), Qt::Key_Backtab,
                                                                                      Qt::KeyboardModifier::NoModifier));
             return true;
         } else if (keyEvent->key() == Qt::Key_PageDown) {
-            QGuiApplication::sendEvent(QGuiApplication::focusObject(),
+            QGuiApplication::sendEvent((QObject *)QGuiApplication::focusWindow(),
                                        new QKeyEvent(keyEvent->type(), Qt::Key_Tab, Qt::KeyboardModifier::NoModifier));
             return true;
         }
