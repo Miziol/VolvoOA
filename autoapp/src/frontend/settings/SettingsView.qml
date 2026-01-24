@@ -17,6 +17,7 @@ ScreenElement {
         width: allElementsWidth
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
+        anchors.topMargin: margin
 
         TabButton {
             text: qsTr("Android Auto")
@@ -28,10 +29,9 @@ ScreenElement {
     }
 
     SwipeView {
-        width: parent.width
+        width: allElementsWidth
         anchors.top: bar.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: margin
 
         clip: true
