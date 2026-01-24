@@ -4,43 +4,45 @@ import QtQuick.Layouts
 import "qrc:/commons"
 
 ScreenElement {
-    property int margin: 20
+    property int allElementsWidth: 2 * elementWidth + columnsMargin
+    property int elementWidth: Math.min((width - (2 * margin) - columnsMargin) / 2, 500)
     property int elementHeight: guiStyle.mediumElementSize
+    property int margin: 20
+    property int columnsMargin: 60
 
-    Item {
-        anchors.fill: parent
-        anchors.margins: margin
+    clip: true
 
-        TabBar {
-            id: bar
-            width: parent.width
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
+    TabBar {
+        id: bar
+        width: allElementsWidth
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
 
-            TabButton {
-                text: qsTr("Android Auto")
-            }
-
-            TabButton {
-                text: qsTr("Management")
-            }
+        TabButton {
+            text: qsTr("Android Auto")
         }
 
-        SwipeView {
-            width: parent.width
-            anchors.top: bar.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            //anchors.bottom: parent.bottom
-            anchors.topMargin: margin
+        TabButton {
+            text: qsTr("Management")
+        }
+    }
 
-            clip: true
-            currentIndex: bar.currentIndex
+    SwipeView {
+        width: parent.width
+        anchors.top: bar.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.topMargin: margin
 
-            AndroidAutoTab {}
+        clip: true
+        currentIndex: bar.currentIndex
 
-            ManagementTab {}
+        AndroidAutoTab {
+            enabled: bar.currentIndex == 0
+        }
+
+        ManagementTab {
+            enabled: bar.currentIndex == 1
         }
     }
 }
