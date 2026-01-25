@@ -4,90 +4,105 @@ import QtQuick.Layouts
 import "qrc:/commons"
 
 
-GridLayout {
-    columns: 2
-    columnSpacing: margin
+FocusScope {
+    implicitWidth: tabBar.implicitWidth
+    implicitHeight: tabBar.implicitHeight
 
-    Title {
-        height: elementHeight
-        Layout.columnSpan: 2
-        text: qsTr("Navigation")
-    }
+    GridLayout {
+        id: tabBar
+        columns: 2
+        columnSpacing: columnsMargin
 
-    Switch {
-        width: 400
-        height: elementHeight
-        text: qsTr("Show cursor")
+        Title {
+            Layout.preferredWidth: allElementsWidth
+            Layout.preferredHeight: elementHeight
+            Layout.columnSpan: 2
 
-        checked: settingsManager.showCursor
-        onClicked: settingsManager.showCursor = checked
-    }
-
-    Title {
-        height: elementHeight
-        Layout.columnSpan: 2
-        text: qsTr("Updates")
-    }
-
-    ComboBox {
-        model: arduinoService.arduinosList
-        currentIndex: arduinoService.currentIndex
-
-        onModelChanged: console.error(model)
-
-        onCurrentIndexChanged: arduinoService.currentIndex = currentIndex
-
-        Component.onCompleted: console.error(model)
-    }
-
-    Row {
-        RoundButton {
-            height: elementHeight
-            enabled: arduinoService.currentIndex != -1
-
-            text: qsTr("Update Arduino Firmware")
-
-            onClicked: arduinoService.updateSelectedArduinoFirmware()
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            text: qsTr("Navigation")
         }
 
-        BusyIndicator {
-            height: elementHeight
-            running: arduinoService.arduinoUpdater.running
-        }
-    }
+        Switch {
+            Layout.preferredWidth: elementWidth
+            Layout.preferredHeight: elementHeight
+            focus: true
 
-    Row {
-        spacing: margin
+            text: qsTr("Show cursor")
 
-        RoundButton {
-            height: elementHeight
-            enabled: !appUpdater.running
-
-            text: qsTr("Update App")
-
-            onClicked: core.updateApp()
+            checked: settingsManager.showCursor
+            onClicked: settingsManager.showCursor = checked
         }
 
-        ProgressBar {
-            height: elementHeight
-            visible: appUpdater.running
-            value: appUpdater.step / appUpdater.steps
-        }
-    }
+        Title {
+            Layout.preferredWidth: allElementsWidth
+            Layout.preferredHeight: elementHeight
+            Layout.columnSpan: 2
 
-    Row {
-        RoundButton {
-            height: elementHeight
-            enabled: !systemUpdater.running
-
-            text: qsTr("Update System")
-
-            onClicked: core.updateSystem()
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            text: qsTr("Updates")
         }
 
-        BusyIndicator {
-            height: elementHeight
-            running: systemUpdater.running
+        ComboBox {
+            Layout.preferredWidth: elementWidth
+            Layout.preferredHeight: elementHeight
+
+            model: arduinoService.arduinosList
+            currentIndex: arduinoService.currentIndex
+
+            onCurrentIndexChanged: arduinoService.currentIndex = currentIndex
+        }
+
+        Row {
+            RoundButton {
+                height: elementHeight
+                enabled: arduinoService.currentIndex != -1
+
+                text: qsTr("Update Arduino Firmware")
+
+                onClicked: arduinoService.updateSelectedArduinoFirmware()
+            }
+
+            BusyIndicator {
+                height: elementHeight
+                running: arduinoService.arduinoUpdater.running
+            }
+        }
+
+        Row {
+            spacing: margin
+
+            RoundButton {
+                height: elementHeight
+                enabled: !appUpdater.running
+
+                text: qsTr("Update App")
+
+                onClicked: core.updateApp()
+            }
+
+            ProgressBar {
+                height: elementHeight
+                visible: appUpdater.running
+                value: appUpdater.step / appUpdater.steps
+            }
+        }
+
+        Row {
+            RoundButton {
+                height: elementHeight
+                enabled: !systemUpdater.running
+
+                text: qsTr("Update System")
+
+                onClicked: core.updateSystem()
+            }
+
+            BusyIndicator {
+                height: elementHeight
+                running: systemUpdater.running
+            }
         }
     }
 }

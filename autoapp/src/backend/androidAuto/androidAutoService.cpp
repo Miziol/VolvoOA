@@ -44,6 +44,10 @@ void AndroidAutoService::createFactories(QObject *qmlRootObject) {
         this, ioService, settingsManager, *serviceFactory);
 }
 
+bool AndroidAutoService::isAADeviceConnected() {
+    return aaDevice != nullptr;
+}
+
 void AndroidAutoService::onAndroidAutoQuit() {
     aaDevice->deleteLater();
     aaDevice = nullptr;

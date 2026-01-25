@@ -15,7 +15,11 @@ class AndroidAutoService : public QObject, public f1x::openauto::autoapp::servic
     Q_OBJECT
 
 signals:
+    void aaDeviceChanged();
     void focusOnAA(bool focus);
+
+public:
+    Q_PROPERTY(bool aaConnected READ isAADeviceConnected NOTIFY aaDeviceChanged);
 
 public:
     AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService);
@@ -28,6 +32,8 @@ public slots:
 
     void startIOServiceWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
     void createFactories(QObject *qmlRootObject);
+
+    bool isAADeviceConnected();
 
     void onAndroidAutoQuit() override;
     void setFocusOnAA(bool focus) override;

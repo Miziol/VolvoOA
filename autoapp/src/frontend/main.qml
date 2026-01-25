@@ -34,17 +34,17 @@ Window {
         onSwitchToSettings: viewIndex ? viewIndex = 0 : viewIndex = 1
         onSwitchToAndroidAuto: viewIndex = 2
 
-        KeyNavigation.backtab: null
         KeyNavigation.tab: viewIndex == 2 ? null : viewIndex ? mainView : settingsView
     }
 
     SettingsView {
         id: settingsView
         x: (0 - viewIndex) * parent.width
+        width: parent.width
         anchors.top: appBar.bottom
         anchors.bottom: parent.bottom
 
-        width: parent.width
+        enabled: x == 0
 
         KeyNavigation.backtab: appBar
         KeyNavigation.tab: appBar
@@ -53,10 +53,11 @@ Window {
     MainView {
         id: mainView
         x: (1 - viewIndex) * parent.width
+        width: parent.width
         anchors.top: appBar.bottom
         anchors.bottom: parent.bottom
 
-        width: parent.width
+        enabled: x == 0
         focus: true
 
         KeyNavigation.backtab: appBar
@@ -69,8 +70,9 @@ Window {
 
         width: parent.width
         height: parent.height
-
         anchors.verticalCenter: parent.verticalCenter
+
+        enabled: x == 0
     }
 
     FocusIndicator {
@@ -78,12 +80,14 @@ Window {
     }
 
     onActiveFocusItemChanged: {
-        focusIndicator.width = activeFocusItem.width
-        focusIndicator.height = activeFocusItem.height
+        if (activeFocusItem != null) {
+            focusIndicator.width = activeFocusItem.width
+            focusIndicator.height = activeFocusItem.height
 
-        const activeFocusItemLocation = activeFocusItem.mapToGlobal(0, 0)
-        focusIndicator.x = activeFocusItemLocation.x
-        focusIndicator.y = activeFocusItemLocation.y
+            const activeFocusItemLocation = activeFocusItem.mapToItem(null, 0, 0)
+            focusIndicator.x = activeFocusItemLocation.x
+            focusIndicator.y = activeFocusItemLocation.y
+        }
     }
 
     Connections {

@@ -22,12 +22,10 @@
     </qresource>
     <qresource prefix="/window/">
         <file alias="FocusIndicator.qml">window/FocusIndicator.qml</file>
+        <file alias="Logo.qml">window/Logo.qml</file>
         <file alias="MainBar.qml">window/MainBar.qml</file>
     </qresource>
     <qresource prefix="/icons/">
-        <file alias="dashboard.svg">resources/icons/dashboard.svg</file>
         <file alias="logo.svg">resources/icons/logo.svg</file>
-        <file alias="settings.svg">resources/icons/settings.svg</file>
-        <file alias="phone.svg">resources/icons/phone.svg</file>
     </qresource>
 </RCC>
