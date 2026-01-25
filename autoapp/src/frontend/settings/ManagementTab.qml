@@ -14,28 +14,40 @@ FocusScope {
         columnSpacing: columnsMargin
 
         Title {
-            height: elementHeight
+            Layout.preferredWidth: allElementsWidth
+            Layout.preferredHeight: elementHeight
             Layout.columnSpan: 2
+
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
             text: qsTr("Navigation")
         }
 
         Switch {
-            width: 400
-            height: elementHeight
-            text: qsTr("Show cursor")
+            Layout.preferredWidth: elementWidth
+            Layout.preferredHeight: elementHeight
             focus: true
+
+            text: qsTr("Show cursor")
 
             checked: settingsManager.showCursor
             onClicked: settingsManager.showCursor = checked
         }
 
         Title {
-            height: elementHeight
+            Layout.preferredWidth: allElementsWidth
+            Layout.preferredHeight: elementHeight
             Layout.columnSpan: 2
+
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
             text: qsTr("Updates")
         }
 
         ComboBox {
+            Layout.preferredWidth: elementWidth
+            Layout.preferredHeight: elementHeight
+
             model: arduinoService.arduinosList
             currentIndex: arduinoService.currentIndex
 
