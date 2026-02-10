@@ -12,5 +12,9 @@ ScreenElement {
 
             onClicked: modelData.tryToStartAndroidAutoServer()
         }
+
+        EmptyListIcon {
+            visible: false
+        }
     }
 }
