@@ -5,11 +5,13 @@ import "qrc:/commons"
 ScreenElement {
     ListView {
         anchors.fill: parent
-        model: usbService.usbDevices
+        model: [{deviceName: "TEST"}] //usbService.usbDevices
         enabled: model.length > 0
         focus: true
 
         delegate: Button {
+            width: parent.width
+
             text: modelData.deviceName
 
             onClicked: modelData.tryToStartAndroidAutoServer()
