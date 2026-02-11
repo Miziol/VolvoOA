@@ -5,7 +5,7 @@ import "qrc:/commons"
 ScreenElement {
     ListView {
         anchors.fill: parent
-        model: [{deviceName: "TEST"}] //usbService.usbDevices
+        model: usbService.usbDevices
         enabled: model.length > 0
         focus: true
 
