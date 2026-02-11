@@ -1,32 +1,38 @@
 import QtQuick
 
-Item {
-    width: 200
-    height: 200
+Column {
+    id: root
+    property color color: "grey"
 
-    // Główna obudowa (odpowiednik <rect>)
+    height: 2 * width
+
     Rectangle {
-        x: 60; y: 30
-        width: 80
-        height: 140
-        radius: 10 // rx, ry
+        width: parent.width
+        height: parent.height * 8/9
+        anchors.horizontalCenter: parent.horizontalCenter
+        radius: 15
 
-        color: "transparent" // fill="none"
-        border.color: "grey" // stroke="grey"
-        border.width: 15     // stroke-width="15"
+        color: "transparent"
+        border.color: parent.color
+        border.width: width/10
 
-        // Kropka w środku (odpowiednik <circle>)
-        // Pozycjonujemy względem rodzica (obudowy)
         Rectangle {
-            width: 30  // r * 2
-            height: 30
-            radius: 15 // połowa szerokootności daje koło
-            color: "grey"
+            width: 2 * parent.border.width
+            height: width
+            radius: width/2
+            color: root.color
 
-            // Wyśrodkowanie w poziomie i dół (zgodnie z cy="140" w SVG)
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 15 // Dostosowane do cy=140
+            anchors.bottomMargin: parent.border.width + guiStyle.detailSize
         }
+    }
+
+    Text {
+        height: parent.height * 1/9
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        color: root.color
+        text: qsTr("Connect device")
     }
 }
