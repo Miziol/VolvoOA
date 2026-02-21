@@ -9,9 +9,9 @@
 #define SWM_ID 0x20
 #define LSM_ID 0x10
 
-#define SCREEN_POWER_PIN 0  // TODO
-#define PHONE_POWER_PIN 0   // TODO
-#define PI_POWER_ON_PIN 0   // TODO
+#define SCREEN_POWER_PIN 5
+#define PHONE_POWER_PIN 4
+#define PI_POWER_ON_PIN 2
 
 #define BACK_BUTTON KEY_HOME
 #define ENTER_BUTTON KEY_RETURN
