@@ -5,10 +5,11 @@ Column {
     property color color: "grey"
 
     height: 2 * width
+    spacing: parent.height / 9
 
     Rectangle {
         width: parent.width
-        height: parent.height * 8/9
+        height: parent.height * 7/9
         anchors.horizontalCenter: parent.horizontalCenter
         radius: 15
 
@@ -33,6 +34,7 @@ Column {
         anchors.horizontalCenter: parent.horizontalCenter
 
         color: root.color
+        font.pixelSize: guiStyle.titleTextSize
         text: qsTr("Connect device")
     }
 }
