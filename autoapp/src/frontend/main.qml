@@ -30,6 +30,7 @@ Window {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        enabled: viewIndex != 2
 
         onSwitchToSettings: viewIndex ? viewIndex = 0 : viewIndex = 1
         onSwitchToAndroidAuto: viewIndex = 2
@@ -77,6 +78,7 @@ Window {
 
     FocusIndicator {
         id: focusIndicator
+        visible: viewIndex != 2
     }
 
     onActiveFocusItemChanged: {
@@ -96,6 +98,7 @@ Window {
         function onFocusOnAA(focus) {
             if (focus) {
                 viewIndex = 2
+                androidAutoView.forceActiveFocus()
             } else {
                 viewIndex = 1
             }
