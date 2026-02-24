@@ -1,6 +1,6 @@
 import QtQuick
 
-Item {
+FocusScope {
     Behavior on x {
         SmoothedAnimation {
             duration: animationTime

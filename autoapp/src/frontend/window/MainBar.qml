@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Material
 
-Item {
+FocusScope {
     signal switchToSettings()
     signal switchToAndroidAuto()
 
@@ -11,22 +11,22 @@ Item {
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
 
+        focus: true
         text: qsTr("Settings")
 
         onClicked: switchToSettings()
     }
 
-    Image {
+    Logo {
         anchors.fill: parent
         anchors.margins: 5
-        fillMode: Image.PreserveAspectFit
-
-        source: "qrc:/icons/logo.svg"
     }
 
     ToolButton {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
+
+        enabled: aaService.aaConnected
 
         text: qsTr("Android Auto")
 

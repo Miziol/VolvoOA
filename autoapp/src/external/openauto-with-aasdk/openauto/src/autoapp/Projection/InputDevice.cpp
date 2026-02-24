@@ -116,12 +116,14 @@ bool InputDevice::handleKeyEvent(int key, bool pressed) {
             break;
 
         case Qt::Key_PageUp:
+        case Qt::Key_Backtab:
             wheelDirection = WheelDirection::LEFT;
             eventType = ButtonEventType::NONE;
             buttonCode = aasdk::proto::enums::ButtonCode::SCROLL_WHEEL;
             break;
 
         case Qt::Key_PageDown:
+        case Qt::Key_Tab:
             wheelDirection = WheelDirection::RIGHT;
             eventType = ButtonEventType::NONE;
             buttonCode = aasdk::proto::enums::ButtonCode::SCROLL_WHEEL;

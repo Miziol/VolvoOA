@@ -11,6 +11,7 @@ void AndroidAutoService::addUSBDevice(libusb_context *context, libusb_device *de
     if (aaDevice == nullptr) {
         cinfo << "New AA device start processing";
         aaDevice = new AndroidAutoDevice(this, context, device, ioService, *androidAutoEntityFactory);
+        emit aaDeviceChanged();
     } else {
         cwarning << "Android Auto entity already exist. AA device ignored";
     }
@@ -21,6 +22,7 @@ void AndroidAutoService::removeDevice(libusb_device *device) {
         cinfo << "Stoping AA device";
         aaDevice->deleteLater();
         aaDevice = nullptr;
+        emit aaDeviceChanged();
     }
 }
 
@@ -44,9 +46,14 @@ void AndroidAutoService::createFactories(QObject *qmlRootObject) {
         this, ioService, settingsManager, *serviceFactory);
 }
 
+bool AndroidAutoService::isAADeviceConnected() {
+    return aaDevice != nullptr;
+}
+
 void AndroidAutoService::onAndroidAutoQuit() {
     aaDevice->deleteLater();
     aaDevice = nullptr;
+    emit aaDeviceChanged();
 }
 
 void AndroidAutoService::setFocusOnAA(bool focus) {

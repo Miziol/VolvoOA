@@ -12,6 +12,7 @@ ScreenElement {
         objectName: "aaVideoOutput"
         anchors.fill: parent
 
+        focus: true
         fillMode: Image.Stretch
 
         Keys.onPressed: (event) => {
