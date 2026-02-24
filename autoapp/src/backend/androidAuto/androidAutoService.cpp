@@ -23,6 +23,7 @@ void AndroidAutoService::removeDevice(libusb_device *device) {
         aaDevice->deleteLater();
         aaDevice = nullptr;
         emit aaDeviceChanged();
+        emit focusOnAA(false);
     }
 }
 

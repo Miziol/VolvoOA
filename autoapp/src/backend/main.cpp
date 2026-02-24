@@ -21,6 +21,9 @@ static void handleSigTerm(int) {
 }
 
 int main(int argc, char *argv[]) {
+    QElapsedTimer timer;
+    timer.start();
+
     // Closing logic
     if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigTermFd)) {
         qFatal("Nie można utworzyć socketpair dla handlera sygnałów");
@@ -61,7 +64,7 @@ int main(int argc, char *argv[]) {
     AppCore appCore(settings);
 
     QLoggingCategory category = QLoggingCategory("MAIN");
-    cinfo << "App started";
+    cinfo << "App started in" << timer.elapsed() << "ms";
 
     // Run app loop
     app.exec();
