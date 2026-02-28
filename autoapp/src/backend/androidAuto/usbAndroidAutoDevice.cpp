@@ -1,4 +1,4 @@
-#include "androidAutoDevice.h"
+#include "usbAndroidAutoDevice.h"
 
 #include "androidAutoService.h"
 #include "f1x/aasdk/USB/AOAPDevice.hpp"

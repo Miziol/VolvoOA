@@ -1,6 +1,6 @@
 #include "androidAutoService.h"
 
-#include "androidAutoDevice.h"
+#include "usbAndroidAutoDevice.h"
 
 AndroidAutoService::AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService)
     : category("ANDROID AUTO SERVICE"), settingsManager(new_settings), ioService(new_ioService), aaDevice(nullptr) {}
@@ -28,6 +28,8 @@ void AndroidAutoService::removeDevice(libusb_device *device) {
 }
 
 void AndroidAutoService::addNetworkDevice() {
+
+    IAndroidAutoEntity::Pointer create(aasdk::tcp::ITCPEndpoint::Pointer tcpEndpoint) override;
     ;  // TODO
 }
 
