@@ -47,8 +47,7 @@ private:
     f1x::openauto::autoapp::service::ServiceFactory *serviceFactory;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory *androidAutoEntityFactory;
 
-    //UsbAndroidAutoDevice *aaDevice;
-    WirelessAndroidAutoDevice *aaDevice;
+    AndroidAutoDevice *aaDevice;
 };
 
 #endif  // AUTOAPP_ANDROIDAUTOSERVICE_H

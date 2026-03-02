@@ -19,12 +19,14 @@ void AndroidAutoService::addUSBDevice(libusb_context *context, libusb_device *de
 }
 
 void AndroidAutoService::removeDevice(libusb_device *device) {
-    if (device == aaDevice->getDevice()) {
-        cinfo << "Stoping AA device";
-        aaDevice->deleteLater();
-        aaDevice = nullptr;
-        emit aaDeviceChanged();
-        emit focusOnAA(false);
+    if (auto* usb = dynamic_cast<UsbAndroidAutoDevice*>(aaDevice)) {
+        if (device == usb->getDevice()) {
+            cinfo << "Stoping AA device";
+            usb->deleteLater();
+            usb = nullptr;
+            emit aaDeviceChanged();
+            emit focusOnAA(false);
+        }
     }
 }
 

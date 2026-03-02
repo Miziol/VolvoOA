@@ -5,16 +5,12 @@
 
 WirelessAndroidAutoDevice::WirelessAndroidAutoDevice(
     QObject *parent,
-                        QString new_ipAddress,
+    QString new_ipAddress,
     boost::asio::io_service &new_ioService,
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
-    : QObject(parent),
-      category("WIRELESS ANDROID AUTO DEVICE"),
-    socket(nullptr),
-      ipAddress(new_ipAddress),
-      ioService(new_ioService),
-      androidAutoEntityFactory(new_androidAutoEntityFactory),
-      androidAutoEntity(nullptr) {
+    : AndroidAutoDevice(parent, "WIRELESS ANDROID AUTO DEVICE", new_ioService, new_androidAutoEntityFactory),
+      socket(nullptr),
+      ipAddress(new_ipAddress) {
     open();
 }
 
@@ -26,11 +22,11 @@ WirelessAndroidAutoDevice::~WirelessAndroidAutoDevice() {
 void WirelessAndroidAutoDevice::open() {
     socket = std::make_shared<boost::asio::ip::tcp::socket>(ioService);
 
-    tcpWrapper.asyncConnect(*socket, ipAddress.toStdString(), 5277, std::bind(&WirelessAndroidAutoDevice::connectHandler, this, std::placeholders::_1));
+    tcpWrapper.asyncConnect(*socket, ipAddress.toStdString(), 5277,
+                            std::bind(&WirelessAndroidAutoDevice::connectHandler, this, std::placeholders::_1));
 }
 
-void WirelessAndroidAutoDevice::close() {
-}
+void WirelessAndroidAutoDevice::close() {}
 
 void WirelessAndroidAutoDevice::start() {
     if (androidAutoEntity != nullptr)
@@ -52,15 +48,11 @@ void WirelessAndroidAutoDevice::stop() {
     }
 }
 
-void WirelessAndroidAutoDevice::connectHandler(const boost::system::error_code& ec)
-{
-    if(!ec)
-    {
+void WirelessAndroidAutoDevice::connectHandler(const boost::system::error_code &ec) {
+    if (!ec) {
         cinfo << "Connected";
         start();
-    }
-    else
-    {
+    } else {
         cerror << "Failed to connect to AA server with error:" << QString::fromStdString(ec.message());
     }
 }
