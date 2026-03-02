@@ -1,6 +1,7 @@
 #include "androidAutoService.h"
 
 #include "usbAndroidAutoDevice.h"
+#include "wirelessAndroidAutoDevice.h"
 
 AndroidAutoService::AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService)
     : category("ANDROID AUTO SERVICE"), settingsManager(new_settings), ioService(new_ioService), aaDevice(nullptr) {}
@@ -10,7 +11,7 @@ AndroidAutoService::~AndroidAutoService() {}
 void AndroidAutoService::addUSBDevice(libusb_context *context, libusb_device *device) {
     if (aaDevice == nullptr) {
         cinfo << "New AA device start processing";
-        aaDevice = new AndroidAutoDevice(this, context, device, ioService, *androidAutoEntityFactory);
+        aaDevice = new UsbAndroidAutoDevice(this, context, device, ioService, *androidAutoEntityFactory);
         emit aaDeviceChanged();
     } else {
         cwarning << "Android Auto entity already exist. AA device ignored";
@@ -27,10 +28,14 @@ void AndroidAutoService::removeDevice(libusb_device *device) {
     }
 }
 
-void AndroidAutoService::addNetworkDevice() {
-
-    IAndroidAutoEntity::Pointer create(aasdk::tcp::ITCPEndpoint::Pointer tcpEndpoint) override;
-    ;  // TODO
+void AndroidAutoService::addNetworkDevice(QString ip) {
+    if (aaDevice == nullptr) {
+        cinfo << "New AA device start processing";
+        aaDevice = new WirelessAndroidAutoDevice(this, ip, ioService, *androidAutoEntityFactory);
+        emit aaDeviceChanged();
+    } else {
+        cwarning << "Android Auto entity already exist. AA device ignored";
+    }
 }
 
 void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioService,

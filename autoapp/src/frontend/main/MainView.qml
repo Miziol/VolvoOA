@@ -23,4 +23,10 @@ ScreenElement {
             visible: parent.model.length == 0
         }
     }
+
+    Button {
+        text: "Network"
+
+        onClicked: aaService.addNetworkDevice("10.225.8.163") // TODO - this is for test
+    }
 }

@@ -3,14 +3,14 @@
 #include "androidAutoService.h"
 #include "f1x/aasdk/USB/AOAPDevice.hpp"
 
-AndroidAutoDevice::AndroidAutoDevice(
+UsbAndroidAutoDevice::UsbAndroidAutoDevice(
     QObject *parent,
     libusb_context *context,
     libusb_device *new_device,
     boost::asio::io_service &new_ioService,
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
     : QObject(parent),
-      category("ANDROID AUTO DEVICE"),
+      category("USB ANDROID AUTO DEVICE"),
       device(new_device),
       usbWrapper(f1x::aasdk::usb::USBWrapper(context)),
       ioService(new_ioService),
@@ -20,12 +20,12 @@ AndroidAutoDevice::AndroidAutoDevice(
     start();
 }
 
-AndroidAutoDevice::~AndroidAutoDevice() {
+UsbAndroidAutoDevice::~UsbAndroidAutoDevice() {
     stop();
     close();
 }
 
-void AndroidAutoDevice::open() {
+void UsbAndroidAutoDevice::open() {
     int result = libusb_open(device, &handle);
 
     if (result != 0) {
@@ -35,11 +35,11 @@ void AndroidAutoDevice::open() {
     }
 }
 
-void AndroidAutoDevice::close() {
+void UsbAndroidAutoDevice::close() {
     libusb_close(handle);
 }
 
-void AndroidAutoDevice::start() {
+void UsbAndroidAutoDevice::start() {
     if (androidAutoEntity != nullptr)
         return;
 
@@ -52,13 +52,13 @@ void AndroidAutoDevice::start() {
     cinfo << "Started AA entity";
 }
 
-void AndroidAutoDevice::stop() {
+void UsbAndroidAutoDevice::stop() {
     if (androidAutoEntity != nullptr) {
         androidAutoEntity->stop();
         androidAutoEntity.reset();
     }
 }
 
-libusb_device *AndroidAutoDevice::getDevice() {
+libusb_device *UsbAndroidAutoDevice::getDevice() {
     return device;
 }

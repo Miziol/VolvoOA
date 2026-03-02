@@ -1,5 +1,5 @@
-#ifndef AUTOAPP_USBANDROIDAUTODEVICE_H
-#define AUTOAPP_USBANDROIDAUTODEVICE_H
+#ifndef AUTOAPP_WIRELESSANDROIDAUTODEVICE_H
+#define AUTOAPP_WIRELESSANDROIDAUTODEVICE_H
 
 #include <libusb.h>
 
@@ -12,31 +12,30 @@
 
 #include "../../external/openauto-with-aasdk/openauto/include/f1x/openauto/autoapp/Service/AndroidAutoEntity.hpp"
 #include "../logging/loggingCategory.h"
-#include "f1x/aasdk/USB/USBWrapper.hpp"
+#include "f1x/aasdk/TCP/TCPWrapper.hpp"
 #include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
 
-class UsbAndroidAutoDevice : public QObject {
+class WirelessAndroidAutoDevice : public QObject {
     Q_OBJECT
 
 signals:
 
 public:
-    UsbAndroidAutoDevice(QObject *parent,
-                      libusb_context *context,
-                      libusb_device *new_device,
+    WirelessAndroidAutoDevice(QObject *parent,
+                        QString new_ipAddress,
                       boost::asio::io_service &new_ioService,
                       f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
-    ~UsbAndroidAutoDevice();
+    ~WirelessAndroidAutoDevice();
 
 private:
     QLoggingCategory category;
 
-    f1x::aasdk::usb::USBWrapper usbWrapper;
+    f1x::aasdk::tcp::ITCPEndpoint::SocketPointer socket;
+    f1x::aasdk::tcp::TCPWrapper tcpWrapper;
     boost::asio::io_service &ioService;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &androidAutoEntityFactory;
 
-    libusb_device *device;
-    libusb_device_handle *handle;
+    QString ipAddress;
     f1x::openauto::autoapp::service::IAndroidAutoEntity::Pointer androidAutoEntity;
 
 public slots:
@@ -45,9 +44,10 @@ public slots:
     void start();
     void stop();
 
-    libusb_device *getDevice();
-
 private:
+
+
+    void connectHandler(const boost::system::error_code& ec);
 };
 
-#endif  // AUTOAPP_USBANDROIDAUTODEVICE_H
+#endif  // AUTOAPP_WIRELESSANDROIDAUTODEVICE_H

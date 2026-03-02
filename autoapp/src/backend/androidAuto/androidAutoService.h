@@ -7,9 +7,10 @@
 
 #include "../logging/loggingCategory.h"
 #include "../settings/settingsManager.h"
-#include "usbAndroidAutoDevice.h"
 #include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
 #include "f1x/openauto/autoapp/Service/ServiceFactory.hpp"
+#include "usbAndroidAutoDevice.h"
+#include "wirelessAndroidAutoDevice.h"
 
 class AndroidAutoService : public QObject, public f1x::openauto::autoapp::service::IAndroidAutoEntityEventHandler {
     Q_OBJECT
@@ -28,7 +29,7 @@ public:
 public slots:
     void addUSBDevice(libusb_context *context, libusb_device *device);
     void removeDevice(libusb_device *device);
-    void addNetworkDevice();  // TCP
+    void addNetworkDevice(QString ip);
 
     void startIOServiceWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
     void createFactories(QObject *qmlRootObject);
@@ -46,7 +47,8 @@ private:
     f1x::openauto::autoapp::service::ServiceFactory *serviceFactory;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory *androidAutoEntityFactory;
 
-    AndroidAutoDevice *aaDevice;
+    //UsbAndroidAutoDevice *aaDevice;
+    WirelessAndroidAutoDevice *aaDevice;
 };
 
 #endif  // AUTOAPP_ANDROIDAUTOSERVICE_H
