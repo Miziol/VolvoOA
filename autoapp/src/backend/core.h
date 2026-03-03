@@ -11,6 +11,7 @@
 #include "car/CANService.h"
 #include "car/arduinoService.h"
 #include "logging/loggingCategory.h"
+#include "network/networkService.h"
 #include "settings/guistyle.h"
 #include "settings/settingsManager.h"
 #include "usb/usbService.h"
@@ -47,6 +48,7 @@ private:
     std::vector<std::thread> threadPool;
     AndroidAutoService androidAutoService;
     UsbService usbService;
+    NetworkService networkService;
     CANService canbusService;
     ArduinoService arduinoService;
 
