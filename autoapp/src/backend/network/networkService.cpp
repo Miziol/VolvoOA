@@ -7,6 +7,8 @@
 #include <QTcpSocket>
 #include <QTimer>
 
+#include "networkDevice.h"
+
 NetworkService::NetworkService() : category("NETWORK SERVICE") {
     scanNetwork();
 }
@@ -48,11 +50,6 @@ void NetworkService::lookForAA(const QString &ip) {
 }
 
 void NetworkService::addAADeviceToList(QString ip) {
-    QHostInfo info = QHostInfo::fromName(ip);
-    QHostInfo *info_ptr = new QHostInfo(info);
-
-    cerror << ip << info.errorString() << info_ptr;
-
-    devices.append((QObject *)info_ptr);
+    devices.append(new NetworkDevice(QHostInfo::fromName(ip)));
     emit networkDevicesChanged();
 }

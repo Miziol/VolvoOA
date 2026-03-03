@@ -41,9 +41,9 @@ ScreenElement {
             delegate: Button {
                 width: parent.width
 
-                text: modelData.hostName() + " (" + modelData.addresses()[0] + ")"
+                text: modelData.displayName
 
-                onClicked: aaService.addNetworkDevice(modelData.addresses()[0])
+                onClicked: aaService.addNetworkDevice(modelData.getIPAddress())
             }
 
             EmptyListIcon {
