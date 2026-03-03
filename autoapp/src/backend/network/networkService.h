@@ -12,26 +12,26 @@ signals:
     void connectTo();
 
 public:
-    Q_PROPERTY(QList<QObject*> networkDevices MEMBER devices NOTIFY networkDevicesChanged)
+    Q_PROPERTY(QList<QObject *> networkDevices MEMBER devices NOTIFY networkDevicesChanged)
 
-    private:
+private:
     static inline int AA_PORT = 5277;
 
 public:
     NetworkService();
     ~NetworkService();
 
-    public slots:
+public slots:
     void scanNetwork();
 
 private:
     QLoggingCategory category;
 
-    QList<QObject*> devices;
+    QList<QObject *> devices;
 
 private:
     void lookForAA(const QString &ip);
-
+    void addAADeviceToList(QString ip);
 };
 
 #endif  // AUTOAPP_NETWORKSERVICE_H

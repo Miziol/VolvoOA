@@ -2,6 +2,7 @@
 
 #include <QtConcurrent/qtconcurrentrun.h>
 
+#include <QHostInfo>
 #include <QNetworkInterface>
 #include <QTcpSocket>
 #include <QTimer>
@@ -10,7 +11,12 @@ NetworkService::NetworkService() : category("NETWORK SERVICE") {
     scanNetwork();
 }
 
-NetworkService::~NetworkService() {}
+NetworkService::~NetworkService() {
+    for (const auto &device : devices) {
+        device->deleteLater();
+        devices.removeOne(device);
+    }
+}
 
 void NetworkService::scanNetwork() {
     QString localBase;
@@ -30,26 +36,23 @@ void NetworkService::scanNetwork() {
 }
 
 void NetworkService::lookForAA(const QString &ip) {
-    QTcpSocket *socket = new QTcpSocket();
+    QTcpSocket socket;
 
-    connect(socket, &QTcpSocket::connected, this, [this, socket, ip]() {
-        cinfo << ">>> ZNALEZIONO ANDROID AUTO:" << ip;
-        socket->abort();
-        socket->deleteLater();
-    }, Qt::QueuedConnection);
+    socket.connectToHost(ip, AA_PORT);
 
-    connect(socket, &QTcpSocket::errorOccurred, this, [this, socket](QAbstractSocket::SocketError) {
-        cerror << ">>> NO AA";
-        socket->deleteLater();
-    }, Qt::QueuedConnection);
+    if (socket.waitForConnected(1000)) {
+        QMetaObject::invokeMethod(this, [this, ip]() { this->addAADeviceToList(ip); }, Qt::QueuedConnection);
 
-    socket->connectToHost(ip, AA_PORT);
+        socket.abort();
+    }
+}
 
-    QTimer::singleShot(1000, socket, [socket]() {
-        if (socket && socket->state() != QAbstractSocket::ConnectedState) {
-            qWarning() << "TIMEOUT";
-            socket->abort();
-            socket->deleteLater();
-        }
-    });
+void NetworkService::addAADeviceToList(QString ip) {
+    QHostInfo info = QHostInfo::fromName(ip);
+    QHostInfo *info_ptr = new QHostInfo(info);
+
+    cerror << ip << info.errorString() << info_ptr;
+
+    devices.append((QObject *)info_ptr);
+    emit networkDevicesChanged();
 }

@@ -21,6 +21,7 @@ AppCore::AppCore(SettingsManager &new_settings)
     qmlRootContext->setContextProperty("guiStyle", &qmlStyle);
     qmlRootContext->setContextProperty("settingsManager", &settings);
     qmlRootContext->setContextProperty("usbService", &usbService);
+    qmlRootContext->setContextProperty("networkService", &networkService);
     qmlRootContext->setContextProperty("aaService", &androidAutoService);
     qmlRootContext->setContextProperty("arduinoService", &arduinoService);
     qmlRootContext->setContextProperty("systemUpdater", &systemUpdater);
