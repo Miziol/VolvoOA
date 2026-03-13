@@ -51,7 +51,7 @@ void WirelessAndroidAutoDevice::stop() {
 void WirelessAndroidAutoDevice::connectHandler(const boost::system::error_code &ec) {
     if (!ec) {
         cinfo << "Connected";
-        start();
+        start(); // QMetaObject::invokeMethod(this, "start", Qt::QueuedConnection);
     } else {
         cerror << "Failed to connect to AA server with error:" << QString::fromStdString(ec.message());
     }

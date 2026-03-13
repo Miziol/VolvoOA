@@ -56,8 +56,16 @@ void AndroidAutoEntity::start(IAndroidAutoEntityEventHandler &eventHandler) {
         auto versionRequestPromise = aasdk::channel::SendPromise::defer(strand_);
         versionRequestPromise->then(
             []() {}, std::bind(&AndroidAutoEntity::onChannelError, this->shared_from_this(), std::placeholders::_1));
+
+        qWarning() << "Version request promise.";
+
         controlServiceChannel_->sendVersionRequest(std::move(versionRequestPromise));
+
+        qWarning() << "Before receive";
+
         controlServiceChannel_->receive(this->shared_from_this());
+
+        qWarning() << "After receive";
     });
 }
 

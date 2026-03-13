@@ -53,5 +53,11 @@ ScreenElement {
                 tipText: qsTr("Power on AA server")
             }
         }
+
+        Button {
+            text: "TEST"
+
+            onClicked: aaService.addNetworkDevice("172.28.232.130")
+        }
     }
 }
