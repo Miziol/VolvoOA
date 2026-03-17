@@ -16,13 +16,14 @@ signals:
 public:
     WirelessAndroidAutoDevice(QObject *parent,
                               QString new_ipAddress,
-                              boost::asio::io_service &new_ioService,
+                              boost::asio::io_context &new_ioService,
                               f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
     ~WirelessAndroidAutoDevice();
 
 private:
     f1x::aasdk::tcp::ITCPEndpoint::SocketPointer socket;
     f1x::aasdk::tcp::TCPWrapper tcpWrapper;
+    boost::asio::io_context::strand strand_;
     QString ipAddress;
 
 public slots:

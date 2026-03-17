@@ -22,7 +22,7 @@ namespace f1x {
 namespace aasdk {
 namespace usb {
 ConnectedAccessoriesEnumerator::ConnectedAccessoriesEnumerator(IUSBWrapper &usbWrapper,
-                                                               boost::asio::io_service &ioService,
+                                                               boost::asio::io_context &ioService,
                                                                IAccessoryModeQueryChainFactory &queryChainFactory)
     : usbWrapper_(usbWrapper), strand_(ioService), queryChainFactory_(queryChainFactory) {}
 

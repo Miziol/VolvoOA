@@ -21,7 +21,7 @@
 namespace f1x {
 namespace aasdk {
 namespace transport {
-TCPTransport::TCPTransport(boost::asio::io_service &ioService, tcp::ITCPEndpoint::Pointer tcpEndpoint)
+TCPTransport::TCPTransport(boost::asio::io_context &ioService, tcp::ITCPEndpoint::Pointer tcpEndpoint)
     : Transport(ioService), tcpEndpoint_(std::move(tcpEndpoint)) {}
 
 void TCPTransport::enqueueReceive(common::DataBuffer buffer) {

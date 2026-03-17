@@ -33,7 +33,7 @@ public:
 
 public slots:
     void handleLibUsbEvents();
-    void startUSBWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
+    void startUSBWorkers(boost::asio::io_context &ioService, std::vector<std::thread> &threadPool);
 
     void newDevice(libusb_device *device);
     void removeDevice(libusb_device *device);

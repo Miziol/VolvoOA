@@ -29,7 +29,7 @@ class BluetoothServiceChannel : public IBluetoothServiceChannel,
                                 public ServiceChannel,
                                 public std::enable_shared_from_this<BluetoothServiceChannel> {
 public:
-    BluetoothServiceChannel(boost::asio::io_service::strand &strand, messenger::IMessenger::Pointer messenger);
+    BluetoothServiceChannel(boost::asio::io_context::strand &strand, messenger::IMessenger::Pointer messenger);
 
     void receive(IBluetoothServiceChannelEventHandler::Pointer eventHandler) override;
     messenger::ChannelId getId() const override;

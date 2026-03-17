@@ -3,7 +3,7 @@
 #include "usbAndroidAutoDevice.h"
 #include "wirelessAndroidAutoDevice.h"
 
-AndroidAutoService::AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService)
+AndroidAutoService::AndroidAutoService(SettingsManager &new_settings, boost::asio::io_context &new_ioService)
     : category("ANDROID AUTO SERVICE"), settingsManager(new_settings), ioService(new_ioService), aaDevice(nullptr) {}
 
 AndroidAutoService::~AndroidAutoService() {}
@@ -40,7 +40,7 @@ void AndroidAutoService::addNetworkDevice(QString ip) {
     }
 }
 
-void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioService,
+void AndroidAutoService::startIOServiceWorkers(boost::asio::io_context &ioService,
                                                std::vector<std::thread> &threadPool) {
     auto ioServiceWorker = [&ioService]() { ioService.run(); };
 

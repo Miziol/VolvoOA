@@ -23,7 +23,7 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-Messenger::Messenger(boost::asio::io_service &ioService,
+Messenger::Messenger(boost::asio::io_context &ioService,
                      IMessageInStream::Pointer messageInStream,
                      IMessageOutStream::Pointer messageOutStream)
     : receiveStrand_(ioService),
@@ -33,16 +33,10 @@ Messenger::Messenger(boost::asio::io_service &ioService,
 
 void Messenger::enqueueReceive(ChannelId channelId, ReceivePromise::Pointer promise) {
     receiveStrand_.dispatch([this, self = this->shared_from_this(), channelId, promise = std::move(promise)]() mutable {
-        std::cerr << "TEST" << (int) channelId;
-
         if (!channelReceiveMessageQueue_.empty(channelId)) {
-            std::cerr << "TEST 2" << std::endl;
             promise->resolve(std::move(channelReceiveMessageQueue_.pop(channelId)));
         } else {
             channelReceivePromiseQueue_.push(channelId, std::move(promise));
-
-            std::cerr << " " << channelReceivePromiseQueue_.size() << " ";
-
             if (channelReceivePromiseQueue_.size() == 1) {
                 auto inStreamPromise = ReceivePromise::defer(receiveStrand_);
                 inStreamPromise->then(

@@ -26,7 +26,7 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-InputService::InputService(boost::asio::io_service &ioService,
+InputService::InputService(boost::asio::io_context &ioService,
                            aasdk::messenger::IMessenger::Pointer messenger,
                            projection::IInputDevice::Pointer inputDevice)
     : strand_(ioService),

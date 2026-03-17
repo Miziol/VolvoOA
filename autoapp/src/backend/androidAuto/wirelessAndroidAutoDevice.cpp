@@ -6,10 +6,11 @@
 WirelessAndroidAutoDevice::WirelessAndroidAutoDevice(
     QObject *parent,
     QString new_ipAddress,
-    boost::asio::io_service &new_ioService,
+    boost::asio::io_context &new_ioService,
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
     : AndroidAutoDevice(parent, "WIRELESS ANDROID AUTO DEVICE", new_ioService, new_androidAutoEntityFactory),
       socket(nullptr),
+      strand_(new_ioService),
       ipAddress(new_ipAddress) {
     open();
 }
@@ -29,16 +30,27 @@ void WirelessAndroidAutoDevice::open() {
 void WirelessAndroidAutoDevice::close() {}
 
 void WirelessAndroidAutoDevice::start() {
-    if (androidAutoEntity != nullptr)
-        return;
+    strand_.dispatch([this]() mutable {
+        if (androidAutoEntity != nullptr) {
+            cinfo << "AA entity already running, skipping start.";
+            return;
+        }
 
-    cinfo << "Starting AA entity";
+        cinfo << "Starting AA entity";
 
-    auto tcpEndpoint(std::make_shared<f1x::aasdk::tcp::TCPEndpoint>(tcpWrapper, std::move(socket)));
-    androidAutoEntity = androidAutoEntityFactory.create(std::move(tcpEndpoint));
-    androidAutoEntity->start(*((AndroidAutoService *)(parent())));
+        try {
+            auto tcpEndpoint = std::make_shared<f1x::aasdk::tcp::TCPEndpoint>(tcpWrapper, std::move(socket));
 
-    cinfo << "Started AA entity";
+            androidAutoEntity = androidAutoEntityFactory.create(std::move(tcpEndpoint));
+            androidAutoEntity->start(*((AndroidAutoService *)(parent())));
+
+            cinfo << "Started AA entity";
+
+        } catch (const std::exception& e) {
+            cerror << "Error while starting AA entity: " << e.what();
+            androidAutoEntity.reset();
+        }
+    });
 }
 
 void WirelessAndroidAutoDevice::stop() {
@@ -51,7 +63,7 @@ void WirelessAndroidAutoDevice::stop() {
 void WirelessAndroidAutoDevice::connectHandler(const boost::system::error_code &ec) {
     if (!ec) {
         cinfo << "Connected";
-        start();  // QMetaObject::invokeMethod(this, "start", Qt::QueuedConnection); // TODO remove OLD
+        QMetaObject::invokeMethod(this, "start", Qt::QueuedConnection);
     } else {
         cerror << "Failed to connect to AA server with error:" << QString::fromStdString(ec.message());
     }

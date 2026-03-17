@@ -22,7 +22,7 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-Pinger::Pinger(boost::asio::io_service &ioService, time_t duration)
+Pinger::Pinger(boost::asio::io_context &ioService, time_t duration)
     : strand_(ioService), timer_(ioService), duration_(duration), cancelled_(false), pingsCount_(0), pongsCount_(0) {}
 
 void Pinger::ping(Promise::Pointer promise) {

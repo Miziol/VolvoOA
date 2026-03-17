@@ -28,7 +28,7 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace input {
-InputServiceChannel::InputServiceChannel(boost::asio::io_service::strand &strand,
+InputServiceChannel::InputServiceChannel(boost::asio::io_context::strand &strand,
                                          messenger::IMessenger::Pointer messenger)
     : ServiceChannel(strand, std::move(messenger), messenger::ChannelId::INPUT) {}
 

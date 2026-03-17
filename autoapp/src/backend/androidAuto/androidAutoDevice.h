@@ -15,14 +15,14 @@ signals:
 public:
     AndroidAutoDevice(QObject *parent,
                       QString logCategory,
-                      boost::asio::io_service &new_ioService,
+                      boost::asio::io_context &new_ioService,
                       f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
     // ~AndroidAutoDevice();
 
 protected:
     QLoggingCategory category;
 
-    boost::asio::io_service &ioService;
+    boost::asio::io_context &ioService;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &androidAutoEntityFactory;
     f1x::openauto::autoapp::service::IAndroidAutoEntity::Pointer androidAutoEntity;
 

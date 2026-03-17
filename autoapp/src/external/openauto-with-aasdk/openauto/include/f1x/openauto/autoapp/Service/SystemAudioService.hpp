@@ -27,7 +27,7 @@ namespace autoapp {
 namespace service {
 class SystemAudioService : public AudioService {
 public:
-    SystemAudioService(boost::asio::io_service &ioService,
+    SystemAudioService(boost::asio::io_context &ioService,
                        aasdk::messenger::IMessenger::Pointer messenger,
                        projection::IAudioOutput::Pointer audioOutput);
 };

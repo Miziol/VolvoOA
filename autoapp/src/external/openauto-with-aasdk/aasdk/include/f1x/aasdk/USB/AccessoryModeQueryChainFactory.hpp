@@ -27,13 +27,13 @@ namespace usb {
 class AccessoryModeQueryChainFactory : public IAccessoryModeQueryChainFactory {
 public:
     AccessoryModeQueryChainFactory(IUSBWrapper &usbWrapper,
-                                   boost::asio::io_service &ioService,
+                                   boost::asio::io_context &ioService,
                                    IAccessoryModeQueryFactory &queryFactory);
     IAccessoryModeQueryChain::Pointer create() override;
 
 private:
     IUSBWrapper &usbWrapper_;
-    boost::asio::io_service &ioService_;
+    boost::asio::io_context &ioService_;
     IAccessoryModeQueryFactory &queryFactory_;
 };
 }  // namespace usb

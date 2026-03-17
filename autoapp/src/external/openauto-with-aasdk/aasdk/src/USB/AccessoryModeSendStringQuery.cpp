@@ -23,7 +23,7 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-AccessoryModeSendStringQuery::AccessoryModeSendStringQuery(boost::asio::io_service &ioService,
+AccessoryModeSendStringQuery::AccessoryModeSendStringQuery(boost::asio::io_context &ioService,
                                                            IUSBWrapper &usbWrapper,
                                                            IUSBEndpoint::Pointer usbEndpoint,
                                                            AccessoryModeSendStringType sendStringType,

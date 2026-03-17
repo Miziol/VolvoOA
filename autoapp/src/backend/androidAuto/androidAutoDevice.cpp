@@ -4,7 +4,7 @@
 AndroidAutoDevice::AndroidAutoDevice(
     QObject *parent,
     QString logCategory,
-    boost::asio::io_service &new_ioService,
+    boost::asio::io_context &new_ioService,
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
     : QObject(parent),
       category(logCategory.toStdString().c_str()),

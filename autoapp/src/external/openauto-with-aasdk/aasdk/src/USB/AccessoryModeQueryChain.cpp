@@ -24,7 +24,7 @@ namespace f1x {
 namespace aasdk {
 namespace usb {
 AccessoryModeQueryChain::AccessoryModeQueryChain(IUSBWrapper &usbWrapper,
-                                                 boost::asio::io_service &ioService,
+                                                 boost::asio::io_context &ioService,
                                                  IAccessoryModeQueryFactory &queryFactory)
     : usbWrapper_(usbWrapper), strand_(ioService), queryFactory_(queryFactory) {}
 

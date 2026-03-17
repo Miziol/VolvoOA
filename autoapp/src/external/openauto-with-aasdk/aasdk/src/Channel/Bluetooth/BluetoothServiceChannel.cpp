@@ -28,7 +28,7 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace bluetooth {
-BluetoothServiceChannel::BluetoothServiceChannel(boost::asio::io_service::strand &strand,
+BluetoothServiceChannel::BluetoothServiceChannel(boost::asio::io_context::strand &strand,
                                                  messenger::IMessenger::Pointer messenger)
     : ServiceChannel(strand, std::move(messenger), messenger::ChannelId::BLUETOOTH) {}
 

@@ -23,7 +23,7 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-BluetoothService::BluetoothService(boost::asio::io_service &ioService,
+BluetoothService::BluetoothService(boost::asio::io_context &ioService,
                                    aasdk::messenger::IMessenger::Pointer messenger,
                                    projection::IBluetoothDevice::Pointer bluetoothDevice)
     : strand_(ioService),

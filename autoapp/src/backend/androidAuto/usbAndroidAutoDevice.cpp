@@ -7,7 +7,7 @@ UsbAndroidAutoDevice::UsbAndroidAutoDevice(
     QObject *parent,
     libusb_context *context,
     libusb_device *new_device,
-    boost::asio::io_service &new_ioService,
+    boost::asio::io_context &new_ioService,
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
     : AndroidAutoDevice(parent, "USB ANDROID AUTO DEVICE", new_ioService, new_androidAutoEntityFactory),
       device(new_device),

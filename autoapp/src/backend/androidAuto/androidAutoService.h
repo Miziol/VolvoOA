@@ -23,7 +23,7 @@ public:
     Q_PROPERTY(bool aaConnected READ isAADeviceConnected NOTIFY aaDeviceChanged);
 
 public:
-    AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService);
+    AndroidAutoService(SettingsManager &new_settings, boost::asio::io_context &new_ioService);
     ~AndroidAutoService();
 
 public slots:
@@ -31,7 +31,7 @@ public slots:
     void removeDevice(libusb_device *device);
     void addNetworkDevice(QString ip);
 
-    void startIOServiceWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
+    void startIOServiceWorkers(boost::asio::io_context &ioService, std::vector<std::thread> &threadPool);
     void createFactories(QObject *qmlRootObject);
 
     bool isAADeviceConnected();
@@ -43,7 +43,7 @@ private:
     QLoggingCategory category;
     SettingsManager &settingsManager;
 
-    boost::asio::io_service &ioService;
+    boost::asio::io_context &ioService;
     f1x::openauto::autoapp::service::ServiceFactory *serviceFactory;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory *androidAutoEntityFactory;
 

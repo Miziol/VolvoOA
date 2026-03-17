@@ -31,7 +31,7 @@ class IUSBWrapper;
 class USBHub : public IUSBHub, public std::enable_shared_from_this<USBHub>, boost::noncopyable {
 public:
     USBHub(IUSBWrapper &usbWrapper,
-           boost::asio::io_service &ioService,
+           boost::asio::io_context &ioService,
            IAccessoryModeQueryChainFactory &queryChainFactory);
 
     void start(Promise::Pointer promise) override;
@@ -48,7 +48,7 @@ private:
                                     void *uerData);
 
     IUSBWrapper &usbWrapper_;
-    boost::asio::io_service::strand strand_;
+    boost::asio::io_context::strand strand_;
     IAccessoryModeQueryChainFactory &queryChainFactory_;
     Promise::Pointer hotplugPromise_;
     Pointer self_;

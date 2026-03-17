@@ -32,7 +32,7 @@ class AccessoryModeQueryChain : public IAccessoryModeQueryChain,
                                 boost::noncopyable {
 public:
     AccessoryModeQueryChain(IUSBWrapper &usbWrapper,
-                            boost::asio::io_service &ioService,
+                            boost::asio::io_context &ioService,
                             IAccessoryModeQueryFactory &queryFactory);
 
     void start(libusb_device_handle *handle, Promise::Pointer promise) override;
@@ -55,7 +55,7 @@ private:
     void startQueryHandler(IUSBEndpoint::Pointer usbEndpoint);
 
     IUSBWrapper &usbWrapper_;
-    boost::asio::io_service::strand strand_;
+    boost::asio::io_context::strand strand_;
     IAccessoryModeQueryFactory &queryFactory_;
     libusb_device_handle *handle_;
     Promise::Pointer promise_;

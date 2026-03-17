@@ -32,7 +32,7 @@ namespace usb {
 class USBEndpoint : public IUSBEndpoint, public std::enable_shared_from_this<USBEndpoint>, boost::noncopyable {
 public:
     USBEndpoint(IUSBWrapper &usbWrapper,
-                boost::asio::io_service &ioService,
+                boost::asio::io_context &ioService,
                 libusb_device_handle *handle,
                 uint8_t endpointAddress = 0x00);
 
@@ -51,7 +51,7 @@ private:
     static void transferHandler(libusb_transfer *transfer);
 
     IUSBWrapper &usbWrapper_;
-    boost::asio::io_service::strand strand_;
+    boost::asio::io_context::strand strand_;
     libusb_device_handle *handle_;
     uint8_t endpointAddress_;
     Transfers transfers_;
