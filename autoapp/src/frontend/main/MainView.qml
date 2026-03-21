@@ -36,7 +36,8 @@ ScreenElement {
             Layout.fillHeight: true
 
             model: networkService.networkDevices
-            enabled: model.length > 0
+            enabled: false // TODO model.length > 0
+            visible: false // TODO remove when feature start working
 
             delegate: Button {
                 width: parent.width

@@ -28,20 +28,14 @@ ServiceChannel::ServiceChannel(boost::asio::io_context::strand &strand,
     : strand_(strand), messenger_(std::move(messenger)), channelId_(channelId) {}
 
 void ServiceChannel::send(messenger::Message::Pointer message, SendPromise::Pointer promise) {
-    std::cerr << "SERVIC CHANGEL START" << std::endl;
-
 #if BOOST_VERSION < 106600
     auto sendPromise = messenger::SendPromise::defer(strand_.get_io_service());
 #else
     auto sendPromise = messenger::SendPromise::defer(strand_.context());
 #endif
 
-    std::cerr << "SERVIC CHANGEL START 2" << std::endl;
-
     io::PromiseLink<>::forward(*sendPromise, std::move(promise));
     messenger_->enqueueSend(std::move(message), std::move(sendPromise));
-
-    std::cerr << "SERVIC CHANGEL START 3" << std::endl;
 }
 }  // namespace channel
 }  // namespace aasdk

@@ -142,14 +142,10 @@ void ControlServiceChannel::receive(IControlServiceChannelEventHandler::Pointer 
         std::bind(&IControlServiceChannelEventHandler::onChannelError, eventHandler, std::placeholders::_1));
 
     messenger_->enqueueReceive(channelId_, std::move(receivePromise));
-
-    std::cerr << "IControlServiceChannel::receive()" << std::endl;
 }
 
 void ControlServiceChannel::messageHandler(messenger::Message::Pointer message,
                                            IControlServiceChannelEventHandler::Pointer eventHandler) {
-
-    std::cerr << "IControlServiceChannel::messageHandler()" << std::endl;
 
     messenger::MessageId messageId(message->getPayload());
     common::DataConstBuffer payload(message->getPayload(), messageId.getSizeOf());
