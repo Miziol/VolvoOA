@@ -46,7 +46,7 @@ void WirelessAndroidAutoDevice::start() {
 
             cinfo << "Started AA entity";
 
-        } catch (const std::exception& e) {
+        } catch (const std::exception &e) {
             cerror << "Error while starting AA entity: " << e.what();
             androidAutoEntity.reset();
         }
