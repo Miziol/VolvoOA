@@ -24,7 +24,7 @@ namespace f1x {
 namespace aasdk {
 namespace usb {
 USBEndpoint::USBEndpoint(IUSBWrapper &usbWrapper,
-                         boost::asio::io_service &ioService,
+                         boost::asio::io_context &ioService,
                          libusb_device_handle *handle,
                          uint8_t endpointAddress)
     : usbWrapper_(usbWrapper), strand_(ioService), handle_(std::move(handle)), endpointAddress_(endpointAddress) {}

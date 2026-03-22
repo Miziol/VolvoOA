@@ -25,7 +25,7 @@
 namespace f1x {
 namespace openauto {
 namespace autoapp {
-App::App(boost::asio::io_service &ioService,
+App::App(boost::asio::io_context &ioService,
          aasdk::usb::USBWrapper &usbWrapper,
          aasdk::tcp::ITCPWrapper &tcpWrapper,
          service::IAndroidAutoEntityFactory &androidAutoEntityFactory,

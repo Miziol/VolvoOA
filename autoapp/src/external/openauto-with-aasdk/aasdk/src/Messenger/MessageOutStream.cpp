@@ -23,7 +23,7 @@
 namespace f1x {
 namespace aasdk {
 namespace messenger {
-MessageOutStream::MessageOutStream(boost::asio::io_service &ioService,
+MessageOutStream::MessageOutStream(boost::asio::io_context &ioService,
                                    transport::ITransport::Pointer transport,
                                    ICryptor::Pointer cryptor)
     : strand_(ioService),

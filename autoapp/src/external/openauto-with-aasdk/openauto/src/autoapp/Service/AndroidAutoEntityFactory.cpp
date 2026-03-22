@@ -33,7 +33,7 @@ namespace openauto {
 namespace autoapp {
 namespace service {
 AndroidAutoEntityFactory::AndroidAutoEntityFactory(IAndroidAutoEntityEventHandler *handler,
-                                                   boost::asio::io_service &ioService,
+                                                   boost::asio::io_context &ioService,
                                                    SettingsManager &configuration,
                                                    IServiceFactory &serviceFactory)
     : eventHandler_(handler), ioService_(ioService), configuration_(configuration), serviceFactory_(serviceFactory) {}

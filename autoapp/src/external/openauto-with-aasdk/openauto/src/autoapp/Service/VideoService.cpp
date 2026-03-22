@@ -24,7 +24,7 @@ namespace openauto {
 namespace autoapp {
 namespace service {
 VideoService::VideoService(IAndroidAutoEntityEventHandler *handler,
-                           boost::asio::io_service &ioService,
+                           boost::asio::io_context &ioService,
                            aasdk::messenger::IMessenger::Pointer messenger,
                            projection::IVideoOutput::Pointer videoOutput)
     : eventHandler_(handler),

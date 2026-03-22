@@ -26,7 +26,7 @@ namespace usb {
 class AccessoryModeProtocolVersionQuery : public AccessoryModeQuery,
                                           public std::enable_shared_from_this<AccessoryModeProtocolVersionQuery> {
 public:
-    AccessoryModeProtocolVersionQuery(boost::asio::io_service &ioService,
+    AccessoryModeProtocolVersionQuery(boost::asio::io_context &ioService,
                                       IUSBWrapper &usbWrapper,
                                       IUSBEndpoint::Pointer usbEndpoint);
     void start(Promise::Pointer promise) override;

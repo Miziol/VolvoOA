@@ -44,7 +44,7 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-ServiceFactory::ServiceFactory(boost::asio::io_service &ioService,
+ServiceFactory::ServiceFactory(boost::asio::io_context &ioService,
                                SettingsManager &configuration,
                                QObject *new_qmlRootObject)
     : ioService_(ioService), configuration_(configuration), qmlRootObject(new_qmlRootObject) {}

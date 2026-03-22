@@ -7,9 +7,10 @@
 
 #include "../logging/loggingCategory.h"
 #include "../settings/settingsManager.h"
-#include "androidAutoDevice.h"
 #include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
 #include "f1x/openauto/autoapp/Service/ServiceFactory.hpp"
+#include "usbAndroidAutoDevice.h"
+#include "wirelessAndroidAutoDevice.h"
 
 class AndroidAutoService : public QObject, public f1x::openauto::autoapp::service::IAndroidAutoEntityEventHandler {
     Q_OBJECT
@@ -22,15 +23,15 @@ public:
     Q_PROPERTY(bool aaConnected READ isAADeviceConnected NOTIFY aaDeviceChanged);
 
 public:
-    AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService);
+    AndroidAutoService(SettingsManager &new_settings, boost::asio::io_context &new_ioService);
     ~AndroidAutoService();
 
 public slots:
     void addUSBDevice(libusb_context *context, libusb_device *device);
     void removeDevice(libusb_device *device);
-    void addNetworkDevice();  // TCP
+    void addNetworkDevice(QString ip);
 
-    void startIOServiceWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool);
+    void startIOServiceWorkers(boost::asio::io_context &ioService, std::vector<std::thread> &threadPool);
     void createFactories(QObject *qmlRootObject);
 
     bool isAADeviceConnected();
@@ -42,7 +43,7 @@ private:
     QLoggingCategory category;
     SettingsManager &settingsManager;
 
-    boost::asio::io_service &ioService;
+    boost::asio::io_context &ioService;
     f1x::openauto::autoapp::service::ServiceFactory *serviceFactory;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory *androidAutoEntityFactory;
 

@@ -38,13 +38,13 @@ public:
     typedef std::function<void(ErrorArgumentType)> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service &ioService) { return std::make_shared<Promise>(ioService); }
+    static Pointer defer(boost::asio::io_context &ioService) { return std::make_shared<Promise>(ioService); }
 
-    static Pointer defer(boost::asio::io_service::strand &strand) { return std::make_shared<Promise>(strand); }
+    static Pointer defer(boost::asio::io_context::strand &strand) { return std::make_shared<Promise>(strand); }
 
-    Promise(boost::asio::io_service &ioService) : ioContextWrapper_(ioService) {}
+    Promise(boost::asio::io_context &ioService) : ioContextWrapper_(ioService) {}
 
-    Promise(boost::asio::io_service::strand &strand) : ioContextWrapper_(strand) {}
+    Promise(boost::asio::io_context::strand &strand) : ioContextWrapper_(strand) {}
 
     void then(ResolveHandler resolveHandler, RejectHandler rejectHandler = RejectHandler()) {
         std::lock_guard<decltype(mutex_)> lock(mutex_);
@@ -97,13 +97,13 @@ public:
     typedef std::function<void(ErrorArgumentType)> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service &ioService) { return std::make_shared<Promise>(ioService); }
+    static Pointer defer(boost::asio::io_context &ioService) { return std::make_shared<Promise>(ioService); }
 
-    static Pointer defer(boost::asio::io_service::strand &strand) { return std::make_shared<Promise>(strand); }
+    static Pointer defer(boost::asio::io_context::strand &strand) { return std::make_shared<Promise>(strand); }
 
-    Promise(boost::asio::io_service &ioService) : ioContextWrapper_(ioService) {}
+    Promise(boost::asio::io_context &ioService) : ioContextWrapper_(ioService) {}
 
-    Promise(boost::asio::io_service::strand &strand) : ioContextWrapper_(strand) {}
+    Promise(boost::asio::io_context::strand &strand) : ioContextWrapper_(strand) {}
 
     void then(ResolveHandler resolveHandler, RejectHandler rejectHandler = RejectHandler()) {
         std::lock_guard<decltype(mutex_)> lock(mutex_);
@@ -152,13 +152,13 @@ public:
     typedef std::function<void()> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service &ioService) { return std::make_shared<Promise>(ioService); }
+    static Pointer defer(boost::asio::io_context &ioService) { return std::make_shared<Promise>(ioService); }
 
-    static Pointer defer(boost::asio::io_service::strand &strand) { return std::make_shared<Promise>(strand); }
+    static Pointer defer(boost::asio::io_context::strand &strand) { return std::make_shared<Promise>(strand); }
 
-    Promise(boost::asio::io_service &ioService) : ioContextWrapper_(ioService) {}
+    Promise(boost::asio::io_context &ioService) : ioContextWrapper_(ioService) {}
 
-    Promise(boost::asio::io_service::strand &strand) : ioContextWrapper_(strand) {}
+    Promise(boost::asio::io_context::strand &strand) : ioContextWrapper_(strand) {}
 
     void then(ResolveHandler resolveHandler, RejectHandler rejectHandler = RejectHandler()) {
         std::lock_guard<decltype(mutex_)> lock(mutex_);
@@ -206,13 +206,13 @@ public:
     typedef std::function<void(void)> RejectHandler;
     typedef std::shared_ptr<Promise> Pointer;
 
-    static Pointer defer(boost::asio::io_service &ioService) { return std::make_shared<Promise>(ioService); }
+    static Pointer defer(boost::asio::io_context &ioService) { return std::make_shared<Promise>(ioService); }
 
-    static Pointer defer(boost::asio::io_service::strand &strand) { return std::make_shared<Promise>(strand); }
+    static Pointer defer(boost::asio::io_context::strand &strand) { return std::make_shared<Promise>(strand); }
 
-    Promise(boost::asio::io_service &ioService) : ioContextWrapper_(ioService) {}
+    Promise(boost::asio::io_context &ioService) : ioContextWrapper_(ioService) {}
 
-    Promise(boost::asio::io_service::strand &strand) : ioContextWrapper_(strand) {}
+    Promise(boost::asio::io_context::strand &strand) : ioContextWrapper_(strand) {}
 
     void then(ResolveHandler resolveHandler, RejectHandler rejectHandler = RejectHandler()) {
         std::lock_guard<decltype(mutex_)> lock(mutex_);

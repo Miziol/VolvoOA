@@ -11,6 +11,7 @@
 #include "car/CANService.h"
 #include "car/arduinoService.h"
 #include "logging/loggingCategory.h"
+#include "network/networkService.h"
 #include "settings/guistyle.h"
 #include "settings/settingsManager.h"
 #include "usb/usbService.h"
@@ -42,11 +43,12 @@ private:
     QQmlContext *qmlRootContext;
     QObject *qmlRootObject;
 
-    boost::asio::io_service ioService;
-    boost::asio::io_service::work work;
+    boost::asio::io_context ioService;
+    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work;
     std::vector<std::thread> threadPool;
     AndroidAutoService androidAutoService;
     UsbService usbService;
+    NetworkService networkService;
     CANService canbusService;
     ArduinoService arduinoService;
 

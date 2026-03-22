@@ -29,7 +29,7 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace control {
-ControlServiceChannel::ControlServiceChannel(boost::asio::io_service::strand &strand,
+ControlServiceChannel::ControlServiceChannel(boost::asio::io_context::strand &strand,
                                              messenger::IMessenger::Pointer messenger)
     : ServiceChannel(strand, messenger, messenger::ChannelId::CONTROL) {}
 
@@ -138,7 +138,7 @@ void ControlServiceChannel::receive(IControlServiceChannelEventHandler::Pointer 
     auto receivePromise = messenger::ReceivePromise::defer(strand_);
     receivePromise->then(
         std::bind(&ControlServiceChannel::messageHandler, this->shared_from_this(), std::placeholders::_1,
-                  eventHandler),
+                  eventHandler),  // TODO never call
         std::bind(&IControlServiceChannelEventHandler::onChannelError, eventHandler, std::placeholders::_1));
 
     messenger_->enqueueReceive(channelId_, std::move(receivePromise));

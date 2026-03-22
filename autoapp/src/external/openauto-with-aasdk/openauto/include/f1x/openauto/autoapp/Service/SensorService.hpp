@@ -29,7 +29,7 @@ class SensorService : public aasdk::channel::sensor::ISensorServiceChannelEventH
                       public IService,
                       public std::enable_shared_from_this<SensorService> {
 public:
-    SensorService(boost::asio::io_service &ioService, aasdk::messenger::IMessenger::Pointer messenger);
+    SensorService(boost::asio::io_context &ioService, aasdk::messenger::IMessenger::Pointer messenger);
 
     void start() override;
     void stop() override;
@@ -43,7 +43,7 @@ private:
     void sendDrivingStatusUnrestricted();
     void sendNightData();
 
-    boost::asio::io_service::strand strand_;
+    boost::asio::io_context::strand strand_;
     aasdk::channel::sensor::SensorServiceChannel::Pointer channel_;
 };
 }  // namespace service

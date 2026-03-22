@@ -27,8 +27,8 @@ namespace io {
 class IOContextWrapper {
 public:
     IOContextWrapper();
-    explicit IOContextWrapper(boost::asio::io_service &ioService);
-    explicit IOContextWrapper(boost::asio::io_service::strand &strand);
+    explicit IOContextWrapper(boost::asio::io_context &ioService);
+    explicit IOContextWrapper(boost::asio::io_context::strand &strand);
 
     template <typename CompletionHandlerType>
     void post(CompletionHandlerType &&handler) {
@@ -52,8 +52,8 @@ public:
     bool isActive() const;
 
 private:
-    boost::asio::io_service *ioService_;
-    boost::asio::io_service::strand *strand_;
+    boost::asio::io_context *ioService_;
+    boost::asio::io_context::strand *strand_;
 };
 }  // namespace io
 }  // namespace aasdk

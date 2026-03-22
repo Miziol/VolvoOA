@@ -22,7 +22,7 @@ namespace f1x {
 namespace aasdk {
 namespace channel {
 namespace av {
-MediaAudioServiceChannel::MediaAudioServiceChannel(boost::asio::io_service::strand &strand,
+MediaAudioServiceChannel::MediaAudioServiceChannel(boost::asio::io_context::strand &strand,
                                                    messenger::IMessenger::Pointer messenger)
     : AudioServiceChannel(strand, std::move(messenger), messenger::ChannelId::MEDIA_AUDIO) {}
 }  // namespace av

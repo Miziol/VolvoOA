@@ -25,7 +25,7 @@ namespace f1x {
 namespace aasdk {
 namespace usb {
 AOAPDevice::AOAPDevice(IUSBWrapper &usbWrapper,
-                       boost::asio::io_service &ioService,
+                       boost::asio::io_context &ioService,
                        libusb_device_handle *handle,
                        const libusb_interface_descriptor *interfaceDescriptor)
     : usbWrapper_(usbWrapper), handle_(std::move(handle)), interfaceDescriptor_(interfaceDescriptor) {
@@ -58,7 +58,7 @@ IUSBEndpoint &AOAPDevice::getOutEndpoint() {
 }
 
 IAOAPDevice::Pointer AOAPDevice::create(IUSBWrapper &usbWrapper,
-                                        boost::asio::io_service &ioService,
+                                        boost::asio::io_context &ioService,
                                         libusb_device_handle *handle) {
     auto configDescriptorHandle = AOAPDevice::getConfigDescriptor(usbWrapper, handle);
     auto interface = AOAPDevice::getInterface(configDescriptorHandle);

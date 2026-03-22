@@ -28,7 +28,7 @@ namespace autoapp {
 namespace service {
 class ServiceFactory : public IServiceFactory {
 public:
-    ServiceFactory(boost::asio::io_service &ioService, SettingsManager &configuration, QObject *new_qmlRootObject);
+    ServiceFactory(boost::asio::io_context &ioService, SettingsManager &configuration, QObject *new_qmlRootObject);
     ServiceList create(IAndroidAutoEntityEventHandler *handler,
                        aasdk::messenger::IMessenger::Pointer messenger) override;
 
@@ -39,7 +39,7 @@ private:
     IService::Pointer createInputService(aasdk::messenger::IMessenger::Pointer messenger);
     void createAudioServices(ServiceList &serviceList, aasdk::messenger::IMessenger::Pointer messenger);
 
-    boost::asio::io_service &ioService_;
+    boost::asio::io_context &ioService_;
     SettingsManager &configuration_;
     QObject *qmlRootObject;
 };

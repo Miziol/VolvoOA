@@ -24,7 +24,7 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-AndroidAutoEntity::AndroidAutoEntity(boost::asio::io_service &ioService,
+AndroidAutoEntity::AndroidAutoEntity(boost::asio::io_context &ioService,
                                      aasdk::messenger::ICryptor::Pointer cryptor,
                                      aasdk::transport::ITransport::Pointer transport,
                                      aasdk::messenger::IMessenger::Pointer messenger,
@@ -56,6 +56,7 @@ void AndroidAutoEntity::start(IAndroidAutoEntityEventHandler &eventHandler) {
         auto versionRequestPromise = aasdk::channel::SendPromise::defer(strand_);
         versionRequestPromise->then(
             []() {}, std::bind(&AndroidAutoEntity::onChannelError, this->shared_from_this(), std::placeholders::_1));
+
         controlServiceChannel_->sendVersionRequest(std::move(versionRequestPromise));
         controlServiceChannel_->receive(this->shared_from_this());
     });

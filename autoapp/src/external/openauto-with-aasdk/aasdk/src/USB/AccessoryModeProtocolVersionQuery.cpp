@@ -24,7 +24,7 @@
 namespace f1x {
 namespace aasdk {
 namespace usb {
-AccessoryModeProtocolVersionQuery::AccessoryModeProtocolVersionQuery(boost::asio::io_service &ioService,
+AccessoryModeProtocolVersionQuery::AccessoryModeProtocolVersionQuery(boost::asio::io_context &ioService,
                                                                      IUSBWrapper &usbWrapper,
                                                                      IUSBEndpoint::Pointer usbEndpoint)
     : AccessoryModeQuery(ioService, std::move(usbEndpoint)) {

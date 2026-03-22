@@ -37,7 +37,7 @@ public:
     typedef std::shared_ptr<VideoService> Pointer;
 
     VideoService(IAndroidAutoEntityEventHandler *handler,
-                 boost::asio::io_service &ioService,
+                 boost::asio::io_context &ioService,
                  aasdk::messenger::IMessenger::Pointer messenger,
                  projection::IVideoOutput::Pointer videoOutput);
 
@@ -59,7 +59,7 @@ private:
     void sendVideoFocusIndication();
 
     IAndroidAutoEntityEventHandler *eventHandler_;
-    boost::asio::io_service::strand strand_;
+    boost::asio::io_context::strand strand_;
     aasdk::channel::av::VideoServiceChannel::Pointer channel_;
     projection::IVideoOutput::Pointer videoOutput_;
     int32_t session_;

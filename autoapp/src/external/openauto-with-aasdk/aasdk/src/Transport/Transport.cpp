@@ -21,7 +21,7 @@
 namespace f1x {
 namespace aasdk {
 namespace transport {
-Transport::Transport(boost::asio::io_service &ioService) : receiveStrand_(ioService), sendStrand_(ioService) {}
+Transport::Transport(boost::asio::io_context &ioService) : receiveStrand_(ioService), sendStrand_(ioService) {}
 
 void Transport::receive(size_t size, ReceivePromise::Pointer promise) {
     receiveStrand_.dispatch([this, self = this->shared_from_this(), size, promise = std::move(promise)]() mutable {

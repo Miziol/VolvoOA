@@ -1,18 +1,10 @@
 #ifndef AUTOAPP_ANDROIDAUTODEVICE_H
 #define AUTOAPP_ANDROIDAUTODEVICE_H
 
-#include <libusb.h>
-
-#include <QAudioFormat>
 #include <QObject>
-#include <QTimer>
-#include <QtNetwork/QSslCertificate>
-#include <QtNetwork/QSslKey>
-#include <QtNetwork/QSslSocket>
 
-#include "../../external/openauto-with-aasdk/openauto/include/f1x/openauto/autoapp/Service/AndroidAutoEntity.hpp"
 #include "../logging/loggingCategory.h"
-#include "f1x/aasdk/USB/USBWrapper.hpp"
+#include "f1x/openauto/autoapp/Service/AndroidAutoEntity.hpp"
 #include "f1x/openauto/autoapp/Service/AndroidAutoEntityFactory.hpp"
 
 class AndroidAutoDevice : public QObject {
@@ -22,30 +14,23 @@ signals:
 
 public:
     AndroidAutoDevice(QObject *parent,
-                      libusb_context *context,
-                      libusb_device *new_device,
-                      boost::asio::io_service &new_ioService,
+                      QString logCategory,
+                      boost::asio::io_context &new_ioService,
                       f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
-    ~AndroidAutoDevice();
+    // ~AndroidAutoDevice();
 
-private:
+protected:
     QLoggingCategory category;
 
-    f1x::aasdk::usb::USBWrapper usbWrapper;
-    boost::asio::io_service &ioService;
+    boost::asio::io_context &ioService;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &androidAutoEntityFactory;
-
-    libusb_device *device;
-    libusb_device_handle *handle;
     f1x::openauto::autoapp::service::IAndroidAutoEntity::Pointer androidAutoEntity;
 
 public slots:
-    void open();
-    void close();
-    void start();
-    void stop();
-
-    libusb_device *getDevice();
+    virtual void open() = 0;
+    virtual void close() = 0;
+    virtual void start() = 0;
+    virtual void stop() = 0;
 
 private:
 };

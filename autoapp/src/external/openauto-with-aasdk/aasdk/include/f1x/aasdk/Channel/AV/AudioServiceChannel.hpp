@@ -30,7 +30,7 @@ class AudioServiceChannel : public IAudioServiceChannel,
                             public ServiceChannel,
                             public std::enable_shared_from_this<AudioServiceChannel> {
 public:
-    AudioServiceChannel(boost::asio::io_service::strand &strand,
+    AudioServiceChannel(boost::asio::io_context::strand &strand,
                         messenger::IMessenger::Pointer messenger,
                         messenger::ChannelId channelId);
 

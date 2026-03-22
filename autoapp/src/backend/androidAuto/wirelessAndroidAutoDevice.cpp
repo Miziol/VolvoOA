@@ -1,0 +1,70 @@
+#include "wirelessAndroidAutoDevice.h"
+
+#include "androidAutoService.h"
+#include "f1x/aasdk/TCP/TCPEndpoint.hpp"
+
+WirelessAndroidAutoDevice::WirelessAndroidAutoDevice(
+    QObject *parent,
+    QString new_ipAddress,
+    boost::asio::io_context &new_ioService,
+    f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
+    : AndroidAutoDevice(parent, "WIRELESS ANDROID AUTO DEVICE", new_ioService, new_androidAutoEntityFactory),
+      socket(nullptr),
+      strand_(new_ioService),
+      ipAddress(new_ipAddress) {
+    open();
+}
+
+WirelessAndroidAutoDevice::~WirelessAndroidAutoDevice() {
+    stop();
+    close();
+}
+
+void WirelessAndroidAutoDevice::open() {
+    socket = std::make_shared<boost::asio::ip::tcp::socket>(ioService);
+
+    tcpWrapper.asyncConnect(*socket, ipAddress.toStdString(), 5277,
+                            std::bind(&WirelessAndroidAutoDevice::connectHandler, this, std::placeholders::_1));
+}
+
+void WirelessAndroidAutoDevice::close() {}
+
+void WirelessAndroidAutoDevice::start() {
+    strand_.dispatch([this]() mutable {
+        if (androidAutoEntity != nullptr) {
+            cinfo << "AA entity already running, skipping start.";
+            return;
+        }
+
+        cinfo << "Starting AA entity";
+
+        try {
+            auto tcpEndpoint = std::make_shared<f1x::aasdk::tcp::TCPEndpoint>(tcpWrapper, std::move(socket));
+
+            androidAutoEntity = androidAutoEntityFactory.create(std::move(tcpEndpoint));
+            androidAutoEntity->start(*((AndroidAutoService *)(parent())));
+
+            cinfo << "Started AA entity";
+
+        } catch (const std::exception &e) {
+            cerror << "Error while starting AA entity: " << e.what();
+            androidAutoEntity.reset();
+        }
+    });
+}
+
+void WirelessAndroidAutoDevice::stop() {
+    if (androidAutoEntity != nullptr) {
+        androidAutoEntity->stop();
+        androidAutoEntity.reset();
+    }
+}
+
+void WirelessAndroidAutoDevice::connectHandler(const boost::system::error_code &ec) {
+    if (!ec) {
+        cinfo << "Connected";
+        QMetaObject::invokeMethod(this, "start", Qt::QueuedConnection);
+    } else {
+        cerror << "Failed to connect to AA server with error:" << QString::fromStdString(ec.message());
+    }
+}

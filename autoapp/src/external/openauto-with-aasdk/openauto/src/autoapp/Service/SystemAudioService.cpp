@@ -23,7 +23,7 @@ namespace f1x {
 namespace openauto {
 namespace autoapp {
 namespace service {
-SystemAudioService::SystemAudioService(boost::asio::io_service &ioService,
+SystemAudioService::SystemAudioService(boost::asio::io_context &ioService,
                                        aasdk::messenger::IMessenger::Pointer messenger,
                                        projection::IAudioOutput::Pointer audioOutput)
     : AudioService(ioService,

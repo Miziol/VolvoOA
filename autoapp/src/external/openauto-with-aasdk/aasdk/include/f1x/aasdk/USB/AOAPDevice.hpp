@@ -30,7 +30,7 @@ namespace usb {
 class AOAPDevice : public IAOAPDevice, boost::noncopyable {
 public:
     AOAPDevice(IUSBWrapper &usbWrapper,
-               boost::asio::io_service &ioService,
+               boost::asio::io_context &ioService,
                libusb_device_handle *handle,
                const libusb_interface_descriptor *interfaceDescriptor);
     ~AOAPDevice() override;
@@ -39,7 +39,7 @@ public:
     IUSBEndpoint &getOutEndpoint() override;
 
     static IAOAPDevice::Pointer create(IUSBWrapper &usbWrapper,
-                                       boost::asio::io_service &ioService,
+                                       boost::asio::io_context &ioService,
                                        libusb_device_handle *handle);
 
 private:

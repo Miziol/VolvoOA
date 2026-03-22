@@ -47,7 +47,7 @@ void UsbService::handleLibUsbEvents() {
     libusb_handle_events_timeout(usbContext, &libusbEventTimeout);
 }
 
-void UsbService::startUSBWorkers(boost::asio::io_service &ioService, std::vector<std::thread> &threadPool) {
+void UsbService::startUSBWorkers(boost::asio::io_context &ioService, std::vector<std::thread> &threadPool) {
     auto usbWorker = [&ioService, this]() {
         timeval libusbEventTimeout{15, 0};
 

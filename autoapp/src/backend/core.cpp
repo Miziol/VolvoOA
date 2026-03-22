@@ -9,7 +9,7 @@ AppCore::AppCore(SettingsManager &new_settings)
     : category("GUI CORE"),
       settings(new_settings),
       androidAutoService(new_settings, ioService),
-      work(ioService),
+      work(boost::asio::make_work_guard(ioService)),
       qmlStyle(settings) {
     QGuiApplication::instance()->installEventFilter(this);
 
@@ -21,6 +21,7 @@ AppCore::AppCore(SettingsManager &new_settings)
     qmlRootContext->setContextProperty("guiStyle", &qmlStyle);
     qmlRootContext->setContextProperty("settingsManager", &settings);
     qmlRootContext->setContextProperty("usbService", &usbService);
+    qmlRootContext->setContextProperty("networkService", &networkService);
     qmlRootContext->setContextProperty("aaService", &androidAutoService);
     qmlRootContext->setContextProperty("arduinoService", &arduinoService);
     qmlRootContext->setContextProperty("systemUpdater", &systemUpdater);
@@ -49,6 +50,7 @@ AppCore::AppCore(SettingsManager &new_settings)
 }
 
 AppCore::~AppCore() {
+    work.reset();
     ioService.stop();
     std::for_each(threadPool.begin(), threadPool.end(), std::bind(&std::thread::join, std::placeholders::_1));
 }

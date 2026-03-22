@@ -1,8 +1,9 @@
 #include "androidAutoService.h"
 
-#include "androidAutoDevice.h"
+#include "usbAndroidAutoDevice.h"
+#include "wirelessAndroidAutoDevice.h"
 
-AndroidAutoService::AndroidAutoService(SettingsManager &new_settings, boost::asio::io_service &new_ioService)
+AndroidAutoService::AndroidAutoService(SettingsManager &new_settings, boost::asio::io_context &new_ioService)
     : category("ANDROID AUTO SERVICE"), settingsManager(new_settings), ioService(new_ioService), aaDevice(nullptr) {}
 
 AndroidAutoService::~AndroidAutoService() {}
@@ -10,7 +11,7 @@ AndroidAutoService::~AndroidAutoService() {}
 void AndroidAutoService::addUSBDevice(libusb_context *context, libusb_device *device) {
     if (aaDevice == nullptr) {
         cinfo << "New AA device start processing";
-        aaDevice = new AndroidAutoDevice(this, context, device, ioService, *androidAutoEntityFactory);
+        aaDevice = new UsbAndroidAutoDevice(this, context, device, ioService, *androidAutoEntityFactory);
         emit aaDeviceChanged();
     } else {
         cwarning << "Android Auto entity already exist. AA device ignored";
@@ -18,20 +19,28 @@ void AndroidAutoService::addUSBDevice(libusb_context *context, libusb_device *de
 }
 
 void AndroidAutoService::removeDevice(libusb_device *device) {
-    if (device == aaDevice->getDevice()) {
-        cinfo << "Stoping AA device";
-        aaDevice->deleteLater();
-        aaDevice = nullptr;
-        emit aaDeviceChanged();
-        emit focusOnAA(false);
+    if (auto *usb = dynamic_cast<UsbAndroidAutoDevice *>(aaDevice)) {
+        if (device == usb->getDevice()) {
+            cinfo << "Stoping AA device";
+            usb->deleteLater();
+            usb = nullptr;
+            emit aaDeviceChanged();
+            emit focusOnAA(false);
+        }
     }
 }
 
-void AndroidAutoService::addNetworkDevice() {
-    ;  // TODO
+void AndroidAutoService::addNetworkDevice(QString ip) {
+    if (aaDevice == nullptr) {
+        cinfo << "New AA device start processing";
+        aaDevice = new WirelessAndroidAutoDevice(this, ip, ioService, *androidAutoEntityFactory);
+        emit aaDeviceChanged();
+    } else {
+        cwarning << "Android Auto entity already exist. AA device ignored";
+    }
 }
 
-void AndroidAutoService::startIOServiceWorkers(boost::asio::io_service &ioService,
+void AndroidAutoService::startIOServiceWorkers(boost::asio::io_context &ioService,
                                                std::vector<std::thread> &threadPool) {
     auto ioServiceWorker = [&ioService]() { ioService.run(); };
 

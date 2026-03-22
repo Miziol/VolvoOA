@@ -2,6 +2,7 @@ import QtQuick
 
 Column {
     id: root
+    property string tipText
     property color color: "grey"
 
     height: 2 * width
@@ -35,6 +36,6 @@ Column {
 
         color: root.color
         font.pixelSize: guiStyle.titleTextSize
-        text: qsTr("Connect device")
+        text: tipText
     }
 }
