@@ -68,7 +68,7 @@ void ArduinoService::receiveArduinoMessage() {
 }
 
 void ArduinoService::analizeLineContent(QString line) {
-    if (line == "SHUTDOWN") {
+    if (line.trimmed() == "SHUTDOWN") {
         emit piShutdownRequestReceived();
     }
 }
