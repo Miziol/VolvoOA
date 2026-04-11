@@ -107,11 +107,11 @@ void VolvoState::sendButtonState(int button, bool isPressed) {
 }
 
 void VolvoState::setScreenPower(bool power) {
-    digitalWrite(SCREEN_POWER_PIN, power ? HIGH : LOW);
+    digitalWrite(SCREEN_POWER_PIN, power ? LOW : HIGH);
 }
 
 void VolvoState::setPhonePower(bool power) {
-    digitalWrite(PHONE_POWER_PIN, power ? HIGH : LOW);
+    digitalWrite(PHONE_POWER_PIN, power ? LOW : HIGH);
 }
 
 void VolvoState::sendStartPISignal() {
