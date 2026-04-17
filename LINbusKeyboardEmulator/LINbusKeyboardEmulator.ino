@@ -3,6 +3,7 @@
 
 #include "src/lin/linBus.h"
 #include "src/lin/linFrame.h"
+#include "src/rtiState.h"
 #include "src/systemState.h"
 #include "src/volvoState.h"
 
@@ -17,6 +18,7 @@ const unsigned long STOPPING_TIMEOUT = 60000;
 LinBus lin(RX_PIN, TX_PIN);
 SystemState systemState;
 VolvoState state;
+RTIState rtiState;
 
 void updateState();
 
@@ -57,6 +59,7 @@ void loop() {
     }
 
     updateState();
+    rtiState.updateState(systemState);
 }
 
 void updateState() {
