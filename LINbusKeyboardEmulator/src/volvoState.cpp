@@ -3,11 +3,9 @@
 #include <Streaming.h>
 
 VolvoState::VolvoState() {
-    pinMode(SCREEN_POWER_PIN, OUTPUT);
     pinMode(PHONE_POWER_PIN, OUTPUT);
     pinMode(PI_POWER_ON_PIN, OUTPUT);
 
-    digitalWrite(SCREEN_POWER_PIN, LOW);
     digitalWrite(PHONE_POWER_PIN, LOW);
     digitalWrite(PI_POWER_ON_PIN, LOW);
 }
@@ -104,10 +102,6 @@ void VolvoState::sendButtonState(int button, bool isPressed) {
     } else {
         Keyboard.release(button);
     }
-}
-
-void VolvoState::setScreenPower(bool power) {
-    digitalWrite(SCREEN_POWER_PIN, power ? LOW : HIGH);
 }
 
 void VolvoState::setPhonePower(bool power) {

@@ -9,7 +9,6 @@
 #define SWM_ID 0x20
 #define LSM_ID 0x10
 
-#define SCREEN_POWER_PIN 5
 #define PHONE_POWER_PIN 4
 #define PI_POWER_ON_PIN 2
 
@@ -35,7 +34,6 @@ public:
     void updateStateSWM(const byte *bytes);
     void updateStateLSM(const byte *bytes);
 
-    void setScreenPower(bool power);
     void setPhonePower(bool power);
 
     void sendStartPISignal();

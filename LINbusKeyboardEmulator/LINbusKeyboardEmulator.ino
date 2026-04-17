@@ -90,7 +90,6 @@ void updateState() {
                     if (DEBUG)
                         Serial << "State changed to: " << "STOPPED" << endl;
                     state.setPhonePower(false);
-                    state.setScreenPower(false);
                 }
                 break;
         }
@@ -101,7 +100,6 @@ void updateState() {
                 if (DEBUG)
                     Serial << "State changed to: " << "STARTING" << endl;
                 state.setPhonePower(true);
-                state.setScreenPower(true);
                 state.sendStartPISignal();
                 break;
 
