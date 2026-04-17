@@ -1,6 +1,6 @@
 #include "rtiState.h"
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 #define POWER_LED 0
 #define IR_PIN 13
@@ -16,7 +16,6 @@
 #define BOTTOM_BUTTON MODE_BUTTON
 
 RTIState::RTIState() {
-    pinMode(IR_PIN, OUTPUT);
     IrSender.begin(IR_PIN);
 }
 
