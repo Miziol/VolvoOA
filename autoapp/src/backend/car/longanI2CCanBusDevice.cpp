@@ -5,13 +5,30 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#include <QtConcurrent/QtConcurrent>
+#include <QThread>
+#include <QVariant>
 #include <iostream>
 
 #include "../../external/LonganLabs I2C CAN/I2C_CAN_dfs.h"
 
+namespace {
+constexpr int kReceiveBufferSize = 16;
+constexpr int kMaxFrameLen = 8;
+
+// ponytail: kalibracja sprzętowa — dobierz do głębokości bufora RX modułu i
+// prędkości magistrali i2c. Przy 125 kbps worst case ~1 ms/ramkę, a moduł ma
+// własny bufor RX (REG_DNUM), więc FIFO o głębokości D daje ~D ms zapasu.
+// 1 ms jest bezpieczne dla D >= 2; przy 100 kHz i2c odczyt i tak trwa ~1 ms,
+// więc realny interwał jest dłuższy. Przy szybszej magistrali skróć.
+constexpr int kPollIntervalMs = 1;
+}  // namespace
+
 LonganI2CCanBusDevice::LonganI2CCanBusDevice(QObject *parent)
-    : QCanBusDevice(parent), bus("i2c-1"), address(DEFAULT_I2C_ADDR), deviceFileDescriptor(-1) {}
+    : QCanBusDevice(parent),
+      category("LONGAN I2C CAN"),
+      bus("i2c-1"),
+      address(DEFAULT_I2C_ADDR),
+      deviceFileDescriptor(-1) {}
 
 LonganI2CCanBusDevice::~LonganI2CCanBusDevice() {
     disconnectDevice();
@@ -32,18 +49,38 @@ bool LonganI2CCanBusDevice::open() {
         setError("Failed to set I2C address", QCanBusDevice::ConnectionError);
         setState(QCanBusDevice::UnconnectedState);
         ::close(deviceFileDescriptor);
+        deviceFileDescriptor = -1;
         return false;
     }
 
     setState(QCanBusDevice::ConnectedState);
 
-    // Start reader thread
-    QtConcurrent::run([this]() { readLoop(); });
+    // Apply the configured bit rate before the worker starts (it owns the fd).
+    const QVariant bitRate = configurationParameter(QCanBusDevice::BitRateKey);
+    if (bitRate.isValid()) {
+        setRegister(REG_BAUD, QByteArray().append(mapSpeedToDefine(bitRate)));
+    }
+
+    // Dedicated worker thread; Qt owns its lifecycle (no manual stop flag).
+    // No context object on purpose: the functor then runs directly in the
+    // worker thread (with a context it would be queued back onto the GUI thread).
+    workerThread = new QThread(this);
+    connect(workerThread, &QThread::started, [this]() { readLoop(); });
+    workerThread->start();
     return true;
 }
 
 void LonganI2CCanBusDevice::close() {
     setState(QCanBusDevice::ClosingState);
+
+    // The worker thread is the sole owner of the fd: stop it before closing.
+    if (workerThread) {
+        workerThread->requestInterruption();
+        workerThread->wait();
+        delete workerThread;
+        workerThread = nullptr;
+    }
+
     if (deviceFileDescriptor >= 0) {
         ::close(deviceFileDescriptor);
         deviceFileDescriptor = -1;
@@ -53,35 +90,22 @@ void LonganI2CCanBusDevice::close() {
 }
 
 void LonganI2CCanBusDevice::setConfigurationParameter(ConfigurationKey key, const QVariant &value) {
-    switch (key) {
-        case ConfigurationKey::RawFilterKey:
-            break;
-        case ConfigurationKey::ErrorFilterKey:
-            break;
-        case ConfigurationKey::LoopbackKey:
-            break;
-        case ConfigurationKey::ReceiveOwnKey:
-            break;
-        case ConfigurationKey::BitRateKey:
-            setSpeed(value);
-            break;
-        case ConfigurationKey::CanFdKey:
-            break;
-        case ConfigurationKey::DataBitRateKey:
-            break;
-        case ConfigurationKey::ProtocolKey:
-            break;
-        case ConfigurationKey::UserKey:
-            break;
-        default:
-            break;
-    }
+    // ponytail: stored in the base and applied in open(); set BitRateKey before
+    // connectDevice() (Qt's documented order) or it takes effect on reconnect.
+    QCanBusDevice::setConfigurationParameter(key, value);
 }
 
 bool LonganI2CCanBusDevice::writeFrame(const QCanBusFrame &frame) {
-    if (state() != ConnectedState)
+    if (state() != ConnectedState) {
         return false;
+    }
 
+    // Hand off to the worker thread's outgoing queue; the worker owns the fd.
+    enqueueOutgoingFrame(frame);
+    return true;
+}
+
+bool LonganI2CCanBusDevice::writeFrameToBus(const QCanBusFrame &frame) {
     QByteArray data;
     for (int i = 3; i >= 0; i--) {
         data.append(0xFF & (frame.frameId() >> (i * 8)));
@@ -99,16 +123,33 @@ QString LonganI2CCanBusDevice::interpretErrorFrame(const QCanBusFrame &frame) {
 }
 
 void LonganI2CCanBusDevice::readLoop() {
-    while (state() == ConnectedState) {
-        uint8_t buffer[16];
-        int n = ::read(deviceFileDescriptor, buffer, sizeof(buffer));
-        if (n > 3) {
-            int id = (buffer[0] << 8) | buffer[1];
-            int len = buffer[2];
-            QByteArray data((char *)&buffer[3], len);
-            QCanBusFrame frame(id, data);
-            enqueueReceivedFrames({frame});
+    while (!QThread::currentThread()->isInterruptionRequested()) {
+        int written = 0;
+        while (hasOutgoingFrames()) {
+            if (writeFrameToBus(dequeueOutgoingFrame())) {
+                ++written;
+            } else {
+                cwarning << "Failed to write CAN frame";
+            }
         }
+        if (written > 0) {
+            emit framesWritten(written);
+        }
+
+        uint8_t buffer[kReceiveBufferSize];
+        const int n = ::read(deviceFileDescriptor, buffer, sizeof(buffer));
+        if (n > 3) {
+            const int len = buffer[2];
+            if (len < 0 || len > kMaxFrameLen || n < 3 + len) {
+                cwarning << "Malformed CAN frame: n=" << n << "len=" << len;
+            }
+            // ponytail: only draining the module's RX FIFO for now; when a consumer
+            // needs speed data, build the frame and enqueueReceivedFrames({frame}).
+            continue;
+        }
+
+        // Nothing available: brief bounded poll instead of spinning at 100% CPU.
+        QThread::msleep(kPollIntervalMs);
     }
 }
 
@@ -116,10 +157,6 @@ bool LonganI2CCanBusDevice::setRegister(unsigned char reg, QByteArray data) {
     data.prepend(reg);
     int transferedBytes = ::write(deviceFileDescriptor, data.constData(), data.size());
     return transferedBytes == data.size();
-}
-
-void LonganI2CCanBusDevice::setSpeed(const QVariant &speed) {
-    setRegister(REG_BAUD, QByteArray().append(mapSpeedToDefine(speed)));
 }
 
 int LonganI2CCanBusDevice::mapSpeedToDefine(const QVariant &speed) {

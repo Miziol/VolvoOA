@@ -10,9 +10,9 @@ CANService::CANService(QObject *parent) : QObject(parent), category("CAN SERVICE
     screenTimer.callOnTimeout(this, &CANService::openScreen);
 
     lowSpeedCanBusDevice = new LonganI2CCanBusDevice(this);
+    lowSpeedCanBusDevice->setConfigurationParameter(QCanBusDevice::BitRateKey, QVariant(speedOfLowSpeedCan));
 
     if (lowSpeedCanBusDevice->connectDevice()) {
-        lowSpeedCanBusDevice->setConfigurationParameter(QCanBusDevice::BitRateKey, QVariant(speedOfLowSpeedCan));
         screenTimer.start();
     } else {
         cerror << lowSpeedCanBusDevice->errorString();
