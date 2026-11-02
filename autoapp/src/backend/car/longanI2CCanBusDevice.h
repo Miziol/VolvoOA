@@ -3,6 +3,10 @@
 
 #include <QtSerialBus/QCanBusDevice>
 
+#include <QThread>
+
+#include "../logging/loggingCategory.h"
+
 class LonganI2CCanBusDevice : public QCanBusDevice {
     Q_OBJECT
 
@@ -13,9 +17,13 @@ public:
     ~LonganI2CCanBusDevice() override;
 
 private:
+    QLoggingCategory category;
+
     QString bus;
     uint8_t address;
     int deviceFileDescriptor;
+
+    QThread *workerThread = nullptr;
 
 protected:
     bool open() override;
@@ -27,10 +35,9 @@ protected:
 
 private:
     void readLoop();
+    bool writeFrameToBus(const QCanBusFrame &frame);
 
     bool setRegister(unsigned char reg, QByteArray data);
-    void setSpeed(const QVariant &speed);
-
     int mapSpeedToDefine(const QVariant &speed);
     unsigned char makeCheckSum(QByteArray frame);
 };
