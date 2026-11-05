@@ -5,16 +5,14 @@
 
 UsbAndroidAutoDevice::UsbAndroidAutoDevice(
     QObject *parent,
-    libusb_context *context,
     libusb_device *new_device,
     boost::asio::io_context &new_ioService,
-    f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
-    : AndroidAutoDevice(parent, "USB ANDROID AUTO DEVICE", new_ioService, new_androidAutoEntityFactory),
-      device(new_device),
-      usbWrapper(f1x::aasdk::usb::USBWrapper(context)) {
-    open();
-    start();
-}
+    f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory,
+    libusb_context *new_context)
+    : AndroidAutoDevice(parent, "USB ANDROID AUTO DEVICE", new_ioService,
+                        new_androidAutoEntityFactory),
+      usbWrapper(new_context),
+      device(new_device) {}
 
 UsbAndroidAutoDevice::~UsbAndroidAutoDevice() {
     stop();

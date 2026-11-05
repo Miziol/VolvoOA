@@ -18,7 +18,7 @@ class UsbDevice : public QObject {
     Q_OBJECT
 
 public:
-    Q_PROPERTY(QString deviceName READ getDeviceName CONSTANT)
+    Q_PROPERTY(QString displayName READ displayName CONSTANT)
 
 public:
     UsbDevice(libusb_device *new_device);
@@ -30,8 +30,11 @@ public:
     void close();
 
 public slots:
-    QString getDeviceName();
-    void tryToStartAndroidAutoServer();
+    QString displayName();
+    // Twin of BluetoothDevice::activate(): the list-entry "start" action. Kicks off the AOAP
+    // accessory handshake; the phone re-enumerates as an AA device and AndroidAutoService
+    // then picks it up via UsbService::newAndroidAutoDevice.
+    void activate();
 
 private:
     QLoggingCategory category;

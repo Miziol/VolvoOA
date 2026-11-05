@@ -1,55 +1,29 @@
 #include "networkService.h"
 
-#include <QtConcurrent/qtconcurrentrun.h>
+#include <QUuid>
 
-#include <QHostInfo>
-#include <QNetworkInterface>
-#include <QTcpSocket>
-#include <QTimer>
-
-#include "networkDevice.h"
-
-NetworkService::NetworkService() : category("NETWORK SERVICE") {
-    scanNetwork();
+NetworkService::NetworkService(SettingsManager &new_settings, QObject *parent)
+    : QObject(parent), settings(new_settings) {
+    connect(&accessPoint, &WifiAccessPoint::ready, this, &NetworkService::ready);
+    connect(&accessPoint, &WifiAccessPoint::failed, this, &NetworkService::failed);
 }
 
-NetworkService::~NetworkService() {
-    for (const auto &device : devices) {
-        device->deleteLater();
-        devices.removeOne(device);
+void NetworkService::ensureStarted() {
+    if (accessPoint.isActive()) {
+        emit ready();
+        return;
     }
-}
 
-void NetworkService::scanNetwork() {
-    QString localBase;
-    for (const auto interface : QNetworkInterface::allInterfaces()) {
-        for (const auto address : interface.addressEntries()) {
-            if (!address.ip().isLinkLocal() && !address.ip().isLoopback() &&
-                address.ip().protocol() == QAbstractSocket::IPv4Protocol) {
-                quint32 netIP = address.ip().toIPv4Address() & address.netmask().toIPv4Address();
-
-                for (int i = 1; i < ~address.netmask().toIPv4Address(); i++) {
-                    QString ip = QHostAddress(netIP + i).toString();
-                    QtConcurrent::run([this, ip]() { this->lookForAA(ip); });
-                }
-            }
-        }
+    QString ssid = settings.getWifiSsid();
+    if (ssid.isEmpty()) {
+        ssid = "AUTOAPP";
     }
-}
-
-void NetworkService::lookForAA(const QString &ip) {
-    QTcpSocket socket;
-
-    socket.connectToHost(ip, AA_PORT);
-
-    if (socket.waitForConnected(1000)) {
-        QMetaObject::invokeMethod(this, [this, ip]() { this->addAADeviceToList(ip); }, Qt::QueuedConnection);
-
-        socket.abort();
+    // ponytail: no stored key => per-session random WPA2 password (>=8 chars); the phone
+    // gets it over BT anyway. Set wireless/key to pin your own.
+    QString key = settings.getWifiKey();
+    if (key.isEmpty()) {
+        key = QUuid::createUuid().toString(QUuid::Id128).left(12);
     }
-}
 
-void NetworkService::addAADeviceToList(QString ip) {
-    devices.append(new NetworkDevice(QHostInfo::fromName(ip)));
-    emit networkDevicesChanged();
+    accessPoint.start(ssid, key, settings.getWifiInterface());
 }

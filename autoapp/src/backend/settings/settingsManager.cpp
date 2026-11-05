@@ -139,6 +139,22 @@ void SettingsManager::setBluetoothRemoteAdapterAddress(const QBluetoothAddress v
     emit bluetoothAddressChanged();
 }
 
+QString SettingsManager::getWifiSsid() const {
+    return value(WIFI_SSID_KEY).toString();
+}
+
+QString SettingsManager::getWifiKey() const {
+    return value(WIFI_KEY_KEY).toString();
+}
+
+QString SettingsManager::getWifiBssid() const {
+    return value(WIFI_BSSID_KEY).toString();
+}
+
+QString SettingsManager::getWifiInterface() const {
+    return value(WIFI_INTERFACE_KEY).toString();
+}
+
 void SettingsManager::setDefault(bool force) {
     setDefaultValue(force, LOGGER_ROTATION_KEY, LOGGER_ROTATION_VALUE);
     setDefaultValue(force, LOGGER_RETENTION_KEY, LOGGER_RETENTION_VALUE);
@@ -158,6 +174,11 @@ void SettingsManager::setDefault(bool force) {
 
     setDefaultValue(force, BLUETOOTH_ADAPTER_TYPE_KEY, (int)(BLUETOOTH_ADAPTER_TYPE_VALUE));
     setDefaultValue(force, BLUETOOTH_REMOTE_ADAPTER_ADDRESS_KEY, BLUETOOTH_REMOTE_ADAPTER_ADDRESS_VALUE.toString());
+
+    setDefaultValue(force, WIFI_SSID_KEY, WIFI_SSID_VALUE);
+    setDefaultValue(force, WIFI_KEY_KEY, WIFI_KEY_VALUE);
+    setDefaultValue(force, WIFI_BSSID_KEY, WIFI_BSSID_VALUE);
+    setDefaultValue(force, WIFI_INTERFACE_KEY, WIFI_INTERFACE_VALUE);
 }
 
 void SettingsManager::setDefaultValue(bool force, QString key, QVariant value) {

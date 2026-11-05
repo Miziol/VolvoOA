@@ -10,18 +10,13 @@
 class AndroidAutoDevice : public QObject {
     Q_OBJECT
 
-signals:
-
-public:
+protected:
     AndroidAutoDevice(QObject *parent,
-                      QString logCategory,
+                      const char *logCategory,
                       boost::asio::io_context &new_ioService,
                       f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
-    // ~AndroidAutoDevice();
 
-protected:
     QLoggingCategory category;
-
     boost::asio::io_context &ioService;
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &androidAutoEntityFactory;
     f1x::openauto::autoapp::service::IAndroidAutoEntity::Pointer androidAutoEntity;
@@ -31,8 +26,6 @@ public slots:
     virtual void close() = 0;
     virtual void start() = 0;
     virtual void stop() = 0;
-
-private:
 };
 
 #endif  // AUTOAPP_ANDROIDAUTODEVICE_H

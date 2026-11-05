@@ -3,6 +3,7 @@
 
 #include <libusb.h>
 
+#include "../logging/loggingCategory.h"
 #include "androidAutoDevice.h"
 #include "f1x/aasdk/USB/USBWrapper.hpp"
 #include "f1x/openauto/autoapp/Service/AndroidAutoEntity.hpp"
@@ -11,17 +12,17 @@
 class UsbAndroidAutoDevice : public AndroidAutoDevice {
     Q_OBJECT
 
-signals:
-
 public:
     UsbAndroidAutoDevice(QObject *parent,
-                         libusb_context *context,
                          libusb_device *new_device,
                          boost::asio::io_context &new_ioService,
-                         f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
+                         f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory,
+                         libusb_context *new_context);
     ~UsbAndroidAutoDevice();
 
 private:
+    // The USB transport's wrapper lives with the session it serves; the aasdk AOAPDevice
+    // borrows it by reference, and ~UsbAndroidAutoDevice tears the entity down first.
     f1x::aasdk::usb::USBWrapper usbWrapper;
 
     libusb_device *device;
@@ -34,8 +35,6 @@ public slots:
     void stop() override;
 
     libusb_device *getDevice();
-
-private:
 };
 
 #endif  // AUTOAPP_USBANDROIDAUTODEVICE_H

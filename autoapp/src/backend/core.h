@@ -8,6 +8,7 @@
 #include "androidAuto/androidAutoService.h"
 #include "app/appUpdater.h"
 #include "app/systemUpdater.h"
+#include "bluetooth/wirelessService.h"
 #include "car/CANService.h"
 #include "car/arduinoService.h"
 #include "logging/loggingCategory.h"
@@ -48,9 +49,10 @@ private:
     std::vector<std::thread> threadPool;
     AndroidAutoService androidAutoService;
     UsbService usbService;
-    NetworkService networkService;
     CANService canbusService;
     ArduinoService arduinoService;
+    NetworkService networkService;
+    WirelessService wirelessService;
 
     SystemUpdater systemUpdater;
     AppUpdater appUpdater;

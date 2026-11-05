@@ -12,15 +12,15 @@ ScreenElement {
             Layout.fillHeight: true
 
             model: usbService.usbDevices
-            enabled: model.length > 0
+            enabled: model.length > 0 && !aaService.aaBusy
             focus: true
 
             delegate: Button {
                 width: parent.width
 
-                text: modelData.deviceName
+                text: modelData.displayName
 
-                onClicked: modelData.tryToStartAndroidAutoServer()
+                onClicked: aaService.connectDevice(modelData)
             }
 
             EmptyListIcon {
@@ -35,23 +35,22 @@ ScreenElement {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            model: networkService.networkDevices
-            enabled: false // TODO model.length > 0
-            visible: false // TODO remove when feature start working
+            model: wirelessService.devices
+            enabled: !aaService.aaBusy
 
             delegate: Button {
                 width: parent.width
 
-                text: modelData.displayName
+                text: modelData.displayName + (modelData.aaRequested ? "  ✓" : "")
 
-                onClicked: aaService.addNetworkDevice(modelData.getIPAddress())
+                onClicked: aaService.connectDevice(modelData)
             }
 
             EmptyListIcon {
                 width: 50
                 anchors.centerIn: parent
-                visible: parent.model.length == 0 // TODO add scanning notification
-                tipText: qsTr("Power on AA server")
+                visible: parent.model.length == 0
+                tipText: qsTr("Pair phone")
             }
         }
     }

@@ -90,6 +90,16 @@ private:
     inline static const QBluetoothAddress BLUETOOTH_REMOTE_ADAPTER_ADDRESS_VALUE = QBluetoothAddress();
     // END TODO
 
+    // Wireless AA: head unit hosts the AP, credentials go to the phone over BT.
+    inline static const QString WIFI_SSID_KEY = "wireless/ssid";
+    inline static const QString WIFI_SSID_VALUE = "";
+    inline static const QString WIFI_KEY_KEY = "wireless/key";
+    inline static const QString WIFI_KEY_VALUE = "";
+    inline static const QString WIFI_BSSID_KEY = "wireless/bssid";
+    inline static const QString WIFI_BSSID_VALUE = "";
+    inline static const QString WIFI_INTERFACE_KEY = "wireless/interface";
+    inline static const QString WIFI_INTERFACE_VALUE = "";  // empty = autodetect
+
 public slots:
     // Logger
     int getLoggerRotation();
@@ -129,6 +139,12 @@ public slots:
     QBluetoothAddress getBluetoothRemoteAdapterAddress() const;
     void setBluetoothRemoteAdapterAddress(const QBluetoothAddress value);
     // END TODO
+
+    // Wireless AA
+    QString getWifiSsid() const;
+    QString getWifiKey() const;
+    QString getWifiBssid() const;
+    QString getWifiInterface() const;
 
 private:
     void setDefault(bool force = false);

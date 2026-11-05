@@ -27,7 +27,7 @@ void UsbDevice::close() {
     handle = nullptr;
 }
 
-QString UsbDevice::getDeviceName() {
+QString UsbDevice::displayName() {
     int bufferLength = 128, manufacturerLength, priductLength;
     unsigned char manufacturer[bufferLength], product[bufferLength];
 
@@ -52,7 +52,7 @@ QString UsbDevice::getDeviceName() {
            QString::fromLatin1(reinterpret_cast<const char *>(product), priductLength);
 }
 
-void UsbDevice::tryToStartAndroidAutoServer() {
+void UsbDevice::activate() {
     queue.append(UsbDeviceStringRequestType{"Android Auto", SendStringType::DESCRIPTION,
                                             &UsbDevice::sendNextElementFromQueue_cb});
     queue.append(

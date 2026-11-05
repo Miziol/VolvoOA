@@ -32,8 +32,11 @@ QtVideoOutput::QtVideoOutput(SettingsManager &configuration, QObject *new_qmlRoo
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 
-    qDebug() << "[QtVideoOutput] create.";
-    mediaPlayer.setVideoOutput(qmlRootObject->findChild<QObject *>("aaVideoOutput"));
+    auto *sink = qmlRootObject->findChild<QObject *>("aaVideoOutput");
+    mediaPlayer.setVideoOutput(sink);
+    connect(&mediaPlayer, &QMediaPlayer::errorOccurred, this, [](QMediaPlayer::Error e, const QString &s) {
+        qCritical() << "[QtVideoOutput] media error:" << e << s;
+    });
 }
 
 bool QtVideoOutput::open() {
