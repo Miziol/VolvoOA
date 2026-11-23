@@ -1,6 +1,5 @@
 #include "bluetoothDevice.h"
 
-#include <QBluetoothLocalDevice>
 #include <QBluetoothSocket>
 
 #include "../network/networkService.h"
@@ -95,7 +94,6 @@ BluetoothDevice::BluetoothDevice(QString new_name, const QBluetoothAddress &new_
     : category("BT DEVICE"),
       name(new_name),
       addressString(new_address.toString()),
-      btAddress(new_address),
       networkService(new_networkService) {}
 
 BluetoothDevice::~BluetoothDevice() {
@@ -106,24 +104,16 @@ BluetoothDevice::~BluetoothDevice() {
     }
 }
 
+QString BluetoothDevice::displayName() {
+    return name;
+}
+
 void BluetoothDevice::activate() {
-    QBluetoothLocalDevice localDevice;
-    if (!localDevice.isValid()) {
-        cerror << "No Bluetooth adapter, cannot arm";
-        return;
-    }
-
-    // Pair if needed so the phone is allowed to connect back; then mark it as the phone we
-    // expect Android Auto from.
-    if (localDevice.pairingStatus(btAddress) != QBluetoothLocalDevice::Paired) {
-        cinfo << "Pairing" << name << addressString;
-        localDevice.requestPairing(btAddress, QBluetoothLocalDevice::Paired);
-    }
-
-    if (!aaRequested) {
-        aaRequested = true;
-        cinfo << name << "requested Android Auto";
-        emit aaRequestedChanged();
+    // The phone initiates the BT pairing and the RFCOMM dial (classic phone -> head unit), so we
+    // only record consent here: until tapped, onClientConnected() drops this phone's dials.
+    if (!armed) {
+        armed = true;
+        cinfo << name << "armed for Android Auto";
     }
 }
 
@@ -144,7 +134,7 @@ void BluetoothDevice::startSession(QBluetoothSocket *newSocket) {
 
     // The phone cannot join until our AP exists, so bring it up first and only then send
     // WifiStartRequest (matches the working ngocthang ordering).
-    if (networkService.isActive()) {
+    if (networkService.isAccessPointActive()) {
         sendStartRequest();
         return;
     }
@@ -157,6 +147,10 @@ void BluetoothDevice::onSocketDisconnected() {
     socket->deleteLater();
     socket = nullptr;
     rxBuffer.clear();
+    if (connected) {
+        connected = false;
+        emit connectedChanged();
+    }
     emit sessionEnded();
 }
 
@@ -241,6 +235,10 @@ void BluetoothDevice::handleMessage(quint16 messageId, const QByteArray &payload
             const qint64 status = readVarintField(payload, 1);
             cinfo << "Stage 5/5: WifiConnectStatus received, status" << status;
             if (status == 0) {
+                if (!connected) {
+                    connected = true;
+                    emit connectedChanged();
+                }
                 emit handshakeCompleted();
             }
             break;

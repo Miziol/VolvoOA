@@ -31,26 +31,39 @@ ScreenElement {
             }
         }
 
-        ListView {
+        ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            model: wirelessService.devices
-            enabled: !aaService.aaBusy
+            Switch {
+                Layout.fillWidth: true
 
-            delegate: Button {
-                width: parent.width
-
-                text: modelData.displayName + (modelData.aaRequested ? "  ✓" : "")
-
-                onClicked: aaService.connectDevice(modelData)
+                text: qsTr("Discoverable")
+                checked: bluetoothService.discoverable
+                onClicked: bluetoothService.discoverable = checked
             }
 
-            EmptyListIcon {
-                width: 50
-                anchors.centerIn: parent
-                visible: parent.model.length == 0
-                tipText: qsTr("Pair phone")
+            ListView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                model: bluetoothService.bluetoothDevices
+                enabled: model.length > 0 && !aaService.aaBusy
+
+                delegate: Button {
+                    width: parent.width
+
+                    text: modelData.displayName + (modelData.connected ? "  ✓" : "")
+
+                    onClicked: aaService.connectDevice(modelData)
+                }
+
+                EmptyListIcon {
+                    width: 50
+                    anchors.centerIn: parent
+                    visible: parent.model.length == 0
+                    tipText: qsTr("Pair phone")
+                }
             }
         }
     }

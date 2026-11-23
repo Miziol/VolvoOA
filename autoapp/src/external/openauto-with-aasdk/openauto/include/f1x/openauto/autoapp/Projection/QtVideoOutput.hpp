@@ -44,6 +44,7 @@ signals:
 protected slots:
     void onStartPlayback();
     void onStopPlayback();
+    void onMediaError(QMediaPlayer::Error error, const QString &errorString);
 
 private:
     SequentialBuffer videoBuffer_;

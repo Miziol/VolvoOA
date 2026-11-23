@@ -1,5 +1,7 @@
 #include "networkService.h"
 
+#include <QProcess>
+#include <QStringList>
 #include <QUuid>
 
 NetworkService::NetworkService(SettingsManager &new_settings, QObject *parent)
@@ -25,5 +27,19 @@ void NetworkService::ensureStarted() {
         key = QUuid::createUuid().toString(QUuid::Id128).left(12);
     }
 
-    accessPoint.start(ssid, key, settings.getWifiInterface());
+    accessPoint.start(ssid, key, detectWifiInterface());
+}
+
+QString NetworkService::detectWifiInterface() {
+    QProcess process;
+    process.start("nmcli", {"-t", "-f", "DEVICE,TYPE", "device", "status"});
+    process.waitForFinished(5000);
+    const QString out = QString::fromUtf8(process.readAllStandardOutput());
+    for (const QString &line : out.split('\n', Qt::SkipEmptyParts)) {
+        const QStringList parts = line.split(':');
+        if (parts.size() >= 2 && parts[1] == "wifi") {
+            return parts[0];
+        }
+    }
+    return {};
 }

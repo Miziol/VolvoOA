@@ -24,53 +24,66 @@ void WifiAccessPoint::start(const QString &ssid, const QString &password, const 
 
     pendingSsid = ssid;
     pendingKey = password;
-    pendingIface = ifname.isEmpty() ? detectWifiInterface() : ifname;
+    pendingIface = ifname;
     if (pendingIface.isEmpty()) {
-        emit failed("No Wi-Fi interface found");
+        emit failed("No Wi-Fi interface provided");
         return;
     }
 
     cinfo << "Bringing up access point on" << pendingIface << "ssid" << pendingSsid;
 
-    // Drop a stale profile first (ignore failure), then create + activate a fresh one.
-    runNmcliAsync({"connection", "delete", HOTSPOT_CONNECTION}, [this](int, QString) {
-        runNmcliAsync({"device", "wifi", "hotspot", "con-name", HOTSPOT_CONNECTION, "ifname",
-                       pendingIface, "ssid", pendingSsid, "password", pendingKey},
-                      [this](int code, QString out) {
-                          if (code != 0) {
-                              emit failed("nmcli hotspot failed: " + out.trimmed());
-                              return;
-                          }
-                          // ponytail: keep the profile from auto-starting on next boot and
-                          // knocking out the normal station connection.
-                          runNmcliAsync({"connection", "modify", HOTSPOT_CONNECTION,
-                                         "connection.autoconnect", "no"},
-                                        [this](int, QString) {
-                                            runNmcliAsync({"-f", "IP4.ADDRESS", "device", "show",
-                                                           pendingIface},
-                                                          [this](int, QString out) {
-                                                              for (const QString &line :
-                                                                   out.split('\n', Qt::SkipEmptyParts)) {
-                                                                  const QString value =
-                                                                      line.section(':', 1).section('/', 0, 0).trimmed();
-                                                                  if (!value.isEmpty()) {
-                                                                      apInfo.address = value;
-                                                                      break;
-                                                                  }
-                                                              }
-                                                              QFile macFile("/sys/class/net/" + pendingIface + "/address");
-                                                              if (macFile.open(QIODevice::ReadOnly)) {
-                                                                  apInfo.bssid = QString::fromUtf8(macFile.readAll()).trimmed();
-                                                              }
-                                                              apInfo.ssid = pendingSsid;
-                                                              apInfo.key = pendingKey;
-                                                              active = true;
-                                                              cinfo << "Access point up, phone dials" << apInfo.address;
-                                                              emit ready();
-                                                          });
-                                        });
-                      });
+    // Drop a stale profile first (both best-effort), then create + activate a fresh one and read
+    // back the gateway IP; the remaining steps are fatal.
+    steps = {
+        {{"connection", "down", HOTSPOT_CONNECTION}, false},
+        {{"connection", "delete", HOTSPOT_CONNECTION}, false},
+        {{"device", "wifi", "hotspot", "con-name", HOTSPOT_CONNECTION, "ifname", pendingIface, "ssid",
+          pendingSsid, "password", pendingKey},
+         true},
+        // ponytail: keep the profile from auto-starting on next boot and knocking out the normal
+        // station connection.
+        {{"connection", "modify", HOTSPOT_CONNECTION, "connection.autoconnect", "no"}, true},
+        {{"-f", "IP4.ADDRESS", "device", "show", pendingIface}, true},
+    };
+    stepIndex = 0;
+    runNextStep();
+}
+
+void WifiAccessPoint::runNextStep() {
+    if (stepIndex >= steps.size()) {
+        onStepsFinished();
+        return;
+    }
+
+    const Step step = steps.at(stepIndex);
+    runNmcliAsync(step.args, [this, step](int code, QString out) {
+        lastOutput = out;
+        if (code != 0 && step.fatal) {
+            emit failed("nmcli " + step.args.join(' ') + " failed: " + out.trimmed());
+            return;
+        }
+        ++stepIndex;
+        runNextStep();
     });
+}
+
+void WifiAccessPoint::onStepsFinished() {
+    for (const QString &line : lastOutput.split('\n', Qt::SkipEmptyParts)) {
+        const QString value = line.section(':', 1).section('/', 0, 0).trimmed();
+        if (!value.isEmpty()) {
+            apInfo.address = value;
+            break;
+        }
+    }
+    QFile macFile("/sys/class/net/" + pendingIface + "/address");
+    if (macFile.open(QIODevice::ReadOnly)) {
+        apInfo.bssid = QString::fromUtf8(macFile.readAll()).trimmed();
+    }
+    apInfo.ssid = pendingSsid;
+    apInfo.key = pendingKey;
+    active = true;
+    cinfo << "Access point up, phone dials" << apInfo.address;
+    emit ready();
 }
 
 void WifiAccessPoint::runNmcliAsync(const QStringList &args,
@@ -90,18 +103,4 @@ void WifiAccessPoint::runNmcliAsync(const QStringList &args,
         }
     });
     process->start("nmcli", QStringList{"-t"} + args);
-}
-
-QString WifiAccessPoint::detectWifiInterface() {
-    QProcess process;
-    process.start("nmcli", {"-t", "-f", "DEVICE,TYPE", "device", "status"});
-    process.waitForFinished(5000);
-    const QString out = QString::fromUtf8(process.readAllStandardOutput());
-    for (const QString &line : out.split('\n', Qt::SkipEmptyParts)) {
-        const QStringList parts = line.split(':');
-        if (parts.size() >= 2 && parts[1] == "wifi") {
-            return parts[0];
-        }
-    }
-    return {};
 }

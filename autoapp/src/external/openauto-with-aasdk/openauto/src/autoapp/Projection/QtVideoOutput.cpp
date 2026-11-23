@@ -32,11 +32,9 @@ QtVideoOutput::QtVideoOutput(SettingsManager &configuration, QObject *new_qmlRoo
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 
-    auto *sink = qmlRootObject->findChild<QObject *>("aaVideoOutput");
-    mediaPlayer.setVideoOutput(sink);
-    connect(&mediaPlayer, &QMediaPlayer::errorOccurred, this, [](QMediaPlayer::Error e, const QString &s) {
-        qCritical() << "[QtVideoOutput] media error:" << e << s;
-    });
+    auto *videoOutput = qmlRootObject->findChild<QObject *>("aaVideoOutput");
+    mediaPlayer.setVideoOutput(videoOutput);
+    connect(&mediaPlayer, &QMediaPlayer::errorOccurred, this, &QtVideoOutput::onMediaError);
 }
 
 bool QtVideoOutput::open() {
@@ -63,6 +61,10 @@ void QtVideoOutput::onStartPlayback() {
 
 void QtVideoOutput::onStopPlayback() {
     mediaPlayer.stop();
+}
+
+void QtVideoOutput::onMediaError(QMediaPlayer::Error error, const QString &errorString) {
+    qCritical() << "[QtVideoOutput] media error:" << error << errorString;
 }
 }  // namespace projection
 }  // namespace autoapp

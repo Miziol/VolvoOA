@@ -143,16 +143,18 @@ QString SettingsManager::getWifiSsid() const {
     return value(WIFI_SSID_KEY).toString();
 }
 
+void SettingsManager::setWifiSsid(QString value) {
+    setValue(WIFI_SSID_KEY, value);
+    emit wifiSsidChanged();
+}
+
 QString SettingsManager::getWifiKey() const {
     return value(WIFI_KEY_KEY).toString();
 }
 
-QString SettingsManager::getWifiBssid() const {
-    return value(WIFI_BSSID_KEY).toString();
-}
-
-QString SettingsManager::getWifiInterface() const {
-    return value(WIFI_INTERFACE_KEY).toString();
+void SettingsManager::setWifiKey(QString value) {
+    setValue(WIFI_KEY_KEY, value);
+    emit wifiKeyChanged();
 }
 
 void SettingsManager::setDefault(bool force) {
@@ -177,8 +179,6 @@ void SettingsManager::setDefault(bool force) {
 
     setDefaultValue(force, WIFI_SSID_KEY, WIFI_SSID_VALUE);
     setDefaultValue(force, WIFI_KEY_KEY, WIFI_KEY_VALUE);
-    setDefaultValue(force, WIFI_BSSID_KEY, WIFI_BSSID_VALUE);
-    setDefaultValue(force, WIFI_INTERFACE_KEY, WIFI_INTERFACE_VALUE);
 }
 
 void SettingsManager::setDefaultValue(bool force, QString key, QVariant value) {

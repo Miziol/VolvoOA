@@ -11,7 +11,7 @@ AppCore::AppCore(SettingsManager &new_settings)
       androidAutoService(new_settings, ioService),
       work(boost::asio::make_work_guard(ioService)),
       networkService(new_settings),
-      wirelessService(networkService),
+      bluetoothService(networkService),
       qmlStyle(settings) {
     QGuiApplication::instance()->installEventFilter(this);
 
@@ -23,7 +23,7 @@ AppCore::AppCore(SettingsManager &new_settings)
     qmlRootContext->setContextProperty("guiStyle", &qmlStyle);
     qmlRootContext->setContextProperty("settingsManager", &settings);
     qmlRootContext->setContextProperty("usbService", &usbService);
-    qmlRootContext->setContextProperty("wirelessService", &wirelessService);
+    qmlRootContext->setContextProperty("bluetoothService", &bluetoothService);
     qmlRootContext->setContextProperty("aaService", &androidAutoService);
     qmlRootContext->setContextProperty("arduinoService", &arduinoService);
     qmlRootContext->setContextProperty("systemUpdater", &systemUpdater);
@@ -49,10 +49,10 @@ AppCore::AppCore(SettingsManager &new_settings)
 
     connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addUSBDevice);
     connect(&usbService, &UsbService::removeAndroidAutoDevice, &androidAutoService, &AndroidAutoService::removeDevice);
-    connect(&wirelessService, &WirelessService::handshakeCompleted, &androidAutoService,
+    connect(&bluetoothService, &BluetoothService::handshakeCompleted, &androidAutoService,
             &AndroidAutoService::armWirelessProjection);
 
-    wirelessService.start();
+    bluetoothService.start();
     androidAutoService.startWirelessServer();
 }
 

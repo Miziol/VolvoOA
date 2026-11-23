@@ -34,6 +34,9 @@ signals:
 
     void appLanguageChanged(QString lang);  // TODO impl translations
 
+    void wifiSsidChanged();
+    void wifiKeyChanged();
+
 public:
     Q_PROPERTY(bool showClock READ getShowClock WRITE setShowClock NOTIFY showClockChanged)
     Q_PROPERTY(bool leftHandDrive READ isLeftHandDrive WRITE setLeftHandDrive NOTIFY leftHandDriveChanged)
@@ -45,6 +48,10 @@ public:
     // Q_PROPERTY() // TODO video margin
 
     Q_PROPERTY(bool showCursor READ getShowCursor WRITE setShowCursor NOTIFY showCursorChanged)
+
+    // Wireless AA hotspot the phone joins (credentials are sent to the phone over BT).
+    Q_PROPERTY(QString wifiSsid READ getWifiSsid WRITE setWifiSsid NOTIFY wifiSsidChanged)
+    Q_PROPERTY(QString wifiKey READ getWifiKey WRITE setWifiKey NOTIFY wifiKeyChanged)
 
 public:
     SettingsManager();
@@ -95,10 +102,6 @@ private:
     inline static const QString WIFI_SSID_VALUE = "";
     inline static const QString WIFI_KEY_KEY = "wireless/key";
     inline static const QString WIFI_KEY_VALUE = "";
-    inline static const QString WIFI_BSSID_KEY = "wireless/bssid";
-    inline static const QString WIFI_BSSID_VALUE = "";
-    inline static const QString WIFI_INTERFACE_KEY = "wireless/interface";
-    inline static const QString WIFI_INTERFACE_VALUE = "";  // empty = autodetect
 
 public slots:
     // Logger
@@ -142,9 +145,9 @@ public slots:
 
     // Wireless AA
     QString getWifiSsid() const;
+    void setWifiSsid(QString value);
     QString getWifiKey() const;
-    QString getWifiBssid() const;
-    QString getWifiInterface() const;
+    void setWifiKey(QString value);
 
 private:
     void setDefault(bool force = false);

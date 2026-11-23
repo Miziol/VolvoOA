@@ -8,7 +8,7 @@
 #include "androidAuto/androidAutoService.h"
 #include "app/appUpdater.h"
 #include "app/systemUpdater.h"
-#include "bluetooth/wirelessService.h"
+#include "bluetooth/bluetoothService.h"
 #include "car/CANService.h"
 #include "car/arduinoService.h"
 #include "logging/loggingCategory.h"
@@ -52,7 +52,7 @@ private:
     CANService canbusService;
     ArduinoService arduinoService;
     NetworkService networkService;
-    WirelessService wirelessService;
+    BluetoothService bluetoothService;
 
     SystemUpdater systemUpdater;
     AppUpdater appUpdater;

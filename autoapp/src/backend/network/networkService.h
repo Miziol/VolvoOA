@@ -19,7 +19,7 @@ public:
 
     void ensureStarted();  // idempotent; emits ready() at once if already up
 
-    bool isActive() const { return accessPoint.isActive(); }
+    bool isAccessPointActive() const { return accessPoint.isActive(); }
     WifiApInfo info() const { return accessPoint.info(); }
 
 signals:
@@ -27,6 +27,10 @@ signals:
     void failed(QString reason);
 
 private:
+    // The Wi-Fi card to host the AP on is resolved here and handed to the access point, which
+    // only knows how to bring a named device up.
+    static QString detectWifiInterface();
+
     SettingsManager &settings;
     WifiAccessPoint accessPoint;
 };

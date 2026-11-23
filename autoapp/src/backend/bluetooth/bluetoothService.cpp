@@ -1,4 +1,4 @@
-#include "wirelessService.h"
+#include "bluetoothService.h"
 
 #include <QBluetoothLocalDevice>
 #include <QBluetoothUuid>
@@ -11,21 +11,20 @@ const QLatin1String AA_WIRELESS_SERVICE_UUID("4de17a00-52cb-11e6-bdf4-0800200c9a
 const QLatin1String AA_WIRELESS_SERVICE_NAME("AndroidAutoWirelessHU");
 }  // namespace
 
-WirelessService::WirelessService(NetworkService &new_networkService, QObject *parent)
+BluetoothService::BluetoothService(NetworkService &new_networkService, QObject *parent)
     : QObject(parent),
-      category("WIRELESS SERVICE"),
+      category("BLUETOOTH SERVICE"),
       networkService(new_networkService),
       rfcommServer(QBluetoothServiceInfo::RfcommProtocol, this) {
-    connect(&rfcommServer, &QBluetoothServer::newConnection, this, &WirelessService::onClientConnected);
+    connect(&rfcommServer, &QBluetoothServer::newConnection, this, &BluetoothService::onClientConnected);
 }
 
-WirelessService::~WirelessService() {
+BluetoothService::~BluetoothService() {
     serviceInfo.unregisterService();
     rfcommServer.close();
 }
 
-bool WirelessService::start() {
-    QBluetoothLocalDevice localDevice;
+bool BluetoothService::start() {
     if (!localDevice.isValid()) {
         cerror << "No Bluetooth adapter available, wireless handshake disabled";
         return false;
@@ -73,30 +72,32 @@ bool WirelessService::start() {
 
     cinfo << "RFCOMM listening on" << localAddress.toString() << "port" << port;
 
-    // Seed with already-paired phones: they need not be discoverable.
-    for (const QBluetoothAddress &paired : localDevice.connectedDevices()) {
-        addKnownDevice(paired.toString(), paired);
-    }
-
-    discoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
-    connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered, this,
-            &WirelessService::onDeviceDiscovered);
-    connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::errorOccurred, this,
-            [this](QBluetoothDeviceDiscoveryAgent::Error error) { cwarning << "BT discovery error:" << int(error); });
-    startDiscovery();
+    // The phone pairs itself (us -> discoverable) and connects to us; we only list the phones it
+    // has already paired. Re-read the list whenever a pairing completes so it stays current.
+    connect(&localDevice, &QBluetoothLocalDevice::pairingFinished, this, &BluetoothService::refreshDevices);
+    refreshDevices();
 
     return true;
 }
 
-void WirelessService::startDiscovery() {
-    if (discoveryAgent == nullptr) {
+void BluetoothService::setDiscoverable(bool enabled) {
+    if (discoverable == enabled) {
         return;
     }
-    cinfo << "Starting BT discovery";
-    discoveryAgent->start();
+    discoverable = enabled;
+    localDevice.setHostMode(enabled ? QBluetoothLocalDevice::HostDiscoverable
+                                    : QBluetoothLocalDevice::HostConnectable);
+    cinfo << "Bluetooth" << (enabled ? "discoverable" : "connectable only");
+    emit discoverableChanged();
 }
 
-void WirelessService::addKnownDevice(const QString &name, const QBluetoothAddress &address) {
+void BluetoothService::refreshDevices() {
+    for (const QBluetoothAddress &paired : localDevice.connectedDevices()) {
+        addKnownDevice(paired.toString(), paired);
+    }
+}
+
+void BluetoothService::addKnownDevice(const QString &name, const QBluetoothAddress &address) {
     if (findDevice(address) != nullptr) {
         return;
     }
@@ -105,12 +106,12 @@ void WirelessService::addKnownDevice(const QString &name, const QBluetoothAddres
     }
 
     BluetoothDevice *phone = new BluetoothDevice(name, address, networkService);
-    connect(phone, &BluetoothDevice::handshakeCompleted, this, &WirelessService::handshakeCompleted);
+    connect(phone, &BluetoothDevice::handshakeCompleted, this, &BluetoothService::handshakeCompleted);
     devices.append(phone);
-    emit devicesChanged();
+    emit bluetoothDevicesChanged();
 }
 
-BluetoothDevice *WirelessService::findDevice(const QBluetoothAddress &address) {
+BluetoothDevice *BluetoothService::findDevice(const QBluetoothAddress &address) {
     const QString wanted = address.toString();
     for (auto *obj : devices) {
         if (obj->property("address").toString() == wanted) {
@@ -120,23 +121,7 @@ BluetoothDevice *WirelessService::findDevice(const QBluetoothAddress &address) {
     return nullptr;
 }
 
-void WirelessService::onDeviceDiscovered(const QBluetoothDeviceInfo &info) {
-    if (info.majorDeviceClass() != QBluetoothDeviceInfo::PhoneDevice) {
-        return;
-    }
-
-    // Main view lists only paired & available phones; a merely-discovered, unpaired phone is noise.
-    QBluetoothLocalDevice localDevice;
-    if (localDevice.pairingStatus(info.address()) != QBluetoothLocalDevice::Paired) {
-        return;
-    }
-
-    const QString name = info.name().isEmpty() ? info.address().toString() : info.name();
-    cinfo << "Paired phone available:" << name << info.address().toString();
-    addKnownDevice(name, info.address());
-}
-
-void WirelessService::onClientConnected() {
+void BluetoothService::onClientConnected() {
     QBluetoothSocket *socket = rfcommServer.nextPendingConnection();
     if (socket == nullptr) {
         cerror << "Received null socket on new connection";
@@ -146,7 +131,7 @@ void WirelessService::onClientConnected() {
     // Only serve a phone the user armed; otherwise drop the link at once (the phone retries
     // once armed) so the single-radio hotspot stays off until a phone actually asks for AA.
     BluetoothDevice *known = findDevice(socket->peerAddress());
-    if (known == nullptr || !known->isAaRequested()) {
+    if (known == nullptr || !known->isArmed()) {
         cinfo << "Ignoring RFCOMM request from" << socket->peerAddress().toString() << "(not requested)";
         socket->deleteLater();
         return;

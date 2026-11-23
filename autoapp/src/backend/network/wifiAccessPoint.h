@@ -34,8 +34,15 @@ signals:
     void failed(QString reason);
 
 private:
+    // nmcli steps run strictly in order; a fatal step aborts the sequence and reports the error.
+    struct Step {
+        QStringList args;
+        bool fatal;
+    };
+
     void runNmcliAsync(const QStringList &args, const std::function<void(int, QString)> &callback);
-    static QString detectWifiInterface();
+    void runNextStep();
+    void onStepsFinished();
 
     QLoggingCategory category;
 
@@ -44,6 +51,9 @@ private:
     QString pendingSsid;
     QString pendingKey;
     QString pendingIface;
+    QList<Step> steps;
+    int stepIndex = 0;
+    QString lastOutput;
 };
 
 #endif  // AUTOAPP_WIFIACCESSPOINT_H

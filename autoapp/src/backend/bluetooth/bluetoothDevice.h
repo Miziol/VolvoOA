@@ -18,26 +18,31 @@ class BluetoothDevice : public QObject {
     Q_OBJECT
 
 public:
-    Q_PROPERTY(QString displayName MEMBER name CONSTANT)
+    Q_PROPERTY(QString displayName READ displayName CONSTANT)
     Q_PROPERTY(QString address MEMBER addressString CONSTANT)
-    Q_PROPERTY(bool aaRequested MEMBER aaRequested NOTIFY aaRequestedChanged)
+    // Twin of UsbAndroidAutoDevice's connection state: true while this phone's AA session is up.
+    Q_PROPERTY(bool connected MEMBER connected NOTIFY connectedChanged)
 
     BluetoothDevice(QString new_name, const QBluetoothAddress &new_address, NetworkService &new_networkService);
     ~BluetoothDevice() override;
 
-    bool isAaRequested() const { return aaRequested; }
+    // Consent gate: the phone is only served once the user tapped it in the list (see activate()).
+    bool isArmed() const { return armed; }
     bool hasSession() const { return socket != nullptr; }
 
-    // Called by WirelessService when this phone dials RFCOMM: adopts the socket and runs the
+    // Called by BluetoothService when this phone dials RFCOMM: adopts the socket and runs the
     // WPP exchange that gets the phone onto the shared Wi-Fi AP.
     void startSession(QBluetoothSocket *socket);
 
 signals:
-    void aaRequestedChanged();
+    void connectedChanged();
     void handshakeCompleted();
     void sessionEnded();
 
 public slots:
+    QString displayName();
+    // Twin of UsbDevice::activate(): the list-entry start action. Records the user's consent so
+    // the phone may dial our RFCOMM/SDP service (the phone itself initiates the connection).
     void activate();
 
 private slots:
@@ -55,9 +60,9 @@ private:
     QLoggingCategory category;
     QString name;
     QString addressString;
-    QBluetoothAddress btAddress;
     NetworkService &networkService;
-    bool aaRequested = false;
+    bool armed = false;
+    bool connected = false;
     QBluetoothSocket *socket = nullptr;
     QByteArray rxBuffer;
 };
