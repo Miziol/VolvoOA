@@ -18,7 +18,7 @@ void UsbDevice::open() {
     }
 }
 
-bool UsbDevice::isOpen() {
+bool UsbDevice::isOpen() const {
     return handle != nullptr;
 }
 
@@ -27,7 +27,7 @@ void UsbDevice::close() {
     handle = nullptr;
 }
 
-QString UsbDevice::displayName() {
+QString UsbDevice::displayName() const {
     int bufferLength = 128, manufacturerLength, priductLength;
     unsigned char manufacturer[bufferLength], product[bufferLength];
 

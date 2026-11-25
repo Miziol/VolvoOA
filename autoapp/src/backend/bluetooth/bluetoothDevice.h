@@ -3,8 +3,8 @@
 
 #include <QBluetoothAddress>
 #include <QByteArray>
-#include <QObject>
 
+#include "../androidAuto/genericAaDevice.h"
 #include "../logging/loggingCategory.h"
 
 class QBluetoothSocket;
@@ -14,11 +14,10 @@ class NetworkService;
 // that phone's state. Tapping it arms the phone for Android Auto; the phone then dials our
 // RFCOMM/SDP service and this object runs the WPP handshake that gets it onto the Wi-Fi AP
 // (owned elsewhere - NetworkService) and, on success, onto projection.
-class BluetoothDevice : public QObject {
+class BluetoothDevice : public GenericAaDevice {
     Q_OBJECT
 
 public:
-    Q_PROPERTY(QString displayName READ displayName CONSTANT)
     Q_PROPERTY(QString address MEMBER addressString CONSTANT)
     // Twin of UsbAndroidAutoDevice's connection state: true while this phone's AA session is up.
     Q_PROPERTY(bool connected MEMBER connected NOTIFY connectedChanged)
@@ -26,9 +25,12 @@ public:
     BluetoothDevice(QString new_name, const QBluetoothAddress &new_address, NetworkService &new_networkService);
     ~BluetoothDevice() override;
 
+    QString displayName() const override;
+    // Peer of UsbDevice::open(): a session is open once the phone has dialed RFCOMM.
+    bool isOpen() const override { return socket != nullptr; }
+
     // Consent gate: the phone is only served once the user tapped it in the list (see activate()).
     bool isArmed() const { return armed; }
-    bool hasSession() const { return socket != nullptr; }
 
     // Called by BluetoothService when this phone dials RFCOMM: adopts the socket and runs the
     // WPP exchange that gets the phone onto the shared Wi-Fi AP.
@@ -40,10 +42,10 @@ signals:
     void sessionEnded();
 
 public slots:
-    QString displayName();
     // Twin of UsbDevice::activate(): the list-entry start action. Records the user's consent so
     // the phone may dial our RFCOMM/SDP service (the phone itself initiates the connection).
-    void activate();
+    void activate() override;
+    void close() override;
 
 private slots:
     void onReadyRead();

@@ -104,7 +104,7 @@ BluetoothDevice::~BluetoothDevice() {
     }
 }
 
-QString BluetoothDevice::displayName() {
+QString BluetoothDevice::displayName() const {
     return name;
 }
 
@@ -141,16 +141,22 @@ void BluetoothDevice::startSession(QBluetoothSocket *newSocket) {
     networkService.ensureStarted();
 }
 
-void BluetoothDevice::onSocketDisconnected() {
-    cinfo << "Phone disconnected" << name;
+void BluetoothDevice::close() {
     disconnect(&networkService, nullptr, this, nullptr);
-    socket->deleteLater();
-    socket = nullptr;
+    if (socket != nullptr) {
+        socket->deleteLater();
+        socket = nullptr;
+    }
     rxBuffer.clear();
     if (connected) {
         connected = false;
         emit connectedChanged();
     }
+}
+
+void BluetoothDevice::onSocketDisconnected() {
+    cinfo << "Phone disconnected" << name;
+    close();
     emit sessionEnded();
 }
 

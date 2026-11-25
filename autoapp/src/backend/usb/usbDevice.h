@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QQueue>
 
+#include "../androidAuto/genericAaDevice.h"
 #include "../logging/loggingCategory.h"
 
 struct UsbDeviceCallbackStruct;
@@ -14,27 +15,27 @@ struct UsbDeviceStringRequestType;
 
 enum class SendStringType { MANUFACTURER, MODEL, DESCRIPTION, VERSION, URI, SERIAL };
 
-class UsbDevice : public QObject {
+class UsbDevice : public GenericAaDevice {
     Q_OBJECT
-
-public:
-    Q_PROPERTY(QString displayName READ displayName CONSTANT)
 
 public:
     UsbDevice(libusb_device *new_device);
     ~UsbDevice();
 
 public:
+    // Peer of BluetoothDevice::startSession(): acquires the transport channel. Here the USB
+    // handle is opened up-front by UsbService (nothing to hand over).
     void open();
-    bool isOpen();
-    void close();
+
+    QString displayName() const override;
+    bool isOpen() const override;
 
 public slots:
-    QString displayName();
     // Twin of BluetoothDevice::activate(): the list-entry "start" action. Kicks off the AOAP
     // accessory handshake; the phone re-enumerates as an AA device and AndroidAutoService
     // then picks it up via UsbService::newAndroidAutoDevice.
-    void activate();
+    void activate() override;
+    void close() override;
 
 private:
     QLoggingCategory category;

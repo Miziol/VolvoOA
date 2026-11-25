@@ -1,5 +1,6 @@
 #include "androidAutoService.h"
 
+#include "genericAaDevice.h"
 #include "usbAndroidAutoDevice.h"
 #include "wirelessAndroidAutoDevice.h"
 
@@ -21,7 +22,8 @@ AndroidAutoService::~AndroidAutoService() {
 }
 
 bool AndroidAutoService::connectDevice(QObject *device) {
-    if (device == nullptr) {
+    auto *source = qobject_cast<GenericAaDevice *>(device);
+    if (source == nullptr) {
         return false;
     }
     if (state != ConnectionState::Idle) {
@@ -34,7 +36,7 @@ bool AndroidAutoService::connectDevice(QObject *device) {
 
     // Transport stays hidden behind the source object: the entry owns its own start sequence
     // (AOAP handshake for USB, pairing + WPP for wireless); we only gate the single slot.
-    QMetaObject::invokeMethod(device, "activate");
+    source->activate();
     return true;
 }
 
