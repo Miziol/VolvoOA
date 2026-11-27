@@ -16,10 +16,8 @@ void NetworkService::ensureStarted() {
         return;
     }
 
-    QString ssid = settings.getWifiSsid();
-    if (ssid.isEmpty()) {
-        ssid = "AUTOAPP";
-    }
+    // SSID fallback (including the "nothing saved yet" case) lives in SettingsManager::getWifiSsid().
+    const QString ssid = settings.getWifiSsid();
     // ponytail: no stored key => per-session random WPA2 password (>=8 chars); the phone
     // gets it over BT anyway. Set wireless/key to pin your own.
     QString key = settings.getWifiKey();

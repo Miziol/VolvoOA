@@ -6,13 +6,14 @@
 UsbAndroidAutoDevice::UsbAndroidAutoDevice(
     QObject *parent,
     libusb_device *new_device,
+    libusb_context *new_context,
     boost::asio::io_context &new_ioService,
-    f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory,
-    libusb_context *new_context)
+    f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
     : AndroidAutoDevice(parent, "USB ANDROID AUTO DEVICE", new_ioService,
                         new_androidAutoEntityFactory),
       usbWrapper(new_context),
-      device(new_device) {}
+      device(new_device),
+      handle(nullptr) {}
 
 UsbAndroidAutoDevice::~UsbAndroidAutoDevice() {
     stop();
@@ -23,6 +24,7 @@ void UsbAndroidAutoDevice::open() {
     int result = libusb_open(device, &handle);
 
     if (result != 0) {
+        handle = nullptr;
         cerror << "Error opening AA device: " << libusb_error_name(result);
     } else {
         cinfo << "Opened AA device";
@@ -30,7 +32,10 @@ void UsbAndroidAutoDevice::open() {
 }
 
 void UsbAndroidAutoDevice::close() {
-    libusb_close(handle);
+    if (handle != nullptr) {
+        libusb_close(handle);
+        handle = nullptr;
+    }
 }
 
 void UsbAndroidAutoDevice::start() {

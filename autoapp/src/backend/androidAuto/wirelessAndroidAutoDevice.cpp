@@ -5,11 +5,11 @@
 
 WirelessAndroidAutoDevice::WirelessAndroidAutoDevice(
     QObject *parent,
-    f1x::aasdk::tcp::ITCPEndpoint::SocketPointer new_socket,
+    f1x::aasdk::tcp::ITCPEndpoint::SocketPointer newSocket,
     boost::asio::io_context &new_ioService,
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
     : AndroidAutoDevice(parent, "WIRELESS ANDROID AUTO DEVICE", new_ioService, new_androidAutoEntityFactory),
-      socket(new_socket) {
+      socket(newSocket) {
     cinfo << "Wireless AA client connected (server mode)";
 }
 

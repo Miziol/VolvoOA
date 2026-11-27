@@ -197,7 +197,7 @@ FocusScope {
             Layout.preferredWidth: elementWidth
             Layout.preferredHeight: elementHeight
 
-            placeholderText: qsTr("AUTOAPP")
+            placeholderText: qsTr("VolvoOA")
             text: settingsManager.wifiSsid
             onTextEdited: settingsManager.wifiSsid = text
         }

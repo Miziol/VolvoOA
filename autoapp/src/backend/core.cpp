@@ -4,6 +4,7 @@
 
 #include <QGuiApplication>
 #include <QKeyEvent>
+#include <QQmlEngine>
 
 AppCore::AppCore(SettingsManager &new_settings)
     : category("GUI CORE"),
@@ -30,6 +31,9 @@ AppCore::AppCore(SettingsManager &new_settings)
     qmlRootContext->setContextProperty("appUpdater", &appUpdater);
 
     cinfo << "Base QML contexts set";
+
+    // Expose AaDeviceEntry::Type so the device list can pick a USB/Wireless icon (modelData.type).
+    qmlRegisterUncreatableType<AaDeviceEntry>("Autoapp", 1, 0, "AaDeviceEntry", "enum holder");
 
     qmlEngine.load("qrc:/main.qml");
     qmlRootObject = qmlEngine.rootObjects()[0];

@@ -1,6 +1,6 @@
 #include "androidAutoService.h"
 
-#include "genericAaDevice.h"
+#include "aaDeviceEntry.h"
 #include "usbAndroidAutoDevice.h"
 #include "wirelessAndroidAutoDevice.h"
 
@@ -22,7 +22,7 @@ AndroidAutoService::~AndroidAutoService() {
 }
 
 bool AndroidAutoService::connectDevice(QObject *device) {
-    auto *source = qobject_cast<GenericAaDevice *>(device);
+    auto *source = qobject_cast<AaDeviceEntry *>(device);
     if (source == nullptr) {
         return false;
     }
@@ -73,7 +73,7 @@ bool AndroidAutoService::isAABusy() const {
 
 void AndroidAutoService::addUSBDevice(libusb_context *context, libusb_device *device) {
     cinfo << "New AA device start processing";
-    installAndroidAutoDevice(new UsbAndroidAutoDevice(this, device, ioService, *androidAutoEntityFactory, context));
+    installAndroidAutoDevice(new UsbAndroidAutoDevice(this, device, context, ioService, *androidAutoEntityFactory));
 }
 
 void AndroidAutoService::addWirelessDevice(f1x::aasdk::tcp::ITCPEndpoint::SocketPointer socket) {

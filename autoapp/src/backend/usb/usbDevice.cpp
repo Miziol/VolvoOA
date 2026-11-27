@@ -5,26 +5,34 @@
 UsbDevice::UsbDevice(libusb_device *new_device) : category("USB DEVICE"), device(new_device), handle(nullptr) {}
 
 UsbDevice::~UsbDevice() {
-    close();
+    // Release the handle directly: deactivate() emits activeChanged(), which is not safe while
+    // this object is being destructed.
+    if (handle != nullptr) {
+        libusb_close(handle);
+        handle = nullptr;
+    }
 }
 
 void UsbDevice::open() {
     int result = libusb_open(device, &handle);
 
     if (result != 0) {
+        handle = nullptr;
         cerror << "Error opening USB device: " << libusb_error_name(result);
     } else {
         cinfo << "Opened USB device";
     }
+    emit activeChanged();
 }
 
-bool UsbDevice::isOpen() const {
+bool UsbDevice::isActive() const {
     return handle != nullptr;
 }
 
-void UsbDevice::close() {
+void UsbDevice::deactivate() {
     libusb_close(handle);
     handle = nullptr;
+    emit activeChanged();
 }
 
 QString UsbDevice::displayName() const {

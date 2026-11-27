@@ -140,10 +140,18 @@ void SettingsManager::setBluetoothRemoteAdapterAddress(const QBluetoothAddress v
 }
 
 QString SettingsManager::getWifiSsid() const {
-    return value(WIFI_SSID_KEY).toString();
+    // An empty SSID is never valid (covers a legacy/cleared key): fall back to the default here,
+    // so callers (NetworkService) don't each need their own isEmpty guard.
+    const QString ssid = value(WIFI_SSID_KEY).toString();
+    return ssid.isEmpty() ? WIFI_SSID_VALUE : ssid;
 }
 
 void SettingsManager::setWifiSsid(QString value) {
+    // Block an empty write: substitute the default instead of storing a value that would make
+    // the hotspot unusable.
+    if (value.isEmpty()) {
+        value = WIFI_SSID_VALUE;
+    }
     setValue(WIFI_SSID_KEY, value);
     emit wifiSsidChanged();
 }

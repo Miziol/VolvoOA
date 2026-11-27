@@ -16,16 +16,17 @@
 class WirelessAndroidAutoDevice : public AndroidAutoDevice {
     Q_OBJECT
 
-signals:
-
 public:
     WirelessAndroidAutoDevice(QObject *parent,
-                              f1x::aasdk::tcp::ITCPEndpoint::SocketPointer new_socket,
+                              f1x::aasdk::tcp::ITCPEndpoint::SocketPointer newSocket,
                               boost::asio::io_context &new_ioService,
                               f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
     ~WirelessAndroidAutoDevice();
 
 private:
+    // The accepted projection socket in aasdk's native form (shared_ptr<asio::tcp::socket>): the
+    // AA transport is boost::asio and aasdk::tcp::TCPEndpoint consumes exactly this type. Qt owns
+    // only the WPP control channel (QBluetoothSocket); the projection channel stays asio.
     f1x::aasdk::tcp::ITCPEndpoint::SocketPointer socket;
     // The wireless transport's wrapper lives with the session it serves; the aasdk TCPEndpoint
     // borrows it by reference, and ~WirelessAndroidAutoDevice tears the entity down first.

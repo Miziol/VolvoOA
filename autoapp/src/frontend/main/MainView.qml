@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import Autoapp 1.0  // AaDeviceEntry enum for the USB/Wireless type icon
 import "qrc:/commons"
 
 ScreenElement {

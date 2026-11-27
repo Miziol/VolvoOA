@@ -4,7 +4,7 @@
 #include <QBluetoothAddress>
 #include <QByteArray>
 
-#include "../androidAuto/genericAaDevice.h"
+#include "../androidAuto/aaDeviceEntry.h"
 #include "../logging/loggingCategory.h"
 
 class QBluetoothSocket;
@@ -14,7 +14,7 @@ class NetworkService;
 // that phone's state. Tapping it arms the phone for Android Auto; the phone then dials our
 // RFCOMM/SDP service and this object runs the WPP handshake that gets it onto the Wi-Fi AP
 // (owned elsewhere - NetworkService) and, on success, onto projection.
-class BluetoothDevice : public GenericAaDevice {
+class BluetoothDevice : public AaDeviceEntry {
     Q_OBJECT
 
 public:
@@ -26,8 +26,9 @@ public:
     ~BluetoothDevice() override;
 
     QString displayName() const override;
-    // Peer of UsbDevice::open(): a session is open once the phone has dialed RFCOMM.
-    bool isOpen() const override { return socket != nullptr; }
+    Type type() const override { return Type::Wireless; }
+    // Engaged once the phone has dialed RFCOMM (the socket is held).
+    bool isActive() const override { return socket != nullptr; }
 
     // Consent gate: the phone is only served once the user tapped it in the list (see activate()).
     bool isArmed() const { return armed; }
@@ -45,7 +46,7 @@ public slots:
     // Twin of UsbDevice::activate(): the list-entry start action. Records the user's consent so
     // the phone may dial our RFCOMM/SDP service (the phone itself initiates the connection).
     void activate() override;
-    void close() override;
+    void deactivate() override;
 
 private slots:
     void onReadyRead();

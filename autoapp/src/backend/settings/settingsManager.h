@@ -99,7 +99,7 @@ private:
 
     // Wireless AA: head unit hosts the AP, credentials go to the phone over BT.
     inline static const QString WIFI_SSID_KEY = "wireless/ssid";
-    inline static const QString WIFI_SSID_VALUE = "";
+    inline static const QString WIFI_SSID_VALUE = "VolvoOA";
     inline static const QString WIFI_KEY_KEY = "wireless/key";
     inline static const QString WIFI_KEY_VALUE = "";
 

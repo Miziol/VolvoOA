@@ -15,9 +15,9 @@ class UsbAndroidAutoDevice : public AndroidAutoDevice {
 public:
     UsbAndroidAutoDevice(QObject *parent,
                          libusb_device *new_device,
+                         libusb_context *new_context,
                          boost::asio::io_context &new_ioService,
-                         f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory,
-                         libusb_context *new_context);
+                         f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory);
     ~UsbAndroidAutoDevice();
 
 private:

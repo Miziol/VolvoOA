@@ -125,6 +125,7 @@ void BluetoothDevice::startSession(QBluetoothSocket *newSocket) {
     }
 
     socket = newSocket;
+    emit activeChanged();
     connect(socket, &QBluetoothSocket::readyRead, this, &BluetoothDevice::onReadyRead);
     connect(socket, &QBluetoothSocket::disconnected, this, &BluetoothDevice::onSocketDisconnected);
     connect(&networkService, &NetworkService::ready, this, &BluetoothDevice::onAccessPointReady);
@@ -141,11 +142,12 @@ void BluetoothDevice::startSession(QBluetoothSocket *newSocket) {
     networkService.ensureStarted();
 }
 
-void BluetoothDevice::close() {
+void BluetoothDevice::deactivate() {
     disconnect(&networkService, nullptr, this, nullptr);
     if (socket != nullptr) {
         socket->deleteLater();
         socket = nullptr;
+        emit activeChanged();
     }
     rxBuffer.clear();
     if (connected) {
@@ -156,7 +158,7 @@ void BluetoothDevice::close() {
 
 void BluetoothDevice::onSocketDisconnected() {
     cinfo << "Phone disconnected" << name;
-    close();
+    deactivate();
     emit sessionEnded();
 }
 

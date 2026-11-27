@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QQueue>
 
-#include "../androidAuto/genericAaDevice.h"
+#include "../androidAuto/aaDeviceEntry.h"
 #include "../logging/loggingCategory.h"
 
 struct UsbDeviceCallbackStruct;
@@ -15,7 +15,7 @@ struct UsbDeviceStringRequestType;
 
 enum class SendStringType { MANUFACTURER, MODEL, DESCRIPTION, VERSION, URI, SERIAL };
 
-class UsbDevice : public GenericAaDevice {
+class UsbDevice : public AaDeviceEntry {
     Q_OBJECT
 
 public:
@@ -23,19 +23,22 @@ public:
     ~UsbDevice();
 
 public:
-    // Peer of BluetoothDevice::startSession(): acquires the transport channel. Here the USB
-    // handle is opened up-front by UsbService (nothing to hand over).
+    // Acquires the transport channel (the libusb handle). Transport-internal, not part of the
+    // activate()/deactivate() row lifecycle: UsbService opens it up-front, at discovery.
     void open();
 
     QString displayName() const override;
-    bool isOpen() const override;
+    Type type() const override { return Type::Usb; }
+    // Engaged = the libusb handle is open, which UsbService does at discovery - so a listed USB
+    // entry is "active" before the user taps it. Not a user-intent flag.
+    bool isActive() const override;
 
 public slots:
     // Twin of BluetoothDevice::activate(): the list-entry "start" action. Kicks off the AOAP
     // accessory handshake; the phone re-enumerates as an AA device and AndroidAutoService
     // then picks it up via UsbService::newAndroidAutoDevice.
     void activate() override;
-    void close() override;
+    void deactivate() override;
 
 private:
     QLoggingCategory category;
