@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   qmllint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Install qmllint
@@ -13,7 +13,9 @@ jobs:
         run: find autoapp/src/frontend -type f -name "*.qml" -exec qmllint {} \;
 
   clang:
-    runs-on: ubuntu-latest
+    # Pinned on purpose: ubuntu-latest moved to 26.04 whose clang-format (21/22)
+    # reformats the code differently. 24.04 ships clang-format 18 - keep it here.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Install clang
@@ -21,11 +23,11 @@ jobs:
       - name: Run Clang check for autoapp
         run: find autoapp/src -type f \( -name "*.cpp" -o -name "*.h" \) -print0 | xargs -0 clang-format --dry-run --Werror
       - name: Run Clang check for LINbusKeyboardEmulator
-        run: find LINbusKeyboardEmulator -name "*.cpp" -o -name "*.h" -name "*.ino" | xargs clang-format --dry-run --Werror
+        run: find LINbusKeyboardEmulator -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.ino" \) -print0 | xargs -0 clang-format --dry-run --Werror
 
   build-autoapp:
     needs: [clang, qmllint]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Setup environment
@@ -37,7 +39,7 @@ jobs:
 
   build-arduino:
     needs: clang
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Setup Arduino CLI

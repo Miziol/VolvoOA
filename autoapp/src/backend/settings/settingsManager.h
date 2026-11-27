@@ -34,6 +34,9 @@ signals:
 
     void appLanguageChanged(QString lang);  // TODO impl translations
 
+    void wifiSsidChanged();
+    void wifiKeyChanged();
+
 public:
     Q_PROPERTY(bool showClock READ getShowClock WRITE setShowClock NOTIFY showClockChanged)
     Q_PROPERTY(bool leftHandDrive READ isLeftHandDrive WRITE setLeftHandDrive NOTIFY leftHandDriveChanged)
@@ -45,6 +48,10 @@ public:
     // Q_PROPERTY() // TODO video margin
 
     Q_PROPERTY(bool showCursor READ getShowCursor WRITE setShowCursor NOTIFY showCursorChanged)
+
+    // Wireless AA hotspot the phone joins (credentials are sent to the phone over BT).
+    Q_PROPERTY(QString wifiSsid READ getWifiSsid WRITE setWifiSsid NOTIFY wifiSsidChanged)
+    Q_PROPERTY(QString wifiKey READ getWifiKey WRITE setWifiKey NOTIFY wifiKeyChanged)
 
 public:
     SettingsManager();
@@ -90,6 +97,12 @@ private:
     inline static const QBluetoothAddress BLUETOOTH_REMOTE_ADAPTER_ADDRESS_VALUE = QBluetoothAddress();
     // END TODO
 
+    // Wireless AA: head unit hosts the AP, credentials go to the phone over BT.
+    inline static const QString WIFI_SSID_KEY = "wireless/ssid";
+    inline static const QString WIFI_SSID_VALUE = "VolvoOA";
+    inline static const QString WIFI_KEY_KEY = "wireless/key";
+    inline static const QString WIFI_KEY_VALUE = "";
+
 public slots:
     // Logger
     int getLoggerRotation();
@@ -129,6 +142,12 @@ public slots:
     QBluetoothAddress getBluetoothRemoteAdapterAddress() const;
     void setBluetoothRemoteAdapterAddress(const QBluetoothAddress value);
     // END TODO
+
+    // Wireless AA
+    QString getWifiSsid() const;
+    void setWifiSsid(QString value);
+    QString getWifiKey() const;
+    void setWifiKey(QString value);
 
 private:
     void setDefault(bool force = false);

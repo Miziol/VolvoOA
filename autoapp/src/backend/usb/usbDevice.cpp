@@ -5,29 +5,37 @@
 UsbDevice::UsbDevice(libusb_device *new_device) : category("USB DEVICE"), device(new_device), handle(nullptr) {}
 
 UsbDevice::~UsbDevice() {
-    close();
+    // Release the handle directly: deactivate() emits activeChanged(), which is not safe while
+    // this object is being destructed.
+    if (handle != nullptr) {
+        libusb_close(handle);
+        handle = nullptr;
+    }
 }
 
 void UsbDevice::open() {
     int result = libusb_open(device, &handle);
 
     if (result != 0) {
+        handle = nullptr;
         cerror << "Error opening USB device: " << libusb_error_name(result);
     } else {
         cinfo << "Opened USB device";
     }
+    emit activeChanged();
 }
 
-bool UsbDevice::isOpen() {
+bool UsbDevice::isActive() const {
     return handle != nullptr;
 }
 
-void UsbDevice::close() {
+void UsbDevice::deactivate() {
     libusb_close(handle);
     handle = nullptr;
+    emit activeChanged();
 }
 
-QString UsbDevice::getDeviceName() {
+QString UsbDevice::displayName() const {
     int bufferLength = 128, manufacturerLength, priductLength;
     unsigned char manufacturer[bufferLength], product[bufferLength];
 
@@ -52,7 +60,7 @@ QString UsbDevice::getDeviceName() {
            QString::fromLatin1(reinterpret_cast<const char *>(product), priductLength);
 }
 
-void UsbDevice::tryToStartAndroidAutoServer() {
+void UsbDevice::activate() {
     queue.append(UsbDeviceStringRequestType{"Android Auto", SendStringType::DESCRIPTION,
                                             &UsbDevice::sendNextElementFromQueue_cb});
     queue.append(

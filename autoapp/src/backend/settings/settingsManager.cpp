@@ -139,6 +139,32 @@ void SettingsManager::setBluetoothRemoteAdapterAddress(const QBluetoothAddress v
     emit bluetoothAddressChanged();
 }
 
+QString SettingsManager::getWifiSsid() const {
+    // An empty SSID is never valid (covers a legacy/cleared key): fall back to the default here,
+    // so callers (NetworkService) don't each need their own isEmpty guard.
+    const QString ssid = value(WIFI_SSID_KEY).toString();
+    return ssid.isEmpty() ? WIFI_SSID_VALUE : ssid;
+}
+
+void SettingsManager::setWifiSsid(QString value) {
+    // Block an empty write: substitute the default instead of storing a value that would make
+    // the hotspot unusable.
+    if (value.isEmpty()) {
+        value = WIFI_SSID_VALUE;
+    }
+    setValue(WIFI_SSID_KEY, value);
+    emit wifiSsidChanged();
+}
+
+QString SettingsManager::getWifiKey() const {
+    return value(WIFI_KEY_KEY).toString();
+}
+
+void SettingsManager::setWifiKey(QString value) {
+    setValue(WIFI_KEY_KEY, value);
+    emit wifiKeyChanged();
+}
+
 void SettingsManager::setDefault(bool force) {
     setDefaultValue(force, LOGGER_ROTATION_KEY, LOGGER_ROTATION_VALUE);
     setDefaultValue(force, LOGGER_RETENTION_KEY, LOGGER_RETENTION_VALUE);
@@ -158,6 +184,9 @@ void SettingsManager::setDefault(bool force) {
 
     setDefaultValue(force, BLUETOOTH_ADAPTER_TYPE_KEY, (int)(BLUETOOTH_ADAPTER_TYPE_VALUE));
     setDefaultValue(force, BLUETOOTH_REMOTE_ADAPTER_ADDRESS_KEY, BLUETOOTH_REMOTE_ADAPTER_ADDRESS_VALUE.toString());
+
+    setDefaultValue(force, WIFI_SSID_KEY, WIFI_SSID_VALUE);
+    setDefaultValue(force, WIFI_KEY_KEY, WIFI_KEY_VALUE);
 }
 
 void SettingsManager::setDefaultValue(bool force, QString key, QVariant value) {

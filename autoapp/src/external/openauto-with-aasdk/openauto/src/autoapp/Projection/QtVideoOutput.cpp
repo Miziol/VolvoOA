@@ -20,7 +20,12 @@
 
 #include <QDebug>
 #include <QGuiApplication>
+#include <QLoggingCategory>
 #include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
+
+// ponytail: this leaf helper has no per-object QLoggingCategory member like the backend classes
+// (it lives in the vendored openauto tree), so it gets one file-scope category instead.
+Q_LOGGING_CATEGORY(logVideoOutput, "QT VIDEO OUTPUT")
 
 namespace f1x {
 namespace openauto {
@@ -32,8 +37,9 @@ QtVideoOutput::QtVideoOutput(SettingsManager &configuration, QObject *new_qmlRoo
     connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
     connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
 
-    qDebug() << "[QtVideoOutput] create.";
-    mediaPlayer.setVideoOutput(qmlRootObject->findChild<QObject *>("aaVideoOutput"));
+    auto *videoOutput = qmlRootObject->findChild<QObject *>("aaVideoOutput");
+    mediaPlayer.setVideoOutput(videoOutput);
+    connect(&mediaPlayer, &QMediaPlayer::errorOccurred, this, &QtVideoOutput::onMediaError);
 }
 
 bool QtVideoOutput::open() {
@@ -60,6 +66,10 @@ void QtVideoOutput::onStartPlayback() {
 
 void QtVideoOutput::onStopPlayback() {
     mediaPlayer.stop();
+}
+
+void QtVideoOutput::onMediaError(QMediaPlayer::Error error, const QString &errorString) {
+    qCCritical(logVideoOutput) << "media error:" << error << errorString;
 }
 }  // namespace projection
 }  // namespace autoapp

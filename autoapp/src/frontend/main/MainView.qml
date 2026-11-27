@@ -1,57 +1,42 @@
 import QtQuick
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import Autoapp 1.0  // AaDeviceEntry enum for the USB/Wireless type icon
 import "qrc:/commons"
 
 ScreenElement {
-    RowLayout {
+    ColumnLayout {
         anchors.fill: parent
 
-        ListView {
+        Switch {
             Layout.fillWidth: true
-            Layout.fillHeight: true
 
-            model: usbService.usbDevices
-            enabled: model.length > 0
-            focus: true
-
-            delegate: Button {
-                width: parent.width
-
-                text: modelData.deviceName
-
-                onClicked: modelData.tryToStartAndroidAutoServer()
-            }
-
-            EmptyListIcon {
-                width: 50
-                anchors.centerIn: parent
-                visible: parent.model.length == 0
-                tipText: qsTr("Connect device")
-            }
+            text: qsTr("Discoverable")
+            checked: bluetoothService.discoverable
+            onClicked: bluetoothService.discoverable = checked
         }
 
         ListView {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            model: networkService.networkDevices
-            enabled: false // TODO model.length > 0
-            visible: false // TODO remove when feature start working
+            model: usbService.usbDevices.concat(bluetoothService.bluetoothDevices)
+            enabled: model.length > 0 && !aaService.aaBusy
+            focus: true
 
             delegate: Button {
                 width: parent.width
 
-                text: modelData.displayName
+                text: modelData.displayName + (modelData.connected ? "  ✓" : "")
 
-                onClicked: aaService.addNetworkDevice(modelData.getIPAddress())
+                onClicked: aaService.connectDevice(modelData)
             }
 
             EmptyListIcon {
                 width: 50
                 anchors.centerIn: parent
-                visible: parent.model.length == 0 // TODO add scanning notification
-                tipText: qsTr("Power on AA server")
+                visible: parent.model.length == 0
+                tipText: qsTr("Connect or pair device")
             }
         }
     }

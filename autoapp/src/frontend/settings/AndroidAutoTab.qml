@@ -177,6 +177,45 @@ FocusScope {
                 }
             }
         }
+
+        Title {
+            Layout.preferredWidth: allElementsWidth
+            Layout.preferredHeight: elementHeight
+            Layout.columnSpan: 2
+
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            text: qsTr("Wireless hotspot")
+        }
+
+        Label {
+            Layout.preferredHeight: elementHeight
+            text: qsTr("SSID")
+        }
+
+        TextField {
+            Layout.preferredWidth: elementWidth
+            Layout.preferredHeight: elementHeight
+
+            placeholderText: qsTr("VolvoOA")
+            text: settingsManager.wifiSsid
+            onTextEdited: settingsManager.wifiSsid = text
+        }
+
+        Label {
+            Layout.preferredHeight: elementHeight
+            text: qsTr("Password")
+        }
+
+        TextField {
+            Layout.preferredWidth: elementWidth
+            Layout.preferredHeight: elementHeight
+
+            echoMode: TextInput.Password
+            placeholderText: qsTr("random if empty")
+            text: settingsManager.wifiKey
+            onTextEdited: settingsManager.wifiKey = text
+        }
     }
 }
 

@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QQueue>
 
+#include "../androidAuto/aaDeviceEntry.h"
 #include "../logging/loggingCategory.h"
 
 struct UsbDeviceCallbackStruct;
@@ -14,24 +15,30 @@ struct UsbDeviceStringRequestType;
 
 enum class SendStringType { MANUFACTURER, MODEL, DESCRIPTION, VERSION, URI, SERIAL };
 
-class UsbDevice : public QObject {
+class UsbDevice : public AaDeviceEntry {
     Q_OBJECT
-
-public:
-    Q_PROPERTY(QString deviceName READ getDeviceName CONSTANT)
 
 public:
     UsbDevice(libusb_device *new_device);
     ~UsbDevice();
 
 public:
+    // Acquires the transport channel (the libusb handle). Transport-internal, not part of the
+    // activate()/deactivate() row lifecycle: UsbService opens it up-front, at discovery.
     void open();
-    bool isOpen();
-    void close();
+
+    QString displayName() const override;
+    Type type() const override { return Type::Usb; }
+    // Engaged = the libusb handle is open, which UsbService does at discovery - so a listed USB
+    // entry is "active" before the user taps it. Not a user-intent flag.
+    bool isActive() const override;
 
 public slots:
-    QString getDeviceName();
-    void tryToStartAndroidAutoServer();
+    // Twin of BluetoothDevice::activate(): the list-entry "start" action. Kicks off the AOAP
+    // accessory handshake; the phone re-enumerates as an AA device and AndroidAutoService
+    // then picks it up via UsbService::newAndroidAutoDevice.
+    void activate() override;
+    void deactivate() override;
 
 private:
     QLoggingCategory category;

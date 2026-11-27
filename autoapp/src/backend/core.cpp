@@ -4,12 +4,15 @@
 
 #include <QGuiApplication>
 #include <QKeyEvent>
+#include <QQmlEngine>
 
 AppCore::AppCore(SettingsManager &new_settings)
     : category("GUI CORE"),
       settings(new_settings),
       androidAutoService(new_settings, ioService),
       work(boost::asio::make_work_guard(ioService)),
+      networkService(new_settings),
+      bluetoothService(networkService),
       qmlStyle(settings) {
     QGuiApplication::instance()->installEventFilter(this);
 
@@ -21,13 +24,16 @@ AppCore::AppCore(SettingsManager &new_settings)
     qmlRootContext->setContextProperty("guiStyle", &qmlStyle);
     qmlRootContext->setContextProperty("settingsManager", &settings);
     qmlRootContext->setContextProperty("usbService", &usbService);
-    qmlRootContext->setContextProperty("networkService", &networkService);
+    qmlRootContext->setContextProperty("bluetoothService", &bluetoothService);
     qmlRootContext->setContextProperty("aaService", &androidAutoService);
     qmlRootContext->setContextProperty("arduinoService", &arduinoService);
     qmlRootContext->setContextProperty("systemUpdater", &systemUpdater);
     qmlRootContext->setContextProperty("appUpdater", &appUpdater);
 
     cinfo << "Base QML contexts set";
+
+    // Expose AaDeviceEntry::Type so the device list can pick a USB/Wireless icon (modelData.type).
+    qmlRegisterUncreatableType<AaDeviceEntry>("Autoapp", 1, 0, "AaDeviceEntry", "enum holder");
 
     qmlEngine.load("qrc:/main.qml");
     qmlRootObject = qmlEngine.rootObjects()[0];
@@ -47,6 +53,11 @@ AppCore::AppCore(SettingsManager &new_settings)
 
     connect(&usbService, &UsbService::newAndroidAutoDevice, &androidAutoService, &AndroidAutoService::addUSBDevice);
     connect(&usbService, &UsbService::removeAndroidAutoDevice, &androidAutoService, &AndroidAutoService::removeDevice);
+    connect(&bluetoothService, &BluetoothService::handshakeCompleted, &androidAutoService,
+            &AndroidAutoService::armWirelessProjection);
+
+    bluetoothService.start();
+    androidAutoService.startWirelessServer();
 }
 
 AppCore::~AppCore() {
