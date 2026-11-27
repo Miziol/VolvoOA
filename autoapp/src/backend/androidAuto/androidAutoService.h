@@ -3,11 +3,10 @@
 
 #include <libusb-1.0/libusb.h>
 
-#include <boost/asio/ip/tcp.hpp>
-#include <memory>
-
 #include <QObject>
 #include <QTimer>
+#include <boost/asio/ip/tcp.hpp>
+#include <memory>
 
 #include "../logging/loggingCategory.h"
 #include "../settings/settingsManager.h"

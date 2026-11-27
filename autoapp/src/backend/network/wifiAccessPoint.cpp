@@ -37,8 +37,8 @@ void WifiAccessPoint::start(const QString &ssid, const QString &password, const 
     steps = {
         {{"connection", "down", HOTSPOT_CONNECTION}, false},
         {{"connection", "delete", HOTSPOT_CONNECTION}, false},
-        {{"device", "wifi", "hotspot", "con-name", HOTSPOT_CONNECTION, "ifname", pendingIface, "ssid",
-          pendingSsid, "password", pendingKey},
+        {{"device", "wifi", "hotspot", "con-name", HOTSPOT_CONNECTION, "ifname", pendingIface, "ssid", pendingSsid,
+          "password", pendingKey},
          true},
         // ponytail: keep the profile from auto-starting on next boot and knocking out the normal
         // station connection.
@@ -86,8 +86,7 @@ void WifiAccessPoint::onStepsFinished() {
     emit ready();
 }
 
-void WifiAccessPoint::runNmcliAsync(const QStringList &args,
-                                    const std::function<void(int, QString)> &callback) {
+void WifiAccessPoint::runNmcliAsync(const QStringList &args, const std::function<void(int, QString)> &callback) {
     auto *process = new QProcess(this);
     connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this,
             [process, callback](int code, QProcess::ExitStatus) {

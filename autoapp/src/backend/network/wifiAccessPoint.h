@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QString>
-
 #include <functional>
 
 #include "../logging/loggingCategory.h"

@@ -85,8 +85,7 @@ void BluetoothService::setDiscoverable(bool enabled) {
         return;
     }
     discoverable = enabled;
-    localDevice.setHostMode(enabled ? QBluetoothLocalDevice::HostDiscoverable
-                                    : QBluetoothLocalDevice::HostConnectable);
+    localDevice.setHostMode(enabled ? QBluetoothLocalDevice::HostDiscoverable : QBluetoothLocalDevice::HostConnectable);
     cinfo << "Bluetooth" << (enabled ? "discoverable" : "connectable only");
     emit discoverableChanged();
 }

@@ -9,8 +9,7 @@ UsbAndroidAutoDevice::UsbAndroidAutoDevice(
     libusb_context *new_context,
     boost::asio::io_context &new_ioService,
     f1x::openauto::autoapp::service::AndroidAutoEntityFactory &new_androidAutoEntityFactory)
-    : AndroidAutoDevice(parent, "USB ANDROID AUTO DEVICE", new_ioService,
-                        new_androidAutoEntityFactory),
+    : AndroidAutoDevice(parent, "USB ANDROID AUTO DEVICE", new_ioService, new_androidAutoEntityFactory),
       usbWrapper(new_context),
       device(new_device),
       handle(nullptr) {}

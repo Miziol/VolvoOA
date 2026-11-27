@@ -78,8 +78,7 @@ void AndroidAutoService::addUSBDevice(libusb_context *context, libusb_device *de
 
 void AndroidAutoService::addWirelessDevice(f1x::aasdk::tcp::ITCPEndpoint::SocketPointer socket) {
     cinfo << "Wireless AA client connected on projection port";
-    installAndroidAutoDevice(
-        new WirelessAndroidAutoDevice(this, socket, ioService, *androidAutoEntityFactory));
+    installAndroidAutoDevice(new WirelessAndroidAutoDevice(this, socket, ioService, *androidAutoEntityFactory));
 }
 
 void AndroidAutoService::installAndroidAutoDevice(AndroidAutoDevice *device) {
@@ -161,7 +160,8 @@ void AndroidAutoService::startWirelessServer() {
         wirelessAcceptor->listen(boost::asio::socket_base::max_listen_connections, ec);
     }
     if (ec) {
-        cerror << "Failed to start wireless AA server on port" << AA_PORT << ":" << QString::fromStdString(ec.message());
+        cerror << "Failed to start wireless AA server on port" << AA_PORT << ":"
+               << QString::fromStdString(ec.message());
         wirelessAcceptor.reset();
         return;
     }

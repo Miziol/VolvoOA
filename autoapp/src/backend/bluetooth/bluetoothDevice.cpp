@@ -55,9 +55,11 @@ bool readVarint(const QByteArray &data, int &offset, quint64 &out) {
     while (offset < data.size()) {
         const quint8 byte = quint8(data[offset++]);
         out |= quint64(byte & 0x7F) << shift;
-        if ((byte & 0x80) == 0) return true;
+        if ((byte & 0x80) == 0)
+            return true;
         shift += 7;
-        if (shift > 63) return false;
+        if (shift > 63)
+            return false;
     }
     return false;
 }
@@ -67,16 +69,20 @@ qint64 readVarintField(const QByteArray &payload, quint32 field) {
     int offset = 0;
     while (offset < payload.size()) {
         quint64 key = 0;
-        if (!readVarint(payload, offset, key)) return -1;
+        if (!readVarint(payload, offset, key))
+            return -1;
         const quint32 fieldNumber = key >> 3;
         const quint8 wireType = key & 0x7;
         if (wireType == 0) {
             quint64 value = 0;
-            if (!readVarint(payload, offset, value)) return -1;
-            if (fieldNumber == field) return qint64(value);
+            if (!readVarint(payload, offset, value))
+                return -1;
+            if (fieldNumber == field)
+                return qint64(value);
         } else if (wireType == 2) {
             quint64 length = 0;
-            if (!readVarint(payload, offset, length)) return -1;
+            if (!readVarint(payload, offset, length))
+                return -1;
             offset += int(length);
         } else if (wireType == 5) {
             offset += 4;
@@ -90,7 +96,9 @@ qint64 readVarintField(const QByteArray &payload, quint32 field) {
 }
 }  // namespace
 
-BluetoothDevice::BluetoothDevice(QString new_name, const QBluetoothAddress &new_address, NetworkService &new_networkService)
+BluetoothDevice::BluetoothDevice(QString new_name,
+                                 const QBluetoothAddress &new_address,
+                                 NetworkService &new_networkService)
     : category("BT DEVICE"),
       name(new_name),
       addressString(new_address.toString()),
@@ -222,10 +230,9 @@ void BluetoothDevice::sendStartRequest() {
 
 void BluetoothDevice::sendInfoResponse() {
     const WifiApInfo ap = networkService.info();
-    const QByteArray payload = encodeStringField(1, ap.ssid) +
-                               encodeStringField(2, ap.key) +
-                               encodeStringField(3, ap.bssid) +
-                               encodeVarintField(4, SECURITY_WPA2_PERSONAL) + encodeVarintField(5, AP_TYPE_STATIC);
+    const QByteArray payload = encodeStringField(1, ap.ssid) + encodeStringField(2, ap.key) +
+                               encodeStringField(3, ap.bssid) + encodeVarintField(4, SECURITY_WPA2_PERSONAL) +
+                               encodeVarintField(5, AP_TYPE_STATIC);
     sendFrame(MSG_WIFI_INFO_RESPONSE, payload);
     cinfo << "Stage 3/5: sent WifiInfoResponse(ssid" << ap.ssid << ")";
 }
