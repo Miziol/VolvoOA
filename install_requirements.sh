@@ -13,4 +13,4 @@ gstreamer1.0-plugins-bad gstreamer1.0-libav
 curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR=/usr/bin sh
 arduino-cli core update-index
 arduino-cli core install arduino:avr
-arduino-cli lib install "Streaming Vector Keyboard"
+arduino-cli lib install Streaming Vector Keyboard
